@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ChartService {
@@ -41,6 +42,22 @@ public class ChartService {
   dataset.addValue(totalExpenses, "Expenses", "");
 
   return dataset;
+ }
+
+
+ public String[] getCreditOrDebitArray() {
+  List<String> creditOrDebitList = expenseRepository.findAll()
+          .stream()
+          .map(ExpensesModel::getCreditOrDebit)
+          .collect(Collectors.toList());
+
+  return creditOrDebitList.toArray(new String[0]);
+ }
+
+
+ public int[] getAmountsArray() {
+  List<Integer> amountsList = expenseRepository.findAllAmounts();
+  return amountsList.stream().mapToInt(Integer::intValue).toArray();
  }
 
 }

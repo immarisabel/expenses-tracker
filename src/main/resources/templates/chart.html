@@ -12,27 +12,20 @@
 
 <script th:inline="javascript">
         /* Retrieve the data from the server-side */
-        var labels = /*[[${labels}]]*/ [];
-        var dataA = /*[[${dataA}]]*/ [];
-        var dataB = /*[[${dataB}]]*/ [];
+        var creditOrDebit = /*[[${creditOrDebit}]]*/ [];
+        var amounts = /*[[${amounts}]]*/ [];
 
         /* Create the chart */
         var ctx = document.getElementById('chart').getContext('2d');
         new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: labels,
+                labels: creditOrDebit,
                 datasets: [{
-                    label: 'Data A',
-                    data: dataA,
+                    label: 'Amounts',
+                    data: amounts,
                     backgroundColor: 'rgba(54, 162, 235, 0.5)',
                     borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }, {
-                    label: 'Data B',
-                    data: dataB,
-                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
                     borderWidth: 1
                 }]
             },
@@ -50,6 +43,10 @@
                 }
             }
         });
+
+        /* Output the creditOrDebit array */
+        console.log(creditOrDebit);
+        console.log(amounts);
     </script>
 </body>
 </html>
