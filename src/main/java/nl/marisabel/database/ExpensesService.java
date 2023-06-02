@@ -1,4 +1,4 @@
-package nl.marisabel;
+package nl.marisabel.database;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

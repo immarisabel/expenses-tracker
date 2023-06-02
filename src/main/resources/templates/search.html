@@ -7,7 +7,7 @@
 <body>
 <h1>Search Expenses</h1>
 
-<form action="/search" method="get">
+<form action="/search" method="post">
   <input type="text" name="keyword" placeholder="Enter a keyword" />
   <input type="submit" value="Search" />
 </form>
@@ -15,5 +15,23 @@
 <div th:if="${message}">
   <p th:text="${message}" style="color: red;"></p>
 </div>
+
+
+<table th:if="${expenses}">
+  <tr>
+    <th>Date</th>
+    <th>Entity</th>
+    <th>Credit/Debit</th>
+    <th>Amount</th>
+    <th>Description</th>
+  </tr>
+  <tr th:each="expense : ${expenses}">
+    <td th:text="${expense.date}"></td>
+    <td th:text="${expense.entity}"></td>
+    <td th:text="${expense.creditOrDebit}"></td>
+    <td th:text="${expense.amount}"></td>
+    <td th:text="${expense.description}"></td>
+  </tr>
+</table>
 </body>
 </html>

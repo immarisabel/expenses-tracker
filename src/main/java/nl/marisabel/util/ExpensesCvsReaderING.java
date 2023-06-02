@@ -1,9 +1,11 @@
-package nl.marisabel;
+package nl.marisabel.util;
 
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import lombok.extern.log4j.Log4j2;
+import nl.marisabel.database.ExpenseRepository;
+import nl.marisabel.database.ExpensesModel;
 import org.springframework.stereotype.Component;
 
 import java.io.InputStream;

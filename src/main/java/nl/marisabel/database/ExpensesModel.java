@@ -1,4 +1,4 @@
-package nl.marisabel;
+package nl.marisabel.database;
 
 import jakarta.persistence.*;
 import lombok.Data;
