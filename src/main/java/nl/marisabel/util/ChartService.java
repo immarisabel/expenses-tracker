@@ -60,4 +60,13 @@ public class ChartService {
   return amountsList.stream().mapToInt(Integer::intValue).toArray();
  }
 
+
+
+ public int getTotalCredits() {
+  return expenseRepository.calculateTotalCredits();
+ }
+
+ public int getTotalDebits() {
+  return expenseRepository.calculateTotalDebits();
+ }
 }

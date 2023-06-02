@@ -11,4 +11,10 @@ public interface ExpenseRepository extends JpaRepository<ExpensesModel, Long> {
 
  @Query("SELECT amount FROM ExpensesModel")
  List<Integer> findAllAmounts();
+
+ @Query("SELECT COALESCE(SUM(amount), 0) FROM ExpensesModel WHERE creditOrDebit = 'Credit'")
+ int calculateTotalCredits();
+
+ @Query("SELECT COALESCE(SUM(amount), 0) FROM ExpensesModel WHERE creditOrDebit = 'Debit'")
+ int calculateTotalDebits();
 }

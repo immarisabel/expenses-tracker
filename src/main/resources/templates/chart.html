@@ -10,6 +10,11 @@
 
 <canvas id="chart" width="800" height="600"></canvas>
 
+<div>
+    <h2>Total Credits: <span th:text="${totalCredits}"></span></h2>
+    <h2>Total Debits: <span th:text="${totalDebits}"></span></h2>
+</div>
+
 <script th:inline="javascript">
         /* Retrieve the data from the server-side */
         var creditOrDebit = /*[[${creditOrDebit}]]*/ [];
@@ -43,10 +48,6 @@
                 }
             }
         });
-
-        /* Output the creditOrDebit array */
-        console.log(creditOrDebit);
-        console.log(amounts);
     </script>
 </body>
 </html>
