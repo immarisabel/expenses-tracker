@@ -5,6 +5,8 @@ import nl.marisabel.database.ExpensesModel;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -17,24 +19,28 @@ public class ChartService {
  }
 
  public DefaultCategoryDataset generateExpenseIncomeDataset() {
-  // Retrieve the expense and income data from the repository or data source
   List<ExpensesModel> expenses = expenseRepository.findAll(); // Replace with your actual query
-  // Example: List<Income> incomes = incomeRepository.findAll();
 
   // Create a dataset for the chart
   DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-  // Add expense data to the dataset
+  // Calculate total income and expenses
+  double totalIncome = 0;
+  double totalExpenses = 0;
+
   for (ExpensesModel expense : expenses) {
-   // Assuming you have a date field and amount field in the Expense class
-   dataset.addValue(expense.getAmount(), "Expenses", expense.getDate().toString());
+   if (expense.getCreditOrDebit().equalsIgnoreCase("CREDIT")) {
+    totalIncome += expense.getAmount();
+   } else if (expense.getCreditOrDebit().equalsIgnoreCase("DEBIT")) {
+    totalExpenses += expense.getAmount();
+   }
   }
 
-  // Add income data to the dataset
-  // Example: for (Income income : incomes) {
-  //                 dataset.addValue(income.getAmount(), "Income", income.getDate().toString());
-  //             }
+  // Add total income and expenses to the dataset
+  dataset.addValue(totalIncome, "Income", "");
+  dataset.addValue(totalExpenses, "Expenses", "");
 
   return dataset;
  }
+
 }

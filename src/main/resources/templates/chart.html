@@ -1,60 +1,51 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Expense and Income Chart</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8">
+    <title>Chart View</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-<h1>Expense and Income Chart</h1>
+<h1>Monthly Comparison</h1>
 
-<canvas id="expenseIncomeChart" width="800" height="600"></canvas>
+<canvas id="chart" width="800" height="600"></canvas>
 
 <script th:inline="javascript">
-        /* Retrieve the chart data from the server-side */
-        var months = /*[[${months}]]*/ [];
-        var expenses = /*[[${expenses}]]*/ [];
-        var income = /*[[${income}]]*/ [];
+        /* Retrieve the data from the server-side */
+        var labels = /*[[${labels}]]*/ [];
+        var dataA = /*[[${dataA}]]*/ [];
+        var dataB = /*[[${dataB}]]*/ [];
 
         /* Create the chart */
-        var ctx = document.getElementById('expenseIncomeChart').getContext('2d');
-        var chart = new Chart(ctx, {
-            type: 'line',
+        var ctx = document.getElementById('chart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
             data: {
-                labels: months,
-                datasets: [
-                    {
-                        label: 'Expenses',
-                        data: expenses,
-                        borderColor: 'red',
-                        backgroundColor: 'rgba(255, 0, 0, 0.1)',
-                        fill: true
-                    },
-                    {
-                        label: 'Income',
-                        data: income,
-                        borderColor: 'blue',
-                        backgroundColor: 'rgba(0, 0, 255, 0.1)',
-                        fill: true
-                    }
-                ]
+                labels: labels,
+                datasets: [{
+                    label: 'Data A',
+                    data: dataA,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }, {
+                    label: 'Data B',
+                    data: dataB,
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
             },
             options: {
                 responsive: true,
                 scales: {
                     x: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Month'
+                        grid: {
+                            display: false
                         }
                     },
                     y: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Amount'
-                        }
+                        beginAtZero: true
                     }
                 }
             }
