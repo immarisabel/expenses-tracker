@@ -17,37 +17,39 @@
 
 <script th:inline="javascript">
         /* Retrieve the data from the server-side */
-        var creditOrDebit = /*[[${creditOrDebit}]]*/ [];
+        var credit = /*[[${totalCredits}]]*/ [];
+        var debit = /*[[${totalDebits}]]*/ [];
         var amounts = /*[[${amounts}]]*/ [];
 
-        /* Create the chart */
-        var ctx = document.getElementById('chart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: creditOrDebit,
-                datasets: [{
-                    label: 'Amounts',
-                    data: amounts,
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        grid: {
-                            display: false
-                        }
-                    },
-                    y: {
-                        beginAtZero: true
+
+    /* Create the chart */
+    var ctx = document.getElementById('chart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Credit', 'Debit'],
+            datasets: [{
+                label: 'Amounts',
+                data: [credit, debit],
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    grid: {
+                        display: false
                     }
+                },
+                y: {
+                    beginAtZero: true
                 }
             }
-        });
+        }
+    });
     </script>
 </body>
 </html>
