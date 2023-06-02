@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Search Expenses</title>
+</head>
+<body>
+<h1>Search Expenses</h1>
+
+<form action="/search" method="get">
+  <input type="text" name="keyword" placeholder="Enter a keyword" />
+  <input type="submit" value="Search" />
+</form>
+
+<div th:if="${message}">
+  <p th:text="${message}" style="color: red;"></p>
+</div>
+</body>
+</html>
