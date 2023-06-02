@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Expense and Income Chart</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<h1>Expense and Income Chart</h1>
+
+<canvas id="expenseIncomeChart" width="800" height="600"></canvas>
+
+<script th:inline="javascript">
+        /* Retrieve the chart data from the server-side */
+        var months = /*[[${months}]]*/ [];
+        var expenses = /*[[${expenses}]]*/ [];
+        var income = /*[[${income}]]*/ [];
+
+        /* Create the chart */
+        var ctx = document.getElementById('expenseIncomeChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [
+                    {
+                        label: 'Expenses',
+                        data: expenses,
+                        borderColor: 'red',
+                        backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                        fill: true
+                    },
+                    {
+                        label: 'Income',
+                        data: income,
+                        borderColor: 'blue',
+                        backgroundColor: 'rgba(0, 0, 255, 0.1)',
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Month'
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Amount'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
