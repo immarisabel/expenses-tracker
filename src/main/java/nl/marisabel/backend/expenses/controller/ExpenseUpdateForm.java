@@ -12,13 +12,13 @@ import java.util.List;
 public class ExpenseUpdateForm {
 
     private List<ExpenseEntity> expenses;
+    private Long categoryId;
+
 
     // Default constructor
     public ExpenseUpdateForm() {
         this.expenses = new ArrayList<>();
     }
-
-    // Getter and setter for expenses
 
     // Add a convenience method to add an expense to the list
     public void addExpense(ExpenseEntity expense) {

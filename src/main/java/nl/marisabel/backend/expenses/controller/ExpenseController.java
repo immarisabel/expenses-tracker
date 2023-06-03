@@ -1,29 +1,39 @@
 package nl.marisabel.backend.expenses.controller;
 
+import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.repository.CategoryRepository;
 import nl.marisabel.backend.expenses.entity.ExpenseEntity;
 import nl.marisabel.backend.expenses.entity.ExpenseFormDto;
 import nl.marisabel.backend.expenses.repository.ExpenseRepository;
+import nl.marisabel.backend.expenses.service.ExpenseService;
 import nl.marisabel.util.ExpensesCvsReaderING;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
+@Log4j2
 public class ExpenseController {
 
  private final ExpensesCvsReaderING expensesCvsReader;
  private final ExpenseRepository expenseRepository;
  private  final CategoryRepository categoryRepository;
+ private final ExpenseService expenseService;
 
- public ExpenseController(ExpensesCvsReaderING expensesCvsReader, ExpenseRepository expenseRepository, CategoryRepository categoryRepository) {
+
+ public ExpenseController(ExpensesCvsReaderING expensesCvsReader, ExpenseRepository expenseRepository, CategoryRepository categoryRepository, ExpenseService expenseService) {
   this.expensesCvsReader = expensesCvsReader;
   this.expenseRepository = expenseRepository;
   this.categoryRepository = categoryRepository;
+  this.expenseService = expenseService;
  }
 
  @GetMapping("/upload")
@@ -60,16 +70,29 @@ public class ExpenseController {
 
 
  @PostMapping("/expenses/updateCategory")
- public String updateCategory(@RequestParam("selectedExpenseIds") List<Long> selectedExpenseIds,
-                              @RequestParam("categoryId") Long categoryId) {
-  CategoryEntity category = categoryRepository.findById(Math.toIntExact(categoryId)).orElse(null);
-  if (category != null) {
-   List<ExpenseEntity> expenses = expenseRepository.findAllById(selectedExpenseIds);
-   for (ExpenseEntity expense : expenses) {
-    expense.getCategories().add(category);
-   }
-   expenseRepository.saveAll(expenses);
+ public String batchUpdateCategory(
+         @RequestParam("categoryId") Long categoryId,
+         @RequestParam("selectedExpenseIds") String[] selectedExpenseIds,
+         RedirectAttributes redirectAttributes) {
+
+  List<Long> expenseIds = Arrays.stream(selectedExpenseIds)
+          .map(Long::valueOf)
+          .collect(Collectors.toList());
+  log.info("....expenses to update: " + expenseIds.size());
+
+  List<ExpenseEntity> expenses = expenseRepository.findAllById(expenseIds);
+
+  log.info(".... expenses updated: " + expenses);
+
+  try {
+   expenseService.batchUpdateCategory(categoryId, expenses);
+   redirectAttributes.addFlashAttribute("successMessage", "Expenses updated successfully");
+  } catch (Exception e) {
+   redirectAttributes.addFlashAttribute("errorMessage", "Error updating expenses: " + e.getMessage());
   }
+
   return "redirect:/expenses";
  }
+
+
 }

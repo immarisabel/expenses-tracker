@@ -2,6 +2,9 @@ package nl.marisabel.backend.expenses.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
 
 import java.text.DecimalFormat;
@@ -11,7 +14,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString(exclude = "categories")  // excluding the relationship field from toString()
 @Table(name = "expenses")
 public class ExpenseEntity {
  @Id
@@ -31,7 +36,8 @@ public class ExpenseEntity {
  }
 
 
- @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+ @ManyToMany(fetch = FetchType.EAGER,
+         cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
  @JoinTable(
          name = "category_expenses",
          joinColumns = @JoinColumn(name = "expense_id"),
