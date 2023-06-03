@@ -36,28 +36,40 @@ public class ChartController {
  }
 
 
+
  @GetMapping("/months")
  public String showChartWithMonths(Model model) {
-  Map<String, Double> monthlyTotals = chartService.getMonthlyTotals();
+  Map<String, Double> monthlyCredits = chartService.getMonthlyCredits();
+  Map<String, Double> monthlyDebits = chartService.getMonthlyDebits();
 
-  // Extract the months and totals from the map
+ log.info(".... Debits Mapped from service" + monthlyDebits);
+  log.info(".... Credits Mapped from service" + monthlyCredits);
+
   List<String> labels = new ArrayList<>();
-  List<Double> totals = new ArrayList<>();
+  List<Double> credits = new ArrayList<>();
+  List<Double> debits = new ArrayList<>();
 
-  for (Map.Entry<String, Double> entry : monthlyTotals.entrySet()) {
+  log.info(".... Debits List created" + debits);
+  log.info(".... Credits List created" + credits);
+
+  for (Map.Entry<String, Double> entry : monthlyCredits.entrySet()) {
    String month = entry.getKey();
-   double total = entry.getValue();
+   double creditTotal = monthlyCredits.getOrDefault(month, 0.0);
+   double debitTotal = monthlyDebits.getOrDefault(month, 0.0);
+
    labels.add(month);
-   totals.add(total);
+   credits.add(creditTotal);
+   debits.add(debitTotal);
   }
 
-  // Pass data to the view
+  log.info("CREDITS: "+ monthlyCredits.size() + " | DEBITS: " + monthlyDebits.size());
+
   model.addAttribute("labels", labels);
-  model.addAttribute("totals", totals);
+  model.addAttribute("credits", credits);
+  model.addAttribute("debits", debits);
 
   return "chart-months";
  }
-
 
 
 

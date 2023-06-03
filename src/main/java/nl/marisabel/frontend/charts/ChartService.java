@@ -1,5 +1,6 @@
 package nl.marisabel.frontend.charts;
 
+import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.expenses.repository.ExpenseRepository;
 import nl.marisabel.backend.expenses.entity.ExpenseEntity;
 import org.jfree.data.category.DefaultCategoryDataset;
@@ -11,6 +12,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@Log4j2
 public class ChartService {
 
  private final ExpenseRepository expenseRepository;
@@ -86,5 +88,42 @@ public class ChartService {
 
   return monthlyTotals;
  }
+
+ public Map<String, Double> getMonthlyCredits() {
+  List<ExpenseEntity> allExpenses = expenseRepository.findAll();
+
+  Map<String, Double> monthlyCredits = new LinkedHashMap<>();
+
+  for (ExpenseEntity expense : allExpenses) {
+   String month = expense.getDate().getMonth().toString();
+   double amount = expense.getAmount();
+   String creditOrDebit = expense.getCreditOrDebit();
+
+   if ("credit".equalsIgnoreCase(creditOrDebit)) {
+    monthlyCredits.merge(month, amount, Double::sum);
+   }
+  }
+
+  return monthlyCredits;
+ }
+
+ public Map<String, Double> getMonthlyDebits() {
+  List<ExpenseEntity> allExpenses = expenseRepository.findAll();
+
+  Map<String, Double> monthlyDebits = new LinkedHashMap<>();
+
+  for (ExpenseEntity expense : allExpenses) {
+   String month = expense.getDate().getMonth().toString();
+   double amount = expense.getAmount();
+   String creditOrDebit = expense.getCreditOrDebit();
+
+   if ("debit".equalsIgnoreCase(creditOrDebit)) {
+    monthlyDebits.merge(month, amount, Double::sum);
+   }
+  }
+
+  return monthlyDebits;
+ }
+
 
 }
