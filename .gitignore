@@ -36,3 +36,5 @@ build/
 
 ### Mac OS ###
 .DS_Store
+/data/expenses.trace.db
+/data/expenses.mv.db
