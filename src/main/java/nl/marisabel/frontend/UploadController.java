@@ -1,4 +1,4 @@
-package nl.marisabel.controller;
+package nl.marisabel.frontend;
 
 import nl.marisabel.util.ExpensesCvsReaderING;
 import org.springframework.stereotype.Controller;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
-@RequestMapping("/upload")
+@RequestMapping("/uploadForm")
 public class UploadController {
 
  private final ExpensesCvsReaderING expensesCvsReader;

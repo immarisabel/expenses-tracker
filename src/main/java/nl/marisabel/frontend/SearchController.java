@@ -1,7 +1,7 @@
-package nl.marisabel.controller;
+package nl.marisabel.frontend;
 
-import nl.marisabel.database.ExpenseRepository;
-import nl.marisabel.database.ExpensesModel;
+import nl.marisabel.backend.expenses.repository.ExpenseRepository;
+import nl.marisabel.backend.expenses.entity.ExpenseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +29,7 @@ public class SearchController {
  @PostMapping
  public String searchExpenses(@RequestParam(value = "keyword", required = false) String keyword, Model model) {
   if (keyword != null && !keyword.isEmpty()) {
-   List<ExpensesModel> expenses = expenseRepository.findByDescriptionContainingIgnoreCaseOrEntityContainingIgnoreCase(keyword, keyword);
+   List<ExpenseEntity> expenses = expenseRepository.findByDescriptionContainingIgnoreCaseOrEntityContainingIgnoreCase(keyword, keyword);
 
    if (expenses.isEmpty()) {
     model.addAttribute("message", "No data found for '" + keyword + "'.");

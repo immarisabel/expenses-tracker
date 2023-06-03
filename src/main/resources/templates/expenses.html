@@ -1,27 +1,41 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Expense List</title>
+  <!-- Your head content -->
 </head>
 <body>
-<h1>Expense List</h1>
+<h1>Expenses</h1>
 
-<table>
-  <tr>
-    <th>Date</th>
-    <th>Entity</th>
-    <th>Credit/Debit</th>
-    <th>Amount</th>
-    <th>Description</th>
-  </tr>
-  <tr th:each="expense : ${expenses}">
-    <td th:text="${expense.date}"></td>
-    <td th:text="${expense.entity}"></td>
-    <td th:text="${expense.creditOrDebit}"></td>
-    <td th:text="${expense.amount}"></td>
-    <td th:text="${expense.description}"></td>
-  </tr>
-</table>
+<form th:action="@{/expenses/updateCategory}" method="post">
+  <select name="categoryId">
+    <option value="">Select Category</option>
+    <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.category}"></option>
+  </select>
+  <button type="submit">Update</button>
+
+  <table>
+    <!-- Table headers -->
+    <tr>
+      <th>Date</th>
+      <th>Entity</th>
+      <th>Credit/Debit</th>
+      <th>Amount</th>
+      <th>Description</th>
+      <th>Category</th>
+      <th>Select</th>
+    </tr>
+
+    <!-- Table rows -->
+    <tr th:each="expense : ${expenses}">
+      <td th:text="${expense.date}"></td>
+      <td th:text="${expense.entity}"></td>
+      <td th:text="${expense.creditOrDebit}"></td>
+      <td th:text="${expense.amount}"></td>
+      <td th:text="${expense.description}"></td>
+      <td th:text="${expense.categories.size() > 0 ? expense.categories[0].category : ''}"></td>
+      <td><input type="checkbox" name="selectedExpenseIds" th:value="${expense.id}" /></td>
+    </tr>
+  </table>
+</form>
 </body>
 </html>

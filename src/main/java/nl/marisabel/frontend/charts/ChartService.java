@@ -1,12 +1,10 @@
-package nl.marisabel.util;
+package nl.marisabel.frontend.charts;
 
-import nl.marisabel.database.ExpenseRepository;
-import nl.marisabel.database.ExpensesModel;
+import nl.marisabel.backend.expenses.repository.ExpenseRepository;
+import nl.marisabel.backend.expenses.entity.ExpenseEntity;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +18,7 @@ public class ChartService {
  }
 
  public DefaultCategoryDataset generateExpenseIncomeDataset() {
-  List<ExpensesModel> expenses = expenseRepository.findAll(); // Replace with your actual query
+  List<ExpenseEntity> expenses = expenseRepository.findAll(); // Replace with your actual query
 
   // Create a dataset for the chart
   DefaultCategoryDataset dataset = new DefaultCategoryDataset();
@@ -29,7 +27,7 @@ public class ChartService {
   double totalIncome = 0;
   double totalExpenses = 0;
 
-  for (ExpensesModel expense : expenses) {
+  for (ExpenseEntity expense : expenses) {
    if (expense.getCreditOrDebit().equalsIgnoreCase("CREDIT")) {
     totalIncome += expense.getAmount();
    } else if (expense.getCreditOrDebit().equalsIgnoreCase("DEBIT")) {
@@ -48,7 +46,7 @@ public class ChartService {
  public String[] getCreditOrDebitArray() {
   List<String> creditOrDebitList = expenseRepository.findAll()
           .stream()
-          .map(ExpensesModel::getCreditOrDebit)
+          .map(ExpenseEntity::getCreditOrDebit)
           .collect(Collectors.toList());
 
   return creditOrDebitList.toArray(new String[0]);

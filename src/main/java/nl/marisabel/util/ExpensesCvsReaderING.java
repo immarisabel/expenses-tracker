@@ -4,8 +4,8 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import lombok.extern.log4j.Log4j2;
-import nl.marisabel.database.ExpenseRepository;
-import nl.marisabel.database.ExpensesModel;
+import nl.marisabel.backend.expenses.repository.ExpenseRepository;
+import nl.marisabel.backend.expenses.entity.ExpenseEntity;
 import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
@@ -43,7 +43,7 @@ public class ExpensesCvsReaderING {
    String[] record;
    while ((record = csvReader.readNext()) != null) {
     try {
-     ExpensesModel expense = new ExpensesModel();
+     ExpenseEntity expense = new ExpenseEntity();
      expense.setDate(record[0]);
      expense.setEntity(record[1]);
      expense.setCreditOrDebit(record[5]);

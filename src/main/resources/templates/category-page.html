@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Category Management</title>
+</head>
+<body>
+<h2>Categories</h2>
+<ul>
+  <li th:each="category : ${categories}" th:text="${category.category}"></li>
+</ul>
+
+<h2>Add Category</h2>
+<form th:action="@{/categories/add}" method="post" th:object="${newCategory}">
+  <input type="text" th:field="*{category}" placeholder="New Category">
+  <button type="submit">Add Category</button>
+</form>
+</body>
+</html>
