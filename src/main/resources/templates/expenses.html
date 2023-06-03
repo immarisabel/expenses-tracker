@@ -6,24 +6,23 @@
 <body>
 <h1>Expenses</h1>
 
-
 <!-- search by keyword -->
 <p>
 <form th:action="@{/expenses/search}" method="get">
-  <input type="text" name="searchTerm" placeholder="Search expenses..." required>
+  <input type="hidden" name="searchTerm" th:value="${searchTerm}" />
+  <input type="text" name="searchTermInput" placeholder="Search expenses..." required th:value="${searchTerm}" />
   <button type="submit">Search</button>
 </form>
 </p>
 
-<!-- Filter by date-->
+<!-- Filter by date -->
 <p>
 <form th:action="@{/expenses/filter}" method="get">
   <input type="date" name="startDate" required>
   <input type="date" name="endDate" required>
   <button type="submit">Filter</button>
 </form>
-
-
+</p>
 
 <!-- Display the filter results count -->
 <p th:if="${filteredCount != null}" th:text="'Number of results: ' + ${filteredCount}"></p>
@@ -31,16 +30,13 @@
 <!-- Display a message if no results were found -->
 <p th:if="${filteredCount != null and filteredCount == 0}">No results found.</p>
 
-</p>
-
-
 <!-- Display the search results count -->
 <p th:if="${searchCount != null}" th:text="'Number of results: ' + ${searchCount}"></p>
 
 <!-- Display a message if no results were found -->
 <p th:if="${searchCount != null and searchCount == 0}">No results found.</p>
 
-<form th:action="@{/expenses/updateCategory}" method="post">
+<form th:action="@{/expenses/updateCategory(searchTerm=${searchTerm})}" method="post" th:withQueryString="true">
   <select name="categoryId">
     <option value="">Select Category</option>
     <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.category}"></option>
@@ -56,7 +52,7 @@
       <th>Amount</th>
       <th>Description</th>
       <th>Category</th>
-      <th>Select</th>
+      <th><input type="checkbox" id="selectAll" /></th> <!-- Add the "Select All" checkbox -->
     </tr>
 
     <!-- Table rows -->
@@ -71,5 +67,22 @@
     </tr>
   </table>
 </form>
+
+<script>
+  // Function to toggle the selection of all checkboxes
+  function toggleSelectAll() {
+    const checkboxes = document.querySelectorAll('input[name="selectedExpenseIds"]');
+    const selectAllCheckbox = document.getElementById('selectAll');
+
+    checkboxes.forEach((checkbox) => {
+      checkbox.checked = selectAllCheckbox.checked;
+    });
+  }
+
+  // Add event listener to the "Select All" checkbox
+  const selectAllCheckbox = document.getElementById('selectAll');
+  selectAllCheckbox.addEventListener('change', toggleSelectAll);
+</script>
+
 </body>
 </html>
