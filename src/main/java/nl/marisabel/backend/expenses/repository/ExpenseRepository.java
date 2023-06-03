@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long> {
 
- List<ExpenseEntity> findByDescriptionContainingIgnoreCaseOrEntityContainingIgnoreCase(String descriptionKeyword, String entityKeyword);
+ List<ExpenseEntity> findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String entity, String description);
 
  @Query("SELECT amount FROM ExpenseEntity")
  List<Integer> findAllAmounts();

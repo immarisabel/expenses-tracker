@@ -24,7 +24,9 @@ import java.util.List;
  private final CategoryRepository categoryRepository;
 
 
-
+ public List<ExpenseEntity> searchExpenses(String searchTerm) {
+  return expenseRepository.findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(searchTerm, searchTerm);
+ }
  @Transactional
  public void batchUpdateCategory(Long categoryId, List<ExpenseEntity> expenses) {
   CategoryEntity category = categoryRepository.findById(categoryId)

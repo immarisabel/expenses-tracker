@@ -95,4 +95,12 @@ public class ExpenseController {
  }
 
 
+ @GetMapping("/expenses/search")
+ public String searchExpenses(@RequestParam("searchTerm") String searchTerm, Model model) {
+  List<ExpenseEntity> searchResults = expenseService.searchExpenses(searchTerm);
+  model.addAttribute("expenses", searchResults);
+  model.addAttribute("searchCount", searchResults.size());
+  return "expenses";
+ }
+
 }

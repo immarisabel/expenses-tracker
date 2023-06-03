@@ -6,6 +6,19 @@
 <body>
 <h1>Expenses</h1>
 
+
+<p>
+<form th:action="@{/expenses/search}" method="get">
+  <input type="text" name="searchTerm" placeholder="Search expenses..." required>
+  <button type="submit">Search</button>
+</form>
+</p>
+<!-- Display the search results count -->
+<p th:if="${searchCount != null}" th:text="'Number of results: ' + ${searchCount}"></p>
+
+<!-- Display a message if no results were found -->
+<p th:if="${searchCount != null and searchCount == 0}">No results found.</p>
+
 <form th:action="@{/expenses/updateCategory}" method="post">
   <select name="categoryId">
     <option value="">Select Category</option>
