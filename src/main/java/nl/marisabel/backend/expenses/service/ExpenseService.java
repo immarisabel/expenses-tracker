@@ -8,6 +8,7 @@ import nl.marisabel.backend.expenses.repository.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -39,5 +40,11 @@ import java.util.List;
   }
 
   }
+
+ public List<ExpenseEntity> filterExpensesByDate(LocalDate startDate, LocalDate endDate) {
+  return expenseRepository.findByDateBetween(startDate, endDate);
  }
+
+
+}
 

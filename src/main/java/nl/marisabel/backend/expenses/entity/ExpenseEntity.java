@@ -10,6 +10,8 @@ import nl.marisabel.backend.categories.entity.CategoryEntity;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,7 +24,7 @@ public class ExpenseEntity {
  @Id
  @GeneratedValue(strategy = GenerationType.AUTO)
  private Long id;
- private String date;
+ private LocalDate date;
  private String entity;
  private String creditOrDebit;
  private double amount;
@@ -35,6 +37,10 @@ public class ExpenseEntity {
   this.amount = decimalFormat.parse(amount).doubleValue();
  }
 
+ public void setDate(String date) {
+  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+  this.date = LocalDate.parse(date, formatter);
+ }
 
  @ManyToMany(fetch = FetchType.EAGER,
          cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})

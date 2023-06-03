@@ -8,6 +8,7 @@ import nl.marisabel.backend.expenses.entity.ExpenseFormDto;
 import nl.marisabel.backend.expenses.repository.ExpenseRepository;
 import nl.marisabel.backend.expenses.service.ExpenseService;
 import nl.marisabel.util.ExpensesCvsReaderING;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -95,6 +97,8 @@ public class ExpenseController {
  }
 
 
+ // FILTERS (might move to own controller)
+
  @GetMapping("/expenses/search")
  public String searchExpenses(@RequestParam("searchTerm") String searchTerm, Model model) {
   List<ExpenseEntity> searchResults = expenseService.searchExpenses(searchTerm);
@@ -102,5 +106,17 @@ public class ExpenseController {
   model.addAttribute("searchCount", searchResults.size());
   return "expenses";
  }
+
+ @GetMapping("/expenses/filter")
+ public String filterExpensesByDate(@RequestParam("startDate") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate startDate,
+                                    @RequestParam("endDate") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate endDate,
+                                    Model model) {
+  List<ExpenseEntity> filteredResults = expenseService.filterExpensesByDate(startDate, endDate);
+  model.addAttribute("expenses", filteredResults);
+  model.addAttribute("filteredCount", filteredResults.size());
+  return "expenses";
+ }
+
+
 
 }

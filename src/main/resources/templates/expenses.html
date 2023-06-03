@@ -7,12 +7,33 @@
 <h1>Expenses</h1>
 
 
+<!-- search by keyword -->
 <p>
 <form th:action="@{/expenses/search}" method="get">
   <input type="text" name="searchTerm" placeholder="Search expenses..." required>
   <button type="submit">Search</button>
 </form>
 </p>
+
+<!-- Filter by date-->
+<p>
+<form th:action="@{/expenses/filter}" method="get">
+  <input type="date" name="startDate" required>
+  <input type="date" name="endDate" required>
+  <button type="submit">Filter</button>
+</form>
+
+
+
+<!-- Display the filter results count -->
+<p th:if="${filteredCount != null}" th:text="'Number of results: ' + ${filteredCount}"></p>
+
+<!-- Display a message if no results were found -->
+<p th:if="${filteredCount != null and filteredCount == 0}">No results found.</p>
+
+</p>
+
+
 <!-- Display the search results count -->
 <p th:if="${searchCount != null}" th:text="'Number of results: ' + ${searchCount}"></p>
 

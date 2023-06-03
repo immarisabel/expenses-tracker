@@ -44,7 +44,7 @@ public class ExpensesCvsReaderING {
    while ((record = csvReader.readNext()) != null) {
     try {
      ExpenseEntity expense = new ExpenseEntity();
-     expense.setDate(record[0]);
+     expense.setDate(record[0]);  // This now parses the date string to LocalDate
      expense.setEntity(record[1]);
      expense.setCreditOrDebit(record[5]);
      expense.setAmount(record[6]);

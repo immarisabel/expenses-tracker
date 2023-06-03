@@ -3,7 +3,9 @@ package nl.marisabel.backend.expenses.repository;
 import nl.marisabel.backend.expenses.entity.ExpenseEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long> {
@@ -18,6 +20,9 @@ public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long> {
 
  @Query("SELECT COALESCE(SUM(amount), 0) FROM ExpenseEntity WHERE creditOrDebit = 'Debit'")
  int calculateTotalDebits();
+
+ List<ExpenseEntity> findByDateBetween(LocalDate startDate, LocalDate endDate);
+
 
 
 }
