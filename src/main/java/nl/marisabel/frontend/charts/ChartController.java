@@ -6,6 +6,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 @Controller
 @Log4j2
 @RequestMapping("/chart")
@@ -30,6 +34,30 @@ public class ChartController {
 
   return "chart";
  }
+
+
+ @GetMapping("/months")
+ public String showChartWithMonths(Model model) {
+  Map<String, Double> monthlyTotals = chartService.getMonthlyTotals();
+
+  // Extract the months and totals from the map
+  List<String> labels = new ArrayList<>();
+  List<Double> totals = new ArrayList<>();
+
+  for (Map.Entry<String, Double> entry : monthlyTotals.entrySet()) {
+   String month = entry.getKey();
+   double total = entry.getValue();
+   labels.add(month);
+   totals.add(total);
+  }
+
+  // Pass data to the view
+  model.addAttribute("labels", labels);
+  model.addAttribute("totals", totals);
+
+  return "chart-months";
+ }
+
 
 
 

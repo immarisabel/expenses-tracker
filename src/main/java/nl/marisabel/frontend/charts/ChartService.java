@@ -5,7 +5,9 @@ import nl.marisabel.backend.expenses.entity.ExpenseEntity;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -67,4 +69,22 @@ public class ChartService {
  public int getTotalDebits() {
   return expenseRepository.calculateTotalDebits();
  }
+
+
+ public Map<String, Double> getMonthlyTotals() {
+  List<ExpenseEntity> allExpenses = expenseRepository.findAll();
+
+  Map<String, Double> monthlyTotals = new LinkedHashMap<>();
+
+  // Calculate totals for each month
+  for (ExpenseEntity expense : allExpenses) {
+   String month = expense.getDate().getMonth().toString(); // Get the month (e.g., "JANUARY")
+   double amount = expense.getAmount();
+
+   monthlyTotals.merge(month, amount, Double::sum);
+  }
+
+  return monthlyTotals;
+ }
+
 }

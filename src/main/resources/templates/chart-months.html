@@ -6,31 +6,24 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-<h1>Totals Comparison</h1>
+<h1>Monthly Comparison</h1>
 
 <canvas id="chart" width="800" height="600"></canvas>
 
-<div>
-    <h2>Total Credits: <span th:text="${totalCredits}"></span></h2>
-    <h2>Total Debits: <span th:text="${totalDebits}"></span></h2>
-</div>
-
 <script th:inline="javascript">
-        /* Retrieve the data from the server-side */
-        var credit = /*[[${totalCredits}]]*/ [];
-        var debit = /*[[${totalDebits}]]*/ [];
-        var amounts = /*[[${amounts}]]*/ [];
-
+    /* Retrieve the data from the server-side */
+    var labels = /*[[${labels}]]*/ [];
+    var totals = /*[[${totals}]]*/ [];
 
     /* Create the chart */
     var ctx = document.getElementById('chart').getContext('2d');
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Credit', 'Debit'],
+            labels: labels,
             datasets: [{
-                label: 'Amounts',
-                data: [credit, debit],
+                label: 'Monthly Totals',
+                data: totals,
                 backgroundColor: 'rgba(54, 162, 235, 0.5)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1
@@ -50,6 +43,6 @@
             }
         }
     });
-    </script>
+</script>
 </body>
 </html>
