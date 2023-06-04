@@ -155,7 +155,7 @@
         <option value="">Select Category</option>
         <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.category}"></option>
     </select>
-    <button type="submit">Update</button>
+    <button type="submit">Update</button> <a href="/categories">Manage Categories</a>
 <p> <!-- Pagination Controls -->
     <div>
         <a th:if="${expenses.hasPrevious()} == true" th:href="@{/expenses(page=${expenses.number - 1})}">Previous</a>

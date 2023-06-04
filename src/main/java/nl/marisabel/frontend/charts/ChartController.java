@@ -4,8 +4,11 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -69,6 +72,39 @@ public class ChartController {
   model.addAttribute("debits", debits);
 
   return "chart-months";
+ }
+
+
+ @GetMapping("/{month}")
+ public String showChartByMonthlyCategories(@PathVariable String month, Model model) {
+  // Parse the month from the request
+  DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMyyyy");
+  YearMonth yearMonth = YearMonth.parse(month, monthFormatter);
+
+  // Fetch the monthly totals for the given month
+  // You will need to add a method in your service that accepts YearMonth and returns monthly totals
+  Map<String, Double> monthlyCreditsByCategory = chartService.getMonthlyCreditsByCategory(yearMonth);
+  Map<String, Double> monthlyDebitsByCategory = chartService.getMonthlyDebitsByCategory(yearMonth);
+
+  List<String> labels = new ArrayList<>();
+  List<Double> credits = new ArrayList<>();
+  List<Double> debits = new ArrayList<>();
+
+  for (Map.Entry<String, Double> entry : monthlyCreditsByCategory.entrySet()) {
+   String category = entry.getKey();
+   double creditTotal = monthlyCreditsByCategory.getOrDefault(category, 0.0);
+   double debitTotal = monthlyDebitsByCategory.getOrDefault(category, 0.0);
+
+   labels.add(category);
+   credits.add(creditTotal);
+   debits.add(debitTotal);
+  }
+
+  model.addAttribute("labels", labels);
+  model.addAttribute("credits", credits);
+  model.addAttribute("debits", debits);
+
+  return "chart-monthly-categories";
  }
 
 
