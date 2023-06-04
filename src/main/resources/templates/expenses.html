@@ -112,10 +112,16 @@
         <input id="file" type="file" name="file"/>
         <input type="submit" value="Upload"/>
     </form>
-
-    <div th:if="${message}" class="message">
-        <p th:text="${message}"></p>
+    <!-- Upload summary -->
+    <div th:if="${result != null}">
+        <p>Total uploaded: <span th:text="${result.nonDuplicates}"></span></p>
+        <p>Duplicates found: <span th:text="${result.duplicates}"></span></p>
     </div>
+
+    <div th:unless="${result != null}">
+        <p>No data uploaded.</p>
+    </div>
+
 
     <!-- search by keyword -->
     <form th:action="@{/expenses/search}" method="get">

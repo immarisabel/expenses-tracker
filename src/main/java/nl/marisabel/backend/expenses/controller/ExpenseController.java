@@ -8,6 +8,7 @@ import nl.marisabel.backend.expenses.entity.ExpenseEntity;
 import nl.marisabel.backend.expenses.entity.ExpenseFormDto;
 import nl.marisabel.backend.expenses.repository.ExpenseRepository;
 import nl.marisabel.backend.expenses.service.ExpenseService;
+import nl.marisabel.frontend.charts.ExpenseUploadResult;
 import nl.marisabel.util.ExpensesCvsReaderING;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +18,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -41,27 +43,26 @@ public class ExpenseController {
         this.expenseService = expenseService;
     }
 
-    @GetMapping("/upload")
-    public String showUploadForm() {
-        return "upload";
-    }
 
     @PostMapping("/upload")
-    public String handleFileUpload(@RequestParam("file") MultipartFile file, Model model) {
-        if (file.isEmpty()) {
-            model.addAttribute("message", "Please select a file to upload.");
-            return "upload";
-        }
-
+    public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+        String message = "";
         try {
-            expensesCvsReader.read(file.getInputStream());
-            model.addAttribute("message", "File uploaded successfully.");
+            if (file.isEmpty()) {
+                message = "Please select a file to upload.";
+            } else {
+                ExpenseUploadResult result = expensesCvsReader.read(file.getInputStream());
+                redirectAttributes.addFlashAttribute("result", result);
+                message = "File uploaded successfully.";
+            }
         } catch (Exception e) {
-            model.addAttribute("message", "Error uploading file: " + e.getMessage());
+            message = "Error uploading file: " + e.getMessage();
         }
 
-        return "upload";
+        redirectAttributes.addFlashAttribute("message", message);
+        return "redirect:/expenses";
     }
+
 
     @GetMapping("/expenses")
     public String showExpenses(Model model) {
