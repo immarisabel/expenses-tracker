@@ -156,6 +156,13 @@
         <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.category}"></option>
     </select>
     <button type="submit">Update</button>
+<p> <!-- Pagination Controls -->
+    <div>
+        <a th:if="${expenses.hasPrevious()} == true" th:href="@{/expenses(page=${expenses.number - 1})}">Previous</a>
+        <span th:text="${expenses.number + 1}"></span> / <span th:text="${expenses.totalPages}"></span>
+        <a th:if="${expenses.hasNext()} == true" th:href="@{/expenses(page=${expenses.number + 1})}">Next</a>
+    </div></p>
+
 
     <table>
         <!-- Table headers -->
@@ -170,7 +177,7 @@
         </tr>
 
         <!-- Table rows -->
-        <tr th:each="expense : ${expenses}">
+        <tr th:each="expense : ${expenses.content}">
             <td th:text="${expense.date}"></td>
             <td th:text="${expense.entity}"></td>
             <td th:text="${expense.creditOrDebit}"></td>
@@ -180,6 +187,9 @@
             <td><input type="checkbox" name="selectedExpenseIds" th:value="${expense.id}"/></td>
         </tr>
     </table>
+
+
+
 </form>
 
 <script>

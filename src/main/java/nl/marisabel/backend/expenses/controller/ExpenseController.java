@@ -10,6 +10,9 @@ import nl.marisabel.backend.expenses.repository.ExpenseRepository;
 import nl.marisabel.backend.expenses.service.ExpenseService;
 import nl.marisabel.frontend.charts.ExpenseUploadResult;
 import nl.marisabel.util.ExpensesCvsReaderING;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -44,6 +47,18 @@ public class ExpenseController {
     }
 
 
+    @GetMapping("/expenses")
+    public String showExpenses(@RequestParam(defaultValue = "0") int page, Model model, Pageable pageable) {
+        int size = 25; // or whatever number you want
+        Page<ExpenseEntity> expenses = expenseRepository.findAll(PageRequest.of(page, size));
+        List<CategoryEntity> categories = categoryRepository.findAll();
+        model.addAttribute("expenses", expenses);
+        model.addAttribute("categories", categories);
+        model.addAttribute("expenseForm", new ExpenseFormDto());
+        return "expenses";
+    }
+
+
     @PostMapping("/upload")
     public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
         String message = "";
@@ -63,16 +78,6 @@ public class ExpenseController {
         return "redirect:/expenses";
     }
 
-
-    @GetMapping("/expenses")
-    public String showExpenses(Model model) {
-        List<ExpenseEntity> expenses = expenseRepository.findAll();
-        List<CategoryEntity> categories = categoryRepository.findAll();
-        model.addAttribute("expenses", expenses);
-        model.addAttribute("categories", categories);
-        model.addAttribute("expenseForm", new ExpenseFormDto());
-        return "expenses";
-    }
 
 
     @PostMapping("/expenses/updateCategory")
