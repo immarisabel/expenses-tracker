@@ -10,7 +10,12 @@ import java.util.List;
 
 public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long> {
 
- List<ExpenseEntity> findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String entity, String description);
+ //List<ExpenseEntity> findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String entity, String description);
+
+ @Query("SELECT e FROM ExpenseEntity e WHERE lower(e.entity) LIKE lower(concat('%', :searchTerm, '%')) OR lower(e.description) LIKE lower(concat('%', :searchTerm, '%'))")
+ List<ExpenseEntity> findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(@Param("searchTerm") String searchTerm);
+
+ boolean existsByDescriptionIgnoreCase(String description);
 
  @Query("SELECT amount FROM ExpenseEntity")
  List<Integer> findAllAmounts();

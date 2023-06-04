@@ -26,8 +26,11 @@ import java.util.List;
 
 
  public List<ExpenseEntity> searchExpenses(String searchTerm) {
-  return expenseRepository.findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(searchTerm, searchTerm);
+  String searchTermLower = searchTerm.toLowerCase();
+  return expenseRepository.findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(searchTermLower);
  }
+
+
  @Transactional
  public void batchUpdateCategory(Long categoryId, List<ExpenseEntity> expenses) {
   CategoryEntity category = categoryRepository.findById(categoryId)

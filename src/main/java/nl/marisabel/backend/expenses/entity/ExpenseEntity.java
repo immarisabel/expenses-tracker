@@ -28,6 +28,7 @@ public class ExpenseEntity {
  private String entity;
  private String creditOrDebit;
  private double amount;
+ @Column(columnDefinition = "TEXT")
  private String description;
 
  public void setAmount(String amount) throws ParseException {

@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
-
 @Component
 @Log4j2
 public class ExpensesCvsReaderING {
@@ -43,15 +41,24 @@ public class ExpensesCvsReaderING {
    String[] record;
    while ((record = csvReader.readNext()) != null) {
     try {
-     ExpenseEntity expense = new ExpenseEntity();
-     expense.setDate(record[0]);  // This now parses the date string to LocalDate
-     expense.setEntity(record[1]);
-     expense.setCreditOrDebit(record[5]);
-     expense.setAmount(record[6]);
-     expense.setDescription(record[8]);
-     expenseRepository.save(expense);
+     String description = record[8];
 
-     log.info("Expense added: {}", expense);
+     // Check for duplicates before adding to the database
+     boolean isDuplicate = expenseRepository.existsByDescriptionIgnoreCase(description);
+
+     if (!isDuplicate) {
+      ExpenseEntity expense = new ExpenseEntity();
+      expense.setDate(record[0]);  // This now parses the date string to LocalDate
+      expense.setEntity(record[1]);
+      expense.setCreditOrDebit(record[5]);
+      expense.setAmount(record[6]);
+      expense.setDescription(description);
+      expenseRepository.save(expense);
+
+      log.info("Expense added: {}", expense);
+     } else {
+      log.info("Duplicate expense found at line {}: {}", currentLine, description);
+     }
     } catch (Exception e) {
      log.error("Error parsing record at line {}: {}", currentLine, e.getMessage());
     }
@@ -64,6 +71,4 @@ public class ExpensesCvsReaderING {
    }
   }
  }
-
-
 }

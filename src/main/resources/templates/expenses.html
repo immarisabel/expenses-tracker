@@ -1,28 +1,136 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-  <!-- Your head content -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Expense Tracker</title>
+    <style>
+    body {
+      background-color: #222;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      color: #fff;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    form {
+      margin-bottom: 20px;
+    }
+
+  .form-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+    margin-bottom: 20px;
+
+  }
+
+  .form-container form {
+    margin: 0;
+  }
+
+
+  /* Style the custom button */
+  .custom-file-upload {
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+  }
+
+    input[type="submit"] {
+      padding: 8px 12px;
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .message {
+      color: red;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"],
+    input[type="date"] {
+      padding: 6px;
+      border-radius: 4px;
+      border: 1px solid #aaa;
+      width: 200px;
+    }
+
+    button[type="submit"] {
+      padding: 6px 12px;
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #333;
+    }
+
+    tr:nth-child(even) {
+      background-color: #444;
+    }
+
+    input[type="checkbox"] {
+      transform: scale(1.5);
+    }
+
+    </style>
 </head>
+
 <body>
 <h1>Expenses</h1>
 
-<!-- search by keyword -->
-<p>
-<form th:action="@{/expenses/search}" method="get">
-  <input type="hidden" name="searchTerm" th:value="${searchTerm}" />
-  <input type="text" name="searchTermInput" placeholder="Search expenses..." required th:value="${searchTerm}" />
-  <button type="submit">Search</button>
-</form>
-</p>
+<div class="form-container">
+    <!-- UPLOAD-->
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input id="file" type="file" name="file"/>
+        <input type="submit" value="Upload"/>
+    </form>
 
-<!-- Filter by date -->
-<p>
-<form th:action="@{/expenses/filter}" method="get">
-  <input type="date" name="startDate" required>
-  <input type="date" name="endDate" required>
-  <button type="submit">Filter</button>
-</form>
-</p>
+    <div th:if="${message}" class="message">
+        <p th:text="${message}"></p>
+    </div>
+
+    <!-- search by keyword -->
+    <form th:action="@{/expenses/search}" method="get">
+        <input type="hidden" name="searchTerm" th:value="${searchTerm}"/>
+        <input type="text" name="searchTermInput" placeholder="Search expenses..." required th:value="${searchTerm}"/>
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Filter by date -->
+    <form th:action="@{/expenses/filter}" method="get">
+        <input type="date" name="startDate" required>
+        <input type="date" name="endDate" required>
+        <button type="submit">Filter</button>
+    </form>
+</div>
 
 <!-- Display the filter results count -->
 <p th:if="${filteredCount != null}" th:text="'Number of results: ' + ${filteredCount}"></p>
@@ -37,52 +145,54 @@
 <p th:if="${searchCount != null and searchCount == 0}">No results found.</p>
 
 <form th:action="@{/expenses/updateCategory(searchTerm=${searchTerm})}" method="post" th:withQueryString="true">
-  <select name="categoryId">
-    <option value="">Select Category</option>
-    <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.category}"></option>
-  </select>
-  <button type="submit">Update</button>
+    <select name="categoryId">
+        <option value="">Select Category</option>
+        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.category}"></option>
+    </select>
+    <button type="submit">Update</button>
 
-  <table>
-    <!-- Table headers -->
-    <tr>
-      <th>Date</th>
-      <th>Entity</th>
-      <th>Credit/Debit</th>
-      <th>Amount</th>
-      <th>Description</th>
-      <th>Category</th>
-      <th><input type="checkbox" id="selectAll" /></th> <!-- Add the "Select All" checkbox -->
-    </tr>
+    <table>
+        <!-- Table headers -->
+        <tr>
+            <th>Date</th>
+            <th>Entity</th>
+            <th>Credit/Debit</th>
+            <th>Amount</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th><input type="checkbox" id="selectAll"/></th> <!-- Add the "Select All" checkbox -->
+        </tr>
 
-    <!-- Table rows -->
-    <tr th:each="expense : ${expenses}">
-      <td th:text="${expense.date}"></td>
-      <td th:text="${expense.entity}"></td>
-      <td th:text="${expense.creditOrDebit}"></td>
-      <td th:text="${expense.amount}"></td>
-      <td th:text="${expense.description}"></td>
-      <td th:text="${expense.categories.size() > 0 ? expense.categories[0].category : ''}"></td>
-      <td><input type="checkbox" name="selectedExpenseIds" th:value="${expense.id}" /></td>
-    </tr>
-  </table>
+        <!-- Table rows -->
+        <tr th:each="expense : ${expenses}">
+            <td th:text="${expense.date}"></td>
+            <td th:text="${expense.entity}"></td>
+            <td th:text="${expense.creditOrDebit}"></td>
+            <td th:text="${expense.amount}"></td>
+            <td th:text="${expense.description}"></td>
+            <td th:text="${expense.categories.size() > 0 ? expense.categories[0].category : ''}"></td>
+            <td><input type="checkbox" name="selectedExpenseIds" th:value="${expense.id}"/></td>
+        </tr>
+    </table>
 </form>
 
 <script>
-  // Function to toggle the selection of all checkboxes
-  function toggleSelectAll() {
-    const checkboxes = document.querySelectorAll('input[name="selectedExpenseIds"]');
+    // Function to toggle the selection of all checkboxes
+    function toggleSelectAll() {
+      const checkboxes = document.querySelectorAll('input[name="selectedExpenseIds"]');
+      const selectAllCheckbox = document.getElementById('selectAll');
+
+      checkboxes.forEach((checkbox) => {
+        checkbox.checked = selectAllCheckbox.checked;
+      });
+    }
+
+    // Add event listener to the "Select All" checkbox
     const selectAllCheckbox = document.getElementById('selectAll');
+    selectAllCheckbox.addEventListener('change', toggleSelectAll);
 
-    checkboxes.forEach((checkbox) => {
-      checkbox.checked = selectAllCheckbox.checked;
-    });
-  }
-
-  // Add event listener to the "Select All" checkbox
-  const selectAllCheckbox = document.getElementById('selectAll');
-  selectAllCheckbox.addEventListener('change', toggleSelectAll);
 </script>
 
 </body>
+
 </html>
