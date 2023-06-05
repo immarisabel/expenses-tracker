@@ -6,47 +6,67 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Expense Tracker</title>
 
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <!-- Add bootstrap CDN if you haven't included in your project -->
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> -->
 
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #212529;
-      color: #ffffff;
-    }
+        body {
+            font-family: 'Quicksand', sans-serif;
+            padding: 0;
+            margin: 1rem;
+            background: #eef1f5;
+        }
 
-    h1 {
-      margin-top: 40px;
-      text-align: center;
-    }
+        .navbar {
+            background-color: #6474e5;
+            padding: 10px 15px;
+            color: #fff;
+        }
 
-    ul {
-      list-style-type: none;
-      padding: 0;
-      margin-top: 40px;
-      text-align: center;
-    }
+        .navbar a {
+            color: #fff;
+            margin-left: 15px;
+        }
 
-    li {
-      margin-bottom: 10px;
-    }
+        .navbar h1 {
+            color: #fff;
+            font-size: 2rem;
+        }
 
-    a {
-      color: #ffffff;
-      text-decoration: none;
-    }
-  </style>
+        .navbar ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .navbar li {
+            float: left;
+        }
+
+        .navbar li a {
+            display: block;
+            color: #ffffff;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .navbar li a:hover {
+            background-color: #111;
+        }
+    </style>
 </head>
 
-
 <body>
-<h1>Expense Tracker</h1>
-
-<ul>
-  <li><a href="/expenses">View Expenses</a></li>
-  <li><a href="/chart">View Charts</a></li>
-  <li><a href="/categories">Manage Categories</a></li>
-</ul>
+<div class="navbar">
+  <h1>Expense Tracker</h1>
+  <ul>
+    <li><a href="/expenses">View Expenses</a></li>
+    <li><a href="/chart">View Charts</a></li>
+    <li><a href="/categories">Manage Categories</a></li>
+  </ul>
+</div>
 </body>
+
 </html>

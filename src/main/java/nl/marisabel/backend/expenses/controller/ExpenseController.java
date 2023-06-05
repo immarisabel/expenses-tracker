@@ -14,19 +14,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
@@ -47,16 +45,56 @@ public class ExpenseController {
     }
 
 
+    /// BREAKS THE SEARCH RESULTS
     @GetMapping("/expenses")
-    public String showExpenses(@RequestParam(defaultValue = "0") int page, Model model, Pageable pageable) {
+    public String showExpenses(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(value = "searchTerm", required = false) String searchTerm,
+            Model model) {
         int size = 25; // or whatever number you want
-        Page<ExpenseEntity> expenses = expenseRepository.findAll(PageRequest.of(page, size));
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ExpenseEntity> expensePage;
+
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            // if search term is provided, perform a search
+            expensePage = expenseService.searchExpenses(searchTerm, pageable);
+        } else {
+            // if no search term is provided, return all expenses
+            expensePage = expenseRepository.findAll(pageable);
+        }
+
+        List<ExpenseEntity> expenses = expensePage.getContent();
         List<CategoryEntity> categories = categoryRepository.findAll();
+
         model.addAttribute("expenses", expenses);
         model.addAttribute("categories", categories);
         model.addAttribute("expenseForm", new ExpenseFormDto());
+        model.addAttribute("totalCount", expensePage.getTotalElements());
+        model.addAttribute("currentPage", expensePage.getNumber());
+        model.addAttribute("totalPages", expensePage.getTotalPages());
+
         return "expenses";
     }
+
+
+
+
+// WORKING CODE without pagination html
+//    @GetMapping("/expenses")
+//    public String showExpenses(@RequestParam(defaultValue = "0") int page, Model model) {
+//        int size = 25; // or whatever number you want
+//        Pageable pageable = PageRequest.of(page, size);
+//        Page<ExpenseEntity> expensePage = expenseRepository.findAll(pageable);
+//        List<ExpenseEntity> expenses = expensePage.getContent();
+//        long totalCount = expensePage.getTotalElements();
+//        List<CategoryEntity> categories = categoryRepository.findAll();
+//        model.addAttribute("expenses", expenses);
+//        model.addAttribute("categories", categories);
+//        model.addAttribute("expenseForm", new ExpenseFormDto());
+//        model.addAttribute("totalCount", totalCount);
+//        return "expenses";
+//    }
+//
 
 
     @PostMapping("/upload")
@@ -115,31 +153,58 @@ public class ExpenseController {
 
 
 
-
     @GetMapping("/expenses/search")
     public String searchExpenses(@RequestParam(value = "searchTerm", required = false) String searchTerm,
                                  @RequestParam(value = "searchTermInput", required = false) String searchTermInput,
+                                 @RequestParam(defaultValue = "0") int page,
                                  Model model) {
         if (searchTermInput != null) {
             searchTerm = searchTermInput;
-        }        List<ExpenseEntity> searchResults = expenseService.searchExpenses(searchTerm);
+            log.info(".... SEARCHING FOR: "+ searchTerm);
+        }
+        int size = 25;
+        Pageable pageable = PageRequest.of(page, size); // don't forget to define the 'size' variable as your desired page size
+        Page<ExpenseEntity> expensePage = expenseService.searchExpenses(searchTerm, pageable);
+
+        List<ExpenseEntity> searchResults = expensePage.getContent();
         List<CategoryEntity> categories = categoryRepository.findAll();
+
         model.addAttribute("expenses", searchResults);
         model.addAttribute("searchCount", searchResults.size());
         model.addAttribute("categories", categories);
         model.addAttribute("searchTerm", searchTerm);
+        model.addAttribute("currentPage", expensePage.getNumber());
+        model.addAttribute("totalPages", expensePage.getTotalPages());
+
         return "expenses";
     }
 
-    @GetMapping("/expenses/filter")
-    public String filterExpensesByDate(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-                                       @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
-                                       Model model) {
-        List<ExpenseEntity> filteredResults = expenseService.filterExpensesByDate(startDate, endDate);
-        model.addAttribute("expenses", filteredResults);
-        model.addAttribute("filteredCount", filteredResults.size());
-        return "expenses";
-    }
+
+//    @GetMapping("/expenses/search")
+//    public String searchExpenses(@RequestParam(value = "searchTerm", required = false) String searchTerm,
+//                                 @RequestParam(value = "searchTermInput", required = false) String searchTermInput,
+//                                 Model model) {
+//        if (searchTermInput != null) {
+//            searchTerm = searchTermInput;
+//            log.info(".... SEARCHING FOR: "+ searchTerm);
+//        }        List<ExpenseEntity> searchResults = expenseService.searchExpenses(searchTerm);
+//        List<CategoryEntity> categories = categoryRepository.findAll();
+//        model.addAttribute("expenses", searchResults);
+//        model.addAttribute("searchCount", searchResults.size());
+//        model.addAttribute("categories", categories);
+//        model.addAttribute("searchTerm", searchTerm);
+//        return "expenses";
+//    }
+//
+//    @GetMapping("/expenses/filter")
+//    public String filterExpensesByDate(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+//                                       @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+//                                       Model model) {
+//        List<ExpenseEntity> filteredResults = expenseService.filterExpensesByDate(startDate, endDate);
+//        model.addAttribute("expenses", filteredResults);
+//        model.addAttribute("filteredCount", filteredResults.size());
+//        return "expenses";
+//    }
 
 
 }

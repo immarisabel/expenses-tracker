@@ -2,55 +2,167 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Expense Tracker</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Expense Tracker</title>
 
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- Bootstrap CSS -->
+    <!--  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">-->
 
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #212529;
-      color: #ffffff;
-    }
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            padding: 0;
+            margin: 1rem;
+            background: #eef1f5;
+        }
 
-    h1 {
-      margin-top: 40px;
-      text-align: center;
-    }
+        .navbar {
+            background-color: #6474e5;
+            padding: 10px 15px;
+            color: #fff;
+        }
 
-    ul {
-      list-style-type: none;
-      padding: 0;
-      margin-top: 40px;
-      text-align: center;
-    }
+        .navbar a {
+            color: #fff;
+            margin-left: 15px;
+        }
 
-    li {
-      margin-bottom: 10px;
-    }
+        .navbar h1 {
+            color: #fff;
+            font-size: 2rem;
+        }
 
-    a {
-      color: #ffffff;
-      text-decoration: none;
-    }
-  </style>
+        .navbar ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .navbar li {
+            float: left;
+        }
+
+        .navbar li a {
+            display: block;
+            color: #ffffff;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .navbar li a:hover {
+            background-color: #111;
+        }
+
+        .containerB{
+           width: 60%;
+            margin: 2rem;
+        }
+
+
+.form-control{
+    display:block;
+    width:100%;
+    padding:.375rem .75rem;
+    font-size:1rem;
+    line-height:1.5;
+    color:#495057;
+    background-color:#fff;
+    background-clip:padding-box;
+    border:1px solid #ced4da;
+    border-radius:.25rem;
+    transition:border-color .15s ease-in-out,box-shadow .15s ease-in-out
+}
+.form-control::-ms-expand{
+    background-color:transparent;
+    border:0
+}
+.form-control:focus{
+    color:#495057;
+    background-color:#fff;
+    border-color:#80bdff;
+    outline:0;
+    box-shadow:0 0 0 .2rem rgba(0,123,255,.25)
+}
+.form-control::-webkit-input-placeholder{
+    color:#6c757d;
+    opacity:1
+}
+.form-control::-moz-placeholder{
+    color:#6c757d;
+    opacity:1
+}
+.form-control:-ms-input-placeholder{
+    color:#6c757d;
+    opacity:1
+}
+.form-control::-ms-input-placeholder{
+    color:#6c757d;
+    opacity:1
+}
+.form-control::placeholder{
+    color:#6c757d;
+    opacity:1
+}
+.form-control:disabled,.form-control[readonly]{
+    background-color:#e9ecef;
+    opacity:1
+}
+
+
+
+ .myButton {
+    background-color: #6474e5;
+    color: #ffff; /* Text color */
+    border: none; /* Removes the default button border */
+    padding: 5px 10px; /* Top-bottom padding, left-right padding */
+    text-align: center; /* Center the text */
+    text-decoration: none; /* Remove default underline */
+    display: inline-block;
+    font-size: 16px; /* Size of the text */
+    margin: 2px 2px; /* Top-bottom margin, left-right margin */
+    cursor: pointer; /* Makes the cursor a hand when hovering over the button */
+    border-radius: 8px; /* Rounds the corners of the button */
+    transition-duration: 0.4s; /* Creates a nice fade effect when hovering over the button */
+}
+
+.myButton:hover {
+    background-color: #f4a4a4; /* Changes the color when hovering */
+    color: white;
+}
+
+
+    </style>
 </head>
 
-
-
 <body>
-<h2>Categories</h2>
-<ul>
-  <li th:each="category : ${categories}" th:text="${category.category}"></li>
-</ul>
+<div class="navbar">
+    <h1>Expense Tracker</h1>
+    <ul>
+        <li><a href="/expenses">View Expenses</a></li>
+        <li><a href="/chart">View Charts</a></li>
+        <li><a href="/categories">Manage Categories</a></li>
+    </ul>
+</div>
+<div class="containerB">
 
-<h2>Add Category</h2>
-<form th:action="@{/categories/add}" method="post" th:object="${newCategory}">
-  <input type="text" th:field="*{category}" placeholder="New Category">
-  <button type="submit">Add Category</button>
-</form>
+
+    <h2>Current categories</h2>
+    <ul>
+        <li th:each="category : ${categories}" th:text="${category.category}"></li>
+    </ul>
+
+
+    <h2>Add Category</h2>
+    <form th:action="@{/categories/add}" method="post" th:object="${newCategory}">
+        <input class="form-control" type="text" th:field="*{category}" placeholder="New Category">
+        <button type="submit" class="myButton">Add Category</button>
+    </form>
+
+
+</div>
+
 </body>
 </html>

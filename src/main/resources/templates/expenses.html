@@ -1,5 +1,6 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
-<html lang="en" xmlns:th="www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
+
 
 <header>
     <meta charset="UTF-8">
@@ -11,21 +12,127 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
-        body {
-            font-family: 'Quicksand', sans-serif;
+
+
+
+<!--NAVBAR-->
+
+        .navbar {
+            background-color: #6474e5;
+            padding: 10px 15px;
+            color: #fff;
         }
 
+        .navbar a {
+            color: #fff;
+            margin-left: 15px;
+        }
+
+        .navbar h1 {
+            color: #fff;
+            font-size: 2rem;
+        }
+
+        .navbar ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .navbar li {
+            float: left;
+        }
+
+        .navbar li a {
+            display: block;
+            color: #ffffff;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .navbar li a:hover {
+            background-color: #111;
+        }
+
+
+.form-control{
+    display:block;
+    width:100%;
+    padding:.375rem .75rem;
+    font-size:1rem;
+    line-height:1.5;
+    color:#495057;
+    background-color:#fff;
+    background-clip:padding-box;
+    border:1px solid #ced4da;
+    border-radius:.25rem;
+    transition:border-color .15s ease-in-out,box-shadow .15s ease-in-out
+}
+.form-control::-ms-expand{
+    background-color:transparent;
+    border:0
+}
+.form-control:focus{
+    color:#495057;
+    background-color:#fff;
+    border-color:#80bdff;
+    outline:0;
+    box-shadow:0 0 0 .2rem rgba(0,123,255,.25)
+}
+.form-control::-webkit-input-placeholder{
+    color:#6c757d;
+    opacity:1
+}
+.form-control::-moz-placeholder{
+    color:#6c757d;
+    opacity:1
+}
+.form-control:-ms-input-placeholder{
+    color:#6c757d;
+    opacity:1
+}
+.form-control::-ms-input-placeholder{
+    color:#6c757d;
+    opacity:1
+}
+.form-control::placeholder{
+    color:#6c757d;
+    opacity:1
+}
+.form-control:disabled,.form-control[readonly]{
+    background-color:#e9ecef;
+    opacity:1
+}
+
+
+
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            padding: 0;
+            margin: 1rem;
+            background: #eef1f5;
+        }
+
+<!--        .title{-->
+<!--            font-size: 2rem;-->
+<!--            color: #4ea1d3;-->
+<!--            font-weight: bold;-->
+<!--            vertical-align: middle;-->
+<!--        }-->
         .form-container {
             display: flex;
             flex-direction: row;
-            justify-content: space-between;
-            background: #a3b9dd;
+            justify-content: center;
+            background: #9aa4ec;
             padding:2rem;
             margin-bottom:2rem;
         }
 
         form {
-           padding: .5rem;
+           padding: 1rem 7rem 0 7rem;
         }
 
         .limiter {
@@ -40,6 +147,15 @@
         .row.header {
             font-weight: bold;
             border-bottom: 1px solid #000;
+        }
+
+
+        tbody tr:nth-child(odd) {
+            background-color: #d4f7ff ;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #ffffff;
         }
 
         .row {
@@ -74,12 +190,12 @@
             align-items: flex-start;
         }
         .form-container form {
-            margin-bottom: 15px;
+            margin-bottom: 5px;
         }
 
         .myButton {
-    background-color: #efdecd; /* A neutral brown color */
-    color: white; /* Text color */
+    background-color: #6474e5;
+    color: #ffff; /* Text color */
     border: none; /* Removes the default button border */
     padding: 5px 10px; /* Top-bottom padding, left-right padding */
     text-align: center; /* Center the text */
@@ -93,10 +209,9 @@
 }
 
 .myButton:hover {
-    background-color: #e9967a; /* Changes the color when hovering */
+    background-color: #f4a4a4; /* Changes the color when hovering */
     color: white;
 }
-
 
 
     </style>
@@ -106,35 +221,48 @@
 <body>
 
 
-<div class="form-container">
+<div class="navbar" style=" background-color: #6474e5;
+            padding: 10px 15px;
+            color: #fff;">
+    <h1>Expense Tracker</h1>
+    <ul>
+        <li><a href="/expenses">View Expenses</a></li>
+        <li><a href="/chart">View Charts</a></li>
+        <li><a href="/categories">Manage Categories</a></li>
+    </ul>
+</div>
 
+<div class="form-container">
 
 
     <div style="display: flex; justify-content: space-between;">
         <!-- UPLOAD-->
         <form action="/upload" method="post" enctype="multipart/form-data"
               style="display: flex; align-items: center; gap: 10px;">
-            <label for="file">Upload File:</label>
-            <input id="file" type="file" name="file"/>
-            <input class="myButton" type="submit" value="Upload"/>
+            <input id="file" type="file" name="file" class="form-control"/>
+            <input class="myButton" type="submit" value="upload"/>
         </form>
 
         <!-- search by keyword -->
         <form th:action="@{/expenses/search}" method="get" style="display: flex; align-items: center; gap: 10px;">
             <input type="hidden" name="searchTerm" th:value="${searchTerm}"/>
-            <input id="searchTermInput" type="text" name="searchTermInput" placeholder="Search expenses..." required
+            <input  class="form-control" id="searchTermInput" type="text" name="searchTermInput" placeholder="Search expenses..." required
                    th:value="${searchTerm}"/>
-            <button class="myButton" type="submit">Search</button>
+            <button class="myButton" type="submit">search</button>
         </form>
+
 
         <!-- Filter by date -->
         <form th:action="@{/expenses/filter}" method="get" style="display: flex; align-items: center; gap: 10px;">
-            <label for="startDate">From:</label>
-            <input id="startDate" type="date" name="startDate" required>
-            <label for="endDate">To:</label>
-            <input id="endDate" type="date" name="endDate" required>
-            <button class="myButton" type="submit">Filter</button>
+            <label for="startDate">from:</label>
+            <input  class="form-control" id="startDate" type="date" name="startDate" required>
+            <label for="endDate">to:</label>
+            <input  class="form-control" id="endDate" type="date" name="endDate" required>
+            <button class="myButton" type="submit">filter</button>
         </form>
+        <form>
+        <button class="myButton" onclick="window.location.href='expenses/'">clear filters</button>
+    </form>
     </div>
 
     <!-- Upload summary -->
@@ -148,50 +276,54 @@
 </div>
 
 
-<div class="limiter">
-    <div class="container-table100">
-        <div class="wrap-table100">
-            <table>
-                <colgroup>
-                    <col style="width: 10%">
-                    <col style="width: 25%">
-                    <col style="width: 5%">
-                    <col style="width: 10%">
-                    <col style="width: 45%">
-                    <col style="width: 5%;
-                                align-items: center;
-                                justify-content: center;">
-                </colgroup>
 
-                <thead>
-                <tr class="header">
-                    <th>Date</th>
-                    <th>Entity</th>
-                    <th>Credit/Debit</th>
-                    <th>Amount</th>
-                    <th>Description</th>
-                    <th>
-                        <input type="checkbox" id="selectAll"/>
-                    </th>
-                </tr>
-                </thead>
-
-                <tbody>
-                <tr th:each="expense : ${expenses.content}">
-                    <td data-title="Date" th:text="${expense.date}"></td>
-                    <td data-title="Entity" th:text="${expense.entity}"></td>
-                    <td data-title="Credit/Debit" th:text="${expense.creditOrDebit}"></td>
-                    <td data-title="Amount" th:text="${expense.amount}"></td>
-                    <td data-title="Description" th:text="${expense.description}"></td>
-                    <td>
-                        <input type="checkbox" name="selectedExpenseIds" th:value="${expense.id}"/>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+<!--&lt;!&ndash; Pagination Controls &ndash;&gt;-->
+<div>
+    <a th:if="${currentPage > 0}" th:href="@{/expenses(page=${currentPage - 1})}">Previous</a>
+    <span th:text="${currentPage + 1}"></span> / <span th:text="${totalPages}"></span>
+    <a th:if="${currentPage + 1 < totalPages}" th:href="@{/expenses(page=${currentPage + 1})}">Next</a>
 </div>
+
+
+
+<table>
+    <colgroup>
+        <col style="width: 10%">
+        <col style="width: 25%">
+        <col style="width: 5%">
+        <col style="width: 10%">
+        <col style="width: 45%">
+        <col style="width: 5%;
+                    align-items: center;
+                    justify-content: center;">
+    </colgroup>
+
+    <thead>
+    <tr class="header">
+        <th>Date</th>
+        <th>Entity</th>
+        <th>Credit/Debit</th>
+        <th>Amount</th>
+        <th>Description</th>
+        <th>
+            <input type="checkbox" id="selectAll"/>
+        </th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="expense : ${expenses}">
+        <td data-title="Date" th:text="${expense.date}"></td>
+        <td data-title="Entity" th:text="${expense.entity}"></td>
+        <td data-title="Credit/Debit" th:text="${expense.creditOrDebit}"></td>
+        <td data-title="Amount" th:text="${expense.amount}"></td>
+        <td data-title="Description" th:text="${expense.description}"></td>
+        <td style="text-align: center;">
+            <input type="checkbox" name="selectedExpenseIds" th:value="${expense.id}"/>
+        </td>
+    </tr>
+    </tbody>
+</table>
 
 
 </form>
@@ -218,7 +350,16 @@
 
 
 
+
 </script>
+
+<h2>NOTES:</h2>
+<ul>
+    <li>Searching string + space will search exact words</li>
+    <li>Searching string without space after, will look inside words ("ui" = "thuis")</li>
+    <li>upload CVS files from ING (both EN and NL work)</li>
+</ul>
+
 
 
 </body>

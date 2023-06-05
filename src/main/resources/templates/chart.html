@@ -5,10 +5,16 @@
     <title>Chart View</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+<style>
+    .chart-canvas {
+        width: 10pt;
+        height: 10pt;
+    }
+</style>
 <body>
 <h1>Totals Comparison</h1>
 
-<canvas id="chart" width="800" height="600"></canvas>
+<canvas id="chart" class="chart-canvas"></canvas>
 
 <div>
     <h2>Total Credits: <span th:text="${totalCredits}"></span></h2>

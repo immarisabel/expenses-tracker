@@ -6,6 +6,8 @@ import nl.marisabel.backend.categories.repository.CategoryRepository;
 import nl.marisabel.backend.expenses.entity.ExpenseEntity;
 import nl.marisabel.backend.expenses.repository.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -25,11 +27,15 @@ import java.util.List;
  private final CategoryRepository categoryRepository;
 
 
- public List<ExpenseEntity> searchExpenses(String searchTerm) {
-  String searchTermLower = searchTerm.toLowerCase();
-  return expenseRepository.findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(searchTermLower);
- }
+// public List<ExpenseEntity> searchExpenses(String searchTerm) {
+//  String searchTermLower = searchTerm.toLowerCase();
+//  return expenseRepository.findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(searchTermLower);
+// }
 
+ public Page<ExpenseEntity> searchExpenses(String searchTerm, Pageable pageable) {
+  String searchTermLower = searchTerm.toLowerCase();
+  return expenseRepository.findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(searchTermLower, pageable);
+ }
 
  @Transactional
  public void batchUpdateCategory(Long categoryId, List<ExpenseEntity> expenses) {
