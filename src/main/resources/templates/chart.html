@@ -4,29 +4,76 @@
     <meta charset="UTF-8">
     <title>Chart View</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
 </head>
 <style>
     .chart-canvas {
         width: 10pt;
         height: 10pt;
     }
+    body {
+        font-family: 'Quicksand', sans-serif;
+        padding: 0;
+        margin: 0;
+        background: #eef1f5;
+    }
+    .navbar {
+        background-color: #6474e5;
+        padding: 10px 15px;
+        color: #fff;
+    }
+    .navbar a {
+        color: #fff;
+        margin-left: 15px;
+    }
+    .navbar h1 {
+        color: #fff;
+        font-size: 2rem;
+    }
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+    li {
+        float: left;
+    }
+    li a {
+        display: block;
+        color: #ffffff;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+    li a:hover {
+        background-color: #111;
+    }
 </style>
 <body>
-<h1>Totals Comparison</h1>
-
-<canvas id="chart" class="chart-canvas"></canvas>
-
-<div>
-    <h2>Total Credits: <span th:text="${totalCredits}"></span></h2>
-    <h2>Total Debits: <span th:text="${totalDebits}"></span></h2>
+<header class="navbar">
+    <h1>Expense Tracker</h1>
+    <ul class="nav">
+        <li><a href="/expenses">View Expenses</a></li>
+        <li><a href="/chart">View Charts</a></li>
+        <li><a href="/categories">Manage Categories</a></li>
+    </ul>
+</header>
+<div class="container">
+    <h1>Totals Comparison</h1>
+    <canvas id="chart" class="chart-canvas" margin="1rem"></canvas>
+    <div>
+        <h2>Total Credits: <span th:text="${totalCredits}"></span></h2>
+        <h2>Total Debits: <span th:text="${totalDebits}"></span></h2>
+    </div>
 </div>
-
 <script th:inline="javascript">
-        /* Retrieve the data from the server-side */
-        var credit = /*[[${totalCredits}]]*/ [];
-        var debit = /*[[${totalDebits}]]*/ [];
-        var amounts = /*[[${amounts}]]*/ [];
-
+    /* Retrieve the data from the server-side */
+    var credit = /*[[${totalCredits}]]*/ [];
+    var debit = /*[[${totalDebits}]]*/ [];
+    var amounts = /*[[${amounts}]]*/ [];
 
     /* Create the chart */
     var ctx = document.getElementById('chart').getContext('2d');
@@ -37,8 +84,8 @@
             datasets: [{
                 label: 'Amounts',
                 data: [credit, debit],
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
+                backgroundColor: ['rgba(100, 116, 229, 0.5)', 'rgba(244, 164, 164, 0.5)'], // #6474e5 at 50% opacity for Credit and #f4a4a4 at 50% opacity for Debit
+                borderColor: ['rgb(100, 116, 229)', 'rgb(244, 164, 164)'], // #6474e5 for Credit and #f4a4a4 for Debit
                 borderWidth: 1
             }]
         },
@@ -56,6 +103,7 @@
             }
         }
     });
-    </script>
+</script>
+
 </body>
 </html>

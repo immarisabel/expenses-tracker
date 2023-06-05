@@ -79,24 +79,6 @@ public class ExpenseController {
 
 
 
-// WORKING CODE without pagination html
-//    @GetMapping("/expenses")
-//    public String showExpenses(@RequestParam(defaultValue = "0") int page, Model model) {
-//        int size = 25; // or whatever number you want
-//        Pageable pageable = PageRequest.of(page, size);
-//        Page<ExpenseEntity> expensePage = expenseRepository.findAll(pageable);
-//        List<ExpenseEntity> expenses = expensePage.getContent();
-//        long totalCount = expensePage.getTotalElements();
-//        List<CategoryEntity> categories = categoryRepository.findAll();
-//        model.addAttribute("expenses", expenses);
-//        model.addAttribute("categories", categories);
-//        model.addAttribute("expenseForm", new ExpenseFormDto());
-//        model.addAttribute("totalCount", totalCount);
-//        return "expenses";
-//    }
-//
-
-
     @PostMapping("/upload")
     public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
         String message = "";
