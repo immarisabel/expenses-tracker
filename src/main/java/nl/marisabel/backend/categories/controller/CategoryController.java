@@ -38,15 +38,10 @@ public class CategoryController {
     public String deleteCategory(@PathVariable("id") Long categoryId) {
         CategoryEntity category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("Category not found with id " + categoryId));
-
-        // Remove the category from expenses
         for (ExpenseEntity expense : category.getExpenses()) {
             expense.getCategories().remove(category);
         }
-
-        // Delete the category
         categoryRepository.delete(category);
-
         return "redirect:/categories";
     }
 

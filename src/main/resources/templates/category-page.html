@@ -74,6 +74,7 @@
     border:1px solid #ced4da;
     border-radius:.25rem;
     margin-top:1rem;
+    margin-bottom:1rem;
     transition:border-color .15s ease-in-out,box-shadow .15s ease-in-out
 }
 .form-control::-ms-expand{
@@ -135,9 +136,32 @@
 }
 
 
+ .row.header {
+            font-weight: bold;
+            border-bottom: 1px solid #000;
+        }
+
+
+        tbody tr:nth-child(odd) {
+            background-color: #d4f7ff ;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #ffffff;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+        }
+
+        .cell {
+            flex: 1;
+            }
+
     </style>
 </head>
-
 <body>
 <div class="navbar">
     <h1>Expense Tracker</h1>
@@ -148,25 +172,30 @@
     </ul>
 </div>
 <div class="containerB">
-
-
-    <h2>Current categories</h2>
-    <ul>
-        <li th:each="category : ${categories}">
-            <span th:text="${category.category}"></span>
-            <a th:href="@{/categories/delete/{id}(id=${category.id})}" class="myButton">del</a>
-        </li>
-    </ul>
-
+    <table>
+        <thead>
+        <tr>
+            <th>Category</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="category : ${categories}">
+            <td th:text="${category.category}"></td>
+            <td>
+                <a th:href="@{/categories/delete/{id}(id=${category.id})}" class="myButton">del</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
     <h2>Add Category</h2>
     <form th:action="@{/categories/add}" method="post" th:object="${newCategory}">
         <input class="form-control" type="text" th:field="*{category}" placeholder="New Category">
         <button type="submit" class="myButton">Add Category</button>
     </form>
-
-
 </div>
-
 </body>
+
+
 </html>

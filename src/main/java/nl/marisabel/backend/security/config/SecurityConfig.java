@@ -48,6 +48,8 @@ public class SecurityConfig {
                   .requestMatchers("/upload").hasRole("ADMIN")
                   .requestMatchers("/expenses/updateCategory/**").hasRole("ADMIN")
                   .requestMatchers("/expenses/filter").hasRole("ADMIN")
+                  .requestMatchers("/categories/delete/**").hasRole("ADMIN")
+
 
           )
           .formLogin((form) -> form
