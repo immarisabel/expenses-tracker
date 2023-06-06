@@ -31,162 +31,186 @@ import java.util.stream.Collectors;
 @Log4j2
 public class ExpenseController {
 
-    private final ExpensesCvsReaderING expensesCvsReader;
-    private final ExpenseRepository expenseRepository;
-    private final CategoryRepository categoryRepository;
-    private final ExpenseService expenseService;
+ private final ExpensesCvsReaderING expensesCvsReader;
+ private final ExpenseRepository expenseRepository;
+ private final CategoryRepository categoryRepository;
+ private final ExpenseService expenseService;
+
+ public ExpenseController(
+         ExpensesCvsReaderING expensesCvsReader,
+         ExpenseRepository expenseRepository,
+         CategoryRepository categoryRepository,
+         ExpenseService expenseService
+ ) {
+  this.expensesCvsReader = expensesCvsReader;
+  this.expenseRepository = expenseRepository;
+  this.categoryRepository = categoryRepository;
+  this.expenseService = expenseService;
+ }
+
+ @GetMapping("/expenses")
+ public String showExpenses(
+         @RequestParam(defaultValue = "0") int page,
+         @RequestParam(value = "searchTerm", required = false) String searchTerm,
+         Model model
+ ) {
+  int size = 25;
+  Pageable pageable = PageRequest.of(page, size);
+  Page<ExpenseEntity> expensePage;
+
+  if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+   expensePage = expenseService.searchExpenses(searchTerm, pageable);
+  } else {
+   expensePage = expenseRepository.findAll(pageable);
+  }
+
+  List<ExpenseEntity> expenses = expensePage.getContent();
+  List<CategoryEntity> categories = categoryRepository.findAll();
+
+  model.addAttribute("expenses", expenses);
+  model.addAttribute("categories", categories);
+  model.addAttribute("expenseForm", new ExpenseFormDto());
+  model.addAttribute("totalCount", expensePage.getTotalElements());
+  model.addAttribute("currentPage", expensePage.getNumber());
+  model.addAttribute("totalPages", expensePage.getTotalPages());
+
+  return "expenses";
+ }
+
+ @PostMapping("/upload")
+ public String handleFileUpload(
+         @RequestParam("file") MultipartFile file,
+         RedirectAttributes redirectAttributes
+ ) {
+  String message = "";
+  log.info(".... uploading " + file.getName());
+  try {
+   if (file.isEmpty()) {
+    message = "Please select a file to upload.";
+   } else {
+    ExpenseUploadResult result = expensesCvsReader.read(file.getInputStream());
+    redirectAttributes.addFlashAttribute("result", result);
+    message = "File uploaded successfully.";
+
+   }
+  } catch (Exception e) {
+   message = "Error uploading file: " + e.getMessage();
+
+  }
+
+  log.info("....  " + message);
+
+  redirectAttributes.addFlashAttribute("message", message);
+  return "redirect:/expenses";
+ }
+
+ @PostMapping("/expenses/updateCategory")
+ public String batchUpdateCategory(
+         @RequestParam("categoryId") Long categoryId,
+         @RequestParam("selectedExpenseIds") String[] selectedExpenseIds,
+         RedirectAttributes redirectAttributes,
+         HttpServletRequest request
+ ) {
+  List<Long> expenseIds = Arrays.stream(selectedExpenseIds)
+          .map(Long::valueOf)
+          .collect(Collectors.toList());
+  log.info("....expenses to update: " + expenseIds.size());
+
+  List<ExpenseEntity> expenses = expenseRepository.findAllById(expenseIds);
+
+  log.info(".... expenses updated: " + expenses);
+
+  try {
+   expenseService.batchUpdateCategory(categoryId, expenses);
+   redirectAttributes.addFlashAttribute("successMessage", "Expenses updated successfully");
+  } catch (Exception e) {
+   redirectAttributes.addFlashAttribute("errorMessage", "Error updating expenses: " + e.getMessage());
+  }
+
+  String redirectUrl = "redirect:/expenses/search";
+  String queryString = request.getQueryString();
+  if (queryString != null) {
+   redirectUrl += "?" + queryString;
+  }
+
+  return redirectUrl;
+ }
 
 
-    public ExpenseController(ExpensesCvsReaderING expensesCvsReader, ExpenseRepository expenseRepository, CategoryRepository categoryRepository, ExpenseService expenseService) {
-        this.expensesCvsReader = expensesCvsReader;
-        this.expenseRepository = expenseRepository;
-        this.categoryRepository = categoryRepository;
-        this.expenseService = expenseService;
-    }
+ @PostMapping("/expenses/clearCategory")
+ public String batchClearCategory(
+         @RequestParam("categoryId") Long categoryId,
+         @RequestParam("selectedExpenseIds") String[] selectedExpenseIds,
+         RedirectAttributes redirectAttributes,
+         HttpServletRequest request
+ ) {
+  List<Long> expenseIds = Arrays.stream(selectedExpenseIds)
+          .map(Long::valueOf)
+          .collect(Collectors.toList());
+  log.info("...expenses to update: " + expenseIds.size());
+
+  List<ExpenseEntity> expenses = expenseRepository.findAllById(expenseIds);
+
+  log.info("...expenses updated: " + expenses);
+
+  try {
+   for (ExpenseEntity expense : expenses) {
+    expense.getCategories().clear(); // clear all existing categories
+    expenseRepository.save(expense);
+   }
+   redirectAttributes.addFlashAttribute("successMessage", "Categories cleared successfully");
+  } catch (Exception e) {
+   redirectAttributes.addFlashAttribute("errorMessage", "Error clearing categories: " + e.getMessage());
+  }
+
+  String redirectUrl = "redirect:/expenses/search";
+  String queryString = request.getQueryString();
+  if (queryString != null) {
+   redirectUrl += "?" + queryString;
+  }
+
+  return redirectUrl;
+ }
 
 
-    /// BREAKS THE SEARCH RESULTS
-    @GetMapping("/expenses")
-    public String showExpenses(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(value = "searchTerm", required = false) String searchTerm,
-            Model model) {
-        int size = 25; // or whatever number you want
-        Pageable pageable = PageRequest.of(page, size);
-        Page<ExpenseEntity> expensePage;
+ @GetMapping("/expenses/search")
+ public String searchExpenses(
+         @RequestParam(value = "searchTerm", required = false) String searchTerm,
+         @RequestParam(value = "searchTermInput", required = false) String searchTermInput,
+         @RequestParam(defaultValue = "0") int page,
+         Model model
+ ) {
+  if (searchTermInput != null) {
+   searchTerm = searchTermInput;
+   log.info(".... SEARCHING FOR: " + searchTerm);
+  }
+  int size = 25;
+  Pageable pageable = PageRequest.of(page, size);
+  Page<ExpenseEntity> expensePage = expenseService.searchExpenses(searchTerm, pageable);
 
-        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
-            // if search term is provided, perform a search
-            expensePage = expenseService.searchExpenses(searchTerm, pageable);
-        } else {
-            // if no search term is provided, return all expenses
-            expensePage = expenseRepository.findAll(pageable);
-        }
+  List<ExpenseEntity> searchResults = expensePage.getContent();
+  List<CategoryEntity> categories = categoryRepository.findAll();
 
-        List<ExpenseEntity> expenses = expensePage.getContent();
-        List<CategoryEntity> categories = categoryRepository.findAll();
+  model.addAttribute("expenses", searchResults);
+  model.addAttribute("searchCount", searchResults.size());
+  model.addAttribute("categories", categories);
+  model.addAttribute("searchTerm", searchTerm);
+  model.addAttribute("currentPage", expensePage.getNumber());
+  model.addAttribute("totalPages", expensePage.getTotalPages());
 
-        model.addAttribute("expenses", expenses);
-        model.addAttribute("categories", categories);
-        model.addAttribute("expenseForm", new ExpenseFormDto());
-        model.addAttribute("totalCount", expensePage.getTotalElements());
-        model.addAttribute("currentPage", expensePage.getNumber());
-        model.addAttribute("totalPages", expensePage.getTotalPages());
+  return "expenses";
+ }
 
-        return "expenses";
-    }
-
-
-
-
-    @PostMapping("/upload")
-    public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
-        String message = "";
-        try {
-            if (file.isEmpty()) {
-                message = "Please select a file to upload.";
-            } else {
-                ExpenseUploadResult result = expensesCvsReader.read(file.getInputStream());
-                redirectAttributes.addFlashAttribute("result", result);
-                message = "File uploaded successfully.";
-            }
-        } catch (Exception e) {
-            message = "Error uploading file: " + e.getMessage();
-        }
-
-        redirectAttributes.addFlashAttribute("message", message);
-        return "redirect:/expenses";
-    }
-
-
-
-    @PostMapping("/expenses/updateCategory")
-    public String batchUpdateCategory(
-            @RequestParam("categoryId") Long categoryId,
-            @RequestParam("selectedExpenseIds") String[] selectedExpenseIds,
-            RedirectAttributes redirectAttributes,
-            HttpServletRequest request) {
-
-        List<Long> expenseIds = Arrays.stream(selectedExpenseIds)
-                .map(Long::valueOf)
-                .collect(Collectors.toList());
-        log.info("....expenses to update: " + expenseIds.size());
-
-        List<ExpenseEntity> expenses = expenseRepository.findAllById(expenseIds);
-
-        log.info(".... expenses updated: " + expenses);
-
-        try {
-            expenseService.batchUpdateCategory(categoryId, expenses);
-            redirectAttributes.addFlashAttribute("successMessage", "Expenses updated successfully");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Error updating expenses: " + e.getMessage());
-        }
-
-        String redirectUrl = "redirect:/expenses/search";
-        String queryString = request.getQueryString();
-        if (queryString != null) {
-            redirectUrl += "?" + queryString;
-        }
-
-        return redirectUrl;
-    }
-
-
-
-
-    @GetMapping("/expenses/search")
-    public String searchExpenses(@RequestParam(value = "searchTerm", required = false) String searchTerm,
-                                 @RequestParam(value = "searchTermInput", required = false) String searchTermInput,
-                                 @RequestParam(defaultValue = "0") int page,
-                                 Model model) {
-        if (searchTermInput != null) {
-            searchTerm = searchTermInput;
-            log.info(".... SEARCHING FOR: "+ searchTerm);
-        }
-        int size = 25;
-        Pageable pageable = PageRequest.of(page, size); // don't forget to define the 'size' variable as your desired page size
-        Page<ExpenseEntity> expensePage = expenseService.searchExpenses(searchTerm, pageable);
-
-        List<ExpenseEntity> searchResults = expensePage.getContent();
-        List<CategoryEntity> categories = categoryRepository.findAll();
-
-        model.addAttribute("expenses", searchResults);
-        model.addAttribute("searchCount", searchResults.size());
-        model.addAttribute("categories", categories);
-        model.addAttribute("searchTerm", searchTerm);
-        model.addAttribute("currentPage", expensePage.getNumber());
-        model.addAttribute("totalPages", expensePage.getTotalPages());
-
-        return "expenses";
-    }
-
-
-//    @GetMapping("/expenses/search")
-//    public String searchExpenses(@RequestParam(value = "searchTerm", required = false) String searchTerm,
-//                                 @RequestParam(value = "searchTermInput", required = false) String searchTermInput,
-//                                 Model model) {
-//        if (searchTermInput != null) {
-//            searchTerm = searchTermInput;
-//            log.info(".... SEARCHING FOR: "+ searchTerm);
-//        }        List<ExpenseEntity> searchResults = expenseService.searchExpenses(searchTerm);
-//        List<CategoryEntity> categories = categoryRepository.findAll();
-//        model.addAttribute("expenses", searchResults);
-//        model.addAttribute("searchCount", searchResults.size());
-//        model.addAttribute("categories", categories);
-//        model.addAttribute("searchTerm", searchTerm);
-//        return "expenses";
-//    }
-//
-//    @GetMapping("/expenses/filter")
-//    public String filterExpensesByDate(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-//                                       @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
-//                                       Model model) {
-//        List<ExpenseEntity> filteredResults = expenseService.filterExpensesByDate(startDate, endDate);
-//        model.addAttribute("expenses", filteredResults);
-//        model.addAttribute("filteredCount", filteredResults.size());
-//        return "expenses";
-//    }
+ @GetMapping("/expenses/filter")
+ public String filterExpensesByDate(@RequestParam("startDate") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate startDate,
+                                    @RequestParam("endDate") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate endDate,
+                                    Model model) {
+  List<ExpenseEntity> filteredResults = expenseService.filterExpensesByDate(startDate, endDate);
+  model.addAttribute("expenses", filteredResults);
+  model.addAttribute("filteredCount", filteredResults.size());
+  model.addAttribute("currentPage", 0);
+  return "expenses";
+ }
 
 
 }

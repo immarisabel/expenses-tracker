@@ -116,12 +116,7 @@
             background: #eef1f5;
         }
 
-<!--        .title{-->
-<!--            font-size: 2rem;-->
-<!--            color: #4ea1d3;-->
-<!--            font-weight: bold;-->
-<!--            vertical-align: middle;-->
-<!--        }-->
+
         .form-container {
             display: flex;
             flex-direction: row;
@@ -240,6 +235,7 @@
         <form action="/upload" method="post" enctype="multipart/form-data"
               style="display: flex; align-items: center; gap: 10px;">
             <input id="file" type="file" name="file" class="form-control"/>
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
             <input class="myButton" type="submit" value="upload"/>
         </form>
 
@@ -288,6 +284,8 @@
     <a th:if="${currentPage + 1 < totalPages}" th:href="@{/expenses(page=${currentPage + 1})}">Next</a>
 </div>
 
+
+
 <!--UPDATE CATEGORIES-->
 <form th:action="@{/expenses/updateCategory(searchTerm=${searchTerm})}" method="post" th:withQueryString="true">
     <select name="categoryId">
@@ -295,7 +293,6 @@
         <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.category}"></option>
     </select>
     <button type="submit">Update</button>
-
 
 <table>
     <colgroup>
@@ -338,9 +335,8 @@
     </tr>
     </tbody>
 </table>
-
-
 </form>
+
 
 <script>
     // Function to toggle the selection of all checkboxes

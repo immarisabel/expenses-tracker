@@ -51,6 +51,27 @@
     li a:hover {
         background-color: #111;
     }
+
+
+       .myButton {
+    background-color: #6474e5;
+    color: #ffff; /* Text color */
+    border: none; /* Removes the default button border */
+    padding: 5px 10px; /* Top-bottom padding, left-right padding */
+    text-align: center; /* Center the text */
+    text-decoration: none; /* Remove default underline */
+    display: inline-block;
+    font-size: 16px; /* Size of the text */
+    margin: 2px 2px; /* Top-bottom margin, left-right margin */
+    cursor: pointer; /* Makes the cursor a hand when hovering over the button */
+    border-radius: 8px; /* Rounds the corners of the button */
+    transition-duration: 0.4s; /* Creates a nice fade effect when hovering over the button */
+}
+
+.myButton:hover {
+    background-color: #f4a4a4; /* Changes the color when hovering */
+    color: white;
+}
 </style>
 <body>
 <header class="navbar">
@@ -66,52 +87,83 @@
     <canvas id="chart" class="chart-canvas" margin="1rem"></canvas>
 
 
-
-
-
-
     <script th:inline="javascript">
-    /* Retrieve the data from the server-side */
-    var labels = /*[[${labels}]]*/ [];
-    var credits = /*[[${credits}]]*/ [];
-    var debits = /*[[${debits}]]*/ [];
+/* Retrieve the data from the server-side */
+var labels = /*[[${labels}]]*/ [];
+var credits = /*[[${credits}]]*/ [];
+var debits = /*[[${debits}]]*/ [];
 
-    /* Create the chart */
-    var ctx = document.getElementById('chart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Credits',
-                data: credits,
-                 backgroundColor: 'rgba(100, 116, 229, 0.5)', // #6474e5 at 50% opacity
-    borderColor: 'rgb(100, 116, 229)', // #6474e5
+/* Create a map of month numbers to names */
+var monthNumberToNameMap = {
+    "01": "JANUARY",
+    "02": "FEBRUARY",
+    "03": "MARCH",
+    "04": "APRIL",
+    "05": "MAY",
+    "06": "JUNE",
+    "07": "JULY",
+    "08": "AUGUST",
+    "09": "SEPTEMBER",
+    "10": "OCTOBER",
+    "11": "NOVEMBER",
+    "12": "DECEMBER"
+};
 
-                borderWidth: 1
-            }, {
-                label: 'Debits',
-                data: debits,
-               	backgroundColor: 'rgba(244, 164, 164, 0.5)', // #f4a4a4 at 50% opacity
-    borderColor: 'rgb(244, 164, 164)', // #f4a4a4
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    grid: {
-                        display: false
-                    }
-                },
-                y: {
-                    beginAtZero: true
+/* Create a new labels array for display */
+var displayLabels = labels.map(label => {
+    var monthNumber = label.slice(0, 2); // Get the month number
+    var year = label.slice(2); // Get the year
+    var monthName = monthNumberToNameMap[monthNumber];
+    return `${monthName} ${year}`;
+});
+
+/* Create the chart */
+var ctx = document.getElementById('chart').getContext('2d');
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: displayLabels,
+        datasets: [{
+            label: 'Credits',
+            data: credits,
+            backgroundColor: 'rgba(100, 116, 229, 0.5)', // #6474e5 at 50% opacity
+            borderColor: 'rgb(100, 116, 229)', // #6474e5
+            borderWidth: 1
+        }, {
+            label: 'Debits',
+            data: debits,
+            backgroundColor: 'rgba(244, 164, 164, 0.5)', // #f4a4a4 at 50% opacity
+            borderColor: 'rgb(244, 164, 164)', // #f4a4a4
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            x: {
+                grid: {
+                    display: false
                 }
+            },
+            y: {
+                beginAtZero: true
+            }
+        },
+        onClick: function(event, array) {
+            if (array.length > 0) {
+                var label = labels[array[0].index];
+                window.location.href = '/chart/' + label;
             }
         }
-    });
+    }
+});
 </script>
+
+
+
+
+
+
 </div>
 </body>
 </html>

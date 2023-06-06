@@ -26,8 +26,6 @@ public class CategoryEntity {
 
     @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
-            @Fetch(FetchMode.JOIN)
+    @Fetch(FetchMode.JOIN)
     private Set<ExpenseEntity> expenses = new HashSet<>();
-
-
 }

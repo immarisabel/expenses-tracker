@@ -13,24 +13,20 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
-
 @Service
- public class ExpenseService {
-
-  @Autowired
-  public ExpenseService(ExpenseRepository expenseRepository, ExpenseRepository expenseRepository1, CategoryRepository categoryRepository) {
-   this.expenseRepository = expenseRepository1;
-   this.categoryRepository = categoryRepository;
-  }
+public class ExpenseService {
 
  private final ExpenseRepository expenseRepository;
  private final CategoryRepository categoryRepository;
 
-
-// public List<ExpenseEntity> searchExpenses(String searchTerm) {
-//  String searchTermLower = searchTerm.toLowerCase();
-//  return expenseRepository.findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(searchTermLower);
-// }
+ @Autowired
+ public ExpenseService(
+         ExpenseRepository expenseRepository,
+         CategoryRepository categoryRepository
+ ) {
+  this.expenseRepository = expenseRepository;
+  this.categoryRepository = categoryRepository;
+ }
 
  public Page<ExpenseEntity> searchExpenses(String searchTerm, Pageable pageable) {
   String searchTermLower = searchTerm.toLowerCase();
@@ -43,17 +39,13 @@ import java.util.List;
           .orElseThrow(() -> new RuntimeException("Category not found with id " + categoryId));
 
   for (ExpenseEntity expense : expenses) {
-   expense.getCategories().clear();  // clear all existing categories
+   expense.getCategories().clear(); // clear all existing categories
    expense.addCategory(category); // update category
    expenseRepository.save(expense);
   }
-
-  }
+ }
 
  public List<ExpenseEntity> filterExpensesByDate(LocalDate startDate, LocalDate endDate) {
   return expenseRepository.findByDateBetween(startDate, endDate);
  }
-
-
 }
-

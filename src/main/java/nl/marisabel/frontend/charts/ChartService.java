@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,13 +101,14 @@ public class ChartService {
 
   Map<String, Double> monthlyCredits = new LinkedHashMap<>();
 
+  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMyyyy");
   for (ExpenseEntity expense : allExpenses) {
-   String month = expense.getDate().getMonth().toString();
+   String monthYear = expense.getDate().format(formatter);
    double amount = expense.getAmount();
    String creditOrDebit = expense.getCreditOrDebit();
 
    if ("credit".equalsIgnoreCase(creditOrDebit)) {
-    monthlyCredits.merge(month, amount, Double::sum);
+    monthlyCredits.merge(monthYear, amount, Double::sum);
    }
   }
 
@@ -117,14 +119,14 @@ public class ChartService {
   List<ExpenseEntity> allExpenses = expenseRepository.findAll();
 
   Map<String, Double> monthlyDebits = new LinkedHashMap<>();
-
+  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMyyyy");
   for (ExpenseEntity expense : allExpenses) {
-   String month = expense.getDate().getMonth().toString();
+   String monthYear = expense.getDate().format(formatter);
    double amount = expense.getAmount();
    String creditOrDebit = expense.getCreditOrDebit();
 
    if ("debit".equalsIgnoreCase(creditOrDebit)) {
-    monthlyDebits.merge(month, amount, Double::sum);
+    monthlyDebits.merge(monthYear, amount, Double::sum);
    }
   }
 

@@ -15,7 +15,6 @@ import java.util.Map;
 
 @Controller
 @Log4j2
-@RequestMapping("/chart")
 public class ChartController {
 
  private final ChartService chartService;
@@ -24,7 +23,7 @@ public class ChartController {
   this.chartService = chartService;
  }
 
- @GetMapping
+ @GetMapping("/grandTotalChart")
  public String showChart(Model model) {
   int totalCredits = chartService.getTotalCredits();
   int totalDebits = chartService.getTotalDebits();
@@ -40,7 +39,7 @@ public class ChartController {
 
 
 
- @GetMapping("/months")
+ @GetMapping("/chart")
  public String showChartWithMonths(Model model) {
   Map<String, Double> monthlyCredits = chartService.getMonthlyCredits();
   Map<String, Double> monthlyDebits = chartService.getMonthlyDebits();
@@ -75,7 +74,7 @@ public class ChartController {
  }
 
 
- @GetMapping("/{month}")
+ @GetMapping("/chart/{month}")
  public String showChartByMonthlyCategories(@PathVariable String month, Model model) {
   // Parse the month from the request
   DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMyyyy");
