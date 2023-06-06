@@ -73,6 +73,7 @@
     background-clip:padding-box;
     border:1px solid #ced4da;
     border-radius:.25rem;
+    margin-top:1rem;
     transition:border-color .15s ease-in-out,box-shadow .15s ease-in-out
 }
 .form-control::-ms-expand{
@@ -151,7 +152,10 @@
 
     <h2>Current categories</h2>
     <ul>
-        <li th:each="category : ${categories}" th:text="${category.category}"></li>
+        <li th:each="category : ${categories}">
+            <span th:text="${category.category}"></span>
+            <a th:href="@{/categories/delete/{id}(id=${category.id})}" class="myButton">del</a>
+        </li>
     </ul>
 
 

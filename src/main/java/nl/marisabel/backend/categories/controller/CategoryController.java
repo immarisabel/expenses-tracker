@@ -2,12 +2,10 @@ package nl.marisabel.backend.categories.controller;
 
 import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.repository.CategoryRepository;
+import nl.marisabel.backend.expenses.entity.ExpenseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,6 +30,23 @@ public class CategoryController {
     @PostMapping("/add")
     public String addCategory(@ModelAttribute("newCategory") CategoryEntity newCategory) {
         categoryRepository.save(newCategory);
+        return "redirect:/categories";
+    }
+
+
+    @GetMapping("/categories/delete/{id}")
+    public String deleteCategory(@PathVariable("id") Long categoryId) {
+        CategoryEntity category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("Category not found with id " + categoryId));
+
+        // Remove the category from expenses
+        for (ExpenseEntity expense : category.getExpenses()) {
+            expense.getCategories().remove(category);
+        }
+
+        // Delete the category
+        categoryRepository.delete(category);
+
         return "redirect:/categories";
     }
 
