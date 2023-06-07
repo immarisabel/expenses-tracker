@@ -49,6 +49,7 @@ public class SecurityConfig {
                   .requestMatchers("/expenses/updateCategory/**").hasRole("ADMIN")
                   .requestMatchers("/expenses/filter").hasRole("ADMIN")
                   .requestMatchers("/categories/delete/**").hasRole("ADMIN")
+                  .requestMatchers("/goals/**").hasRole("ADMIN")
 
 
           )
