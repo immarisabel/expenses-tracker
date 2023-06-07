@@ -13,25 +13,17 @@
 <div th:each="goal : ${goals}" class="goal">
     <p th:text="${goal.name}"></p>
     <div class="slider-container">
-        <input type="range" min="0" th:attr="max=${goal.max}, value=${goal.value}" class="slider">
+        <input type="range" min="0" th:attr="max=${goal.max}, value=${goal.value}" class="slider" th:id="${goal.name + 'Slider'}">
         <p class="amount" th:id="${goal.name + 'Amount'}" th:text="${goal.value}"></p>
     </div>
+
 </div>
 
-<p>Total allocated: <span id="totalAllocated">0</span>/150.00</p>
+<p>Total allocated: <span id="totalAllocated" th:text="${totalAllocated}"></span> / <span id="totalToAllocate" th:text="${totalToAllocate}"></span></p>
 
 <script th:inline="javascript">
-  let insuranceSlider = document.getElementById("insuranceSlider");
-  let houseSlider = document.getElementById("houseSlider");
-  let clothesSlider = document.getElementById("clothesSlider");
-
-  let insuranceAmount = document.getElementById("insuranceAmount");
-  let houseAmount = document.getElementById("houseAmount");
-  let clothesAmount = document.getElementById("clothesAmount");
   let totalAllocated = document.getElementById("totalAllocated");
-
-  let sliders = [insuranceSlider, houseSlider, clothesSlider];
-  let amounts = [insuranceAmount, houseAmount, clothesAmount];
+  let goalContainers = document.getElementsByClassName("slider-container");
 
   function updateColor(slider) {
     let value = slider.value;
@@ -51,25 +43,31 @@
 
   function updateTotalAllocated() {
     let total = 0;
-    for (let slider of sliders) {
+    for (let container of goalContainers) {
+      let slider = container.getElementsByClassName("slider")[0];
       total += Number(slider.value);
     }
-    totalAllocated.textContent = total;
-    if (total === 150) {
+    totalAllocated.textContent = total.toFixed(2);
+    if (total === /*[[${totalToAllocate}]]*/) {
       totalAllocated.style.color = "#4caf50"; // Green
     } else {
       totalAllocated.style.color = "#f44336"; // Red
     }
   }
 
-  for (let i = 0; i < sliders.length; i++) {
-    sliders[i].oninput = function() {
-      updateColor(this);
-      updateAmount(this, amounts[i]);
+  for (let container of goalContainers) {
+    let slider = container.getElementsByClassName("slider")[0];
+    let amount = container.getElementsByClassName("amount")[0];
+    slider.oninput = function() {
+      updateColor(slider);
+      updateAmount(slider, amount);
       updateTotalAllocated();
     };
   }
 </script>
+
+
+
 
 
 </body>

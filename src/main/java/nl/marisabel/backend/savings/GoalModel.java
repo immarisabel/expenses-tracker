@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 public class GoalModel {
     private String name;
-    private int max;
-    private int value;
+    private double max;
+    private double value;
 
 
 }
