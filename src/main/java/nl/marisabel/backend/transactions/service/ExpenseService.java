@@ -1,10 +1,10 @@
-package nl.marisabel.backend.expenses.service;
+package nl.marisabel.backend.transactions.service;
 
 import jakarta.transaction.Transactional;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.repository.CategoryRepository;
-import nl.marisabel.backend.expenses.entity.ExpenseEntity;
-import nl.marisabel.backend.expenses.repository.ExpenseRepository;
+import nl.marisabel.backend.transactions.entity.ExpenseEntity;
+import nl.marisabel.backend.transactions.repository.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

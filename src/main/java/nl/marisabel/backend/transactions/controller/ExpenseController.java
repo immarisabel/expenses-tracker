@@ -1,14 +1,14 @@
-package nl.marisabel.backend.expenses.controller;
+package nl.marisabel.backend.transactions.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.repository.CategoryRepository;
-import nl.marisabel.backend.expenses.entity.ExpenseEntity;
-import nl.marisabel.backend.expenses.entity.ExpenseFormDto;
-import nl.marisabel.backend.expenses.repository.ExpenseRepository;
-import nl.marisabel.backend.expenses.service.ExpenseService;
-import nl.marisabel.frontend.charts.ExpenseUploadResult;
+import nl.marisabel.backend.transactions.entity.ExpenseEntity;
+import nl.marisabel.backend.transactions.entity.ExpenseFormDto;
+import nl.marisabel.backend.transactions.repository.ExpenseRepository;
+import nl.marisabel.backend.transactions.service.ExpenseService;
+import nl.marisabel.frontend.upload.ExpenseUploadResult;
 import nl.marisabel.util.ExpensesCvsReaderING;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

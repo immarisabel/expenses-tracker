@@ -1,5 +1,6 @@
-package nl.marisabel.backend.savings;
+package nl.marisabel.frontend.goals;
 
+import nl.marisabel.frontend.goals.GoalModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,5 +29,8 @@ public class GoalController {
 
         return "goals";
     }
+
+
+
 }
 

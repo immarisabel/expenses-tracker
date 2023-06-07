@@ -1,7 +1,6 @@
-package nl.marisabel.backend.expenses.entity;
+package nl.marisabel.backend.transactions.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

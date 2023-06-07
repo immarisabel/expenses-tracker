@@ -1,8 +1,8 @@
-package nl.marisabel.backend.expenses.controller;
+package nl.marisabel.backend.transactions.controller;
 
 import lombok.Getter;
 import lombok.Setter;
-import nl.marisabel.backend.expenses.entity.ExpenseEntity;
+import nl.marisabel.backend.transactions.entity.ExpenseEntity;
 
 import java.util.ArrayList;
 import java.util.List;

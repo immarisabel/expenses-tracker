@@ -1,12 +1,11 @@
-package nl.marisabel.backend.expenses.repository;
+package nl.marisabel.backend.transactions.repository;
 
 import nl.marisabel.backend.categories.entity.CategoryEntity;
-import nl.marisabel.backend.expenses.entity.ExpenseEntity;
+import nl.marisabel.backend.transactions.entity.ExpenseEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -1,4 +1,4 @@
-package nl.marisabel.backend.savings;
+package nl.marisabel.frontend.goals;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

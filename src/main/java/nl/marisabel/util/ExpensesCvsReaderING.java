@@ -4,9 +4,9 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import lombok.extern.log4j.Log4j2;
-import nl.marisabel.backend.expenses.repository.ExpenseRepository;
-import nl.marisabel.backend.expenses.entity.ExpenseEntity;
-import nl.marisabel.frontend.charts.ExpenseUploadResult;
+import nl.marisabel.backend.transactions.repository.ExpenseRepository;
+import nl.marisabel.backend.transactions.entity.ExpenseEntity;
+import nl.marisabel.frontend.upload.ExpenseUploadResult;
 import org.springframework.stereotype.Component;
 
 import java.io.InputStream;

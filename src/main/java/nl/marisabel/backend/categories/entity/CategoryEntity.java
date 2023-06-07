@@ -1,11 +1,10 @@
 package nl.marisabel.backend.categories.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import nl.marisabel.backend.expenses.entity.ExpenseEntity;
+import nl.marisabel.backend.transactions.entity.ExpenseEntity;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 

@@ -3,8 +3,8 @@ package nl.marisabel.frontend.charts;
 import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.repository.CategoryRepository;
-import nl.marisabel.backend.expenses.repository.ExpenseRepository;
-import nl.marisabel.backend.expenses.entity.ExpenseEntity;
+import nl.marisabel.backend.transactions.repository.ExpenseRepository;
+import nl.marisabel.backend.transactions.entity.ExpenseEntity;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.springframework.stereotype.Service;
 

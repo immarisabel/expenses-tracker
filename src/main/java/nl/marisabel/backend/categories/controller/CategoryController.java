@@ -2,7 +2,7 @@ package nl.marisabel.backend.categories.controller;
 
 import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.repository.CategoryRepository;
-import nl.marisabel.backend.expenses.entity.ExpenseEntity;
+import nl.marisabel.backend.transactions.entity.ExpenseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
