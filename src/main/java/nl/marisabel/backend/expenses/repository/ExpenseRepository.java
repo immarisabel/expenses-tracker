@@ -21,6 +21,8 @@ public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long> {
  List<ExpenseEntity> findByDateBetween(LocalDate startDate, LocalDate endDate);
 
  boolean existsByDescriptionIgnoreCase(String description);
+ boolean existsByDescriptionIgnoreCaseAndEntityIgnoreCase(String description, String entity);
+
 
  @Query("SELECT e FROM ExpenseEntity e JOIN e.categories c WHERE e.date BETWEEN :startDate AND :endDate AND c = :category")
  List<ExpenseEntity> findAllByDateBetweenAndCategory(LocalDate startDate, LocalDate endDate, CategoryEntity category);

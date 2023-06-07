@@ -1,55 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <style>
-  body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
-  }
 
-  .slider {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 25px;
-    background: #d3d3d3;
-    outline: none;
-    opacity: 0.7;
-    -webkit-transition: .2s;
-    transition: opacity .2s;
-    border-radius: 12px;
-  }
-
-  .slider:hover {
-    opacity: 1;
-  }
-
-  .goal {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 80%;
-    margin-bottom: 1em;
-  }
-
-.slider-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-grow: 1;
-  margin-left: 1em;
-}
-
-
-  .amount {
-    margin-left: 1em;
-    font-size: 1.5em;
-  }
-</style>
-</head>
+<header>
+    <div th:replace="~{fragments/header :: header}"></div>
+</header>
 <body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
 
 <h1>Allocate your funds</h1>
 

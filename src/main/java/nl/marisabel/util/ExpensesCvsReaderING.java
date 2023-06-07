@@ -49,9 +49,10 @@ public class ExpensesCvsReaderING {
             while ((record = csvReader.readNext()) != null) {
                 try {
                     String description = record[8];
+                    String entity = record[1];
 
                     // Check for duplicates before adding to the database
-                    boolean isDuplicate = expenseRepository.existsByDescriptionIgnoreCase(description);
+                    boolean isDuplicate = expenseRepository.existsByDescriptionIgnoreCaseAndEntityIgnoreCase(description, entity);
 
                     if (!isDuplicate) {
                         ExpenseEntity expense = new ExpenseEntity();

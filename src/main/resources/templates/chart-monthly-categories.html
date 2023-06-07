@@ -1,66 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <title>Chart View</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
-</head>
-<style>
-    .chart-canvas {
-        width: 10pt;
-        height: 10pt;
-    }
-    body {
-        font-family: 'Quicksand', sans-serif;
-        padding: 0;
-        margin: 0;
-        background: #eef1f5;
-    }
-    .navbar {
-        background-color: #6474e5;
-        padding: 10px 15px;
-        color: #fff;
-    }
-    .navbar a {
-        color: #fff;
-        margin-left: 15px;
-    }
-    .navbar h1 {
-        color: #fff;
-        font-size: 2rem;
-    }
-    ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-    }
-    li {
-        float: left;
-    }
-    li a {
-        display: block;
-        color: #ffffff;
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-    }
-    li a:hover {
-        background-color: #111;
-    }
-</style>
-<body>
-<header class="navbar">
-  <h1>Expense Tracker</h1>
-  <ul class="nav">
-    <li><a href="/expenses">View Expenses</a></li>
-    <li><a href="/chart">View Charts</a></li>
-    <li><a href="/categories">Manage Categories</a></li>
-  </ul>
+
+<header>
+  <div th:replace="~{fragments/header :: header}"></div>
 </header>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
 <div class="container">
 
   <canvas id="chart" class="chart-canvas" margin="1rem"></canvas>
