@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+  }
+
+  .slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 25px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    border-radius: 12px;
+  }
+
+  .slider:hover {
+    opacity: 1;
+  }
+
+  .goal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+    margin-bottom: 1em;
+  }
+
+.slider-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-grow: 1;
+  margin-left: 1em;
+}
+
+
+  .amount {
+    margin-left: 1em;
+    font-size: 1.5em;
+  }
+</style>
+</head>
+<body>
+
+<h1>Allocate your funds</h1>
+
+<div th:each="goal : ${goals}" class="goal">
+    <p th:text="${goal.name}"></p>
+    <div class="slider-container">
+        <input type="range" min="0" th:attr="max=${goal.max}, value=${goal.value}" class="slider">
+        <p class="amount" th:id="${goal.name + 'Amount'}" th:text="${goal.value}"></p>
+    </div>
+</div>
+
+<p>Total allocated: <span id="totalAllocated">0</span>/150.00</p>
+
+<script th:inline="javascript">
+  let insuranceSlider = document.getElementById("insuranceSlider");
+  let houseSlider = document.getElementById("houseSlider");
+  let clothesSlider = document.getElementById("clothesSlider");
+
+  let insuranceAmount = document.getElementById("insuranceAmount");
+  let houseAmount = document.getElementById("houseAmount");
+  let clothesAmount = document.getElementById("clothesAmount");
+  let totalAllocated = document.getElementById("totalAllocated");
+
+  let sliders = [insuranceSlider, houseSlider, clothesSlider];
+  let amounts = [insuranceAmount, houseAmount, clothesAmount];
+
+  function updateColor(slider) {
+    let value = slider.value;
+    if (value < 49) {
+      slider.style.background = "#f44336"; // Red
+    } else if (value >= 49 && value <= 51) {
+      slider.style.background = "#ffeb3b"; // Yellow
+    } else {
+      slider.style.background = "#4caf50"; // Green
+    }
+  }
+
+  function updateAmount(slider, amount) {
+    let value = slider.value;
+    amount.textContent = value;
+  }
+
+  function updateTotalAllocated() {
+    let total = 0;
+    for (let slider of sliders) {
+      total += Number(slider.value);
+    }
+    totalAllocated.textContent = total;
+    if (total === 150) {
+      totalAllocated.style.color = "#4caf50"; // Green
+    } else {
+      totalAllocated.style.color = "#f44336"; // Red
+    }
+  }
+
+  for (let i = 0; i < sliders.length; i++) {
+    sliders[i].oninput = function() {
+      updateColor(this);
+      updateAmount(this, amounts[i]);
+      updateTotalAllocated();
+    };
+  }
+</script>
+
+
+</body>
+</html>
