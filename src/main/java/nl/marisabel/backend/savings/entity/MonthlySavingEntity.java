@@ -21,12 +21,7 @@ public class MonthlySavingEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private Month month;
+    private Month savingsMonth;
     private double total;
 
-    // getters and setters
-
-    // equals and hashCode methods
-
-    // toString method
 }

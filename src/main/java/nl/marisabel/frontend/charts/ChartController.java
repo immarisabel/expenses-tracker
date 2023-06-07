@@ -88,6 +88,7 @@ public class ChartController {
   List<String> labels = new ArrayList<>();
   List<Double> credits = new ArrayList<>();
   List<Double> debits = new ArrayList<>();
+  List<Double> savings = new ArrayList<>();
 
   for (Map.Entry<String, Double> entry : monthlyCreditsByCategory.entrySet()) {
    String category = entry.getKey();
@@ -97,11 +98,14 @@ public class ChartController {
    labels.add(category);
    credits.add(creditTotal);
    debits.add(debitTotal);
+   savings.add(creditTotal - debitTotal); // Compute savings for each category
   }
 
   model.addAttribute("labels", labels);
   model.addAttribute("credits", credits);
   model.addAttribute("debits", debits);
+  model.addAttribute("savings", savings);
+
 
   return "chart-monthly-categories";
  }

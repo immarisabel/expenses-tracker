@@ -23,14 +23,9 @@ public class SavingsEntity {
     private Long id;
 
     private double amount;
-    private Month month;
+    private Month savingsMonth;
 
     @ManyToOne
     private GoalEntity goal;
 
-    // getters and setters
-
-    // equals and hashCode methods
-
-    // toString method
 }
