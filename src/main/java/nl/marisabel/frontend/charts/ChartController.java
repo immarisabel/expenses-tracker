@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.Year;
 import java.time.YearMonth;
@@ -39,23 +40,13 @@ public class ChartController {
   return "chart";
  }
 
-
  @GetMapping("/chart")
- public String showChartWithMonths(Model model) {
+ public String showChartWithMonths(@RequestParam("year") int year, Model model) {
+  log.info(".... the year is " + year);
 
-  // Generate years for header and link navigation
-  Year year = Year.now();
-  int currentYear = year.getValue();
-  log.info(".... the year is " + currentYear);
-
-  int previousYear = currentYear - 1;
-  int nextYear = currentYear + 1;
-
-  log.info(".... previous and next = " + previousYear + " | " + nextYear);
-
-  // Get data for the current year
-  Map<String, Double> monthlyCredits = chartService.getMonthlyCreditsForYear(currentYear);
-  Map<String, Double> monthlyDebits = chartService.getMonthlyDebitsForYear(currentYear);
+  // Get data for the specified year
+  Map<String, Double> monthlyCredits = chartService.getMonthlyCreditsForYear(year);
+  Map<String, Double> monthlyDebits = chartService.getMonthlyDebitsForYear(year);
 
   // Generate labels and data for the chart
   List<String> labels = new ArrayList<>();
@@ -75,14 +66,62 @@ public class ChartController {
   model.addAttribute("labels", labels);
   model.addAttribute("credits", credits);
   model.addAttribute("debits", debits);
-  model.addAttribute("currentYear", currentYear);
+  model.addAttribute("currentYear", year);
 
   // Set previous and next year for pagination
+  int previousYear = year - 1;
+  int nextYear = year + 1;
   model.addAttribute("prevYear", previousYear);
   model.addAttribute("nextYear", nextYear);
 
   return "chart-months";
  }
+
+
+//
+// @GetMapping("/chart")
+// public String showChartWithMonths(Model model) {
+//
+//  // Generate years for header and link navigation
+//  Year year = Year.now();
+//  int currentYear = year.getValue();
+//  log.info(".... the year is " + currentYear);
+//
+//  int previousYear = currentYear - 1;
+//  int nextYear = currentYear + 1;
+//
+//  log.info(".... previous and next = " + previousYear + " | " + nextYear);
+//
+//  // Get data for the current year
+//  Map<String, Double> monthlyCredits = chartService.getMonthlyCreditsForYear(currentYear);
+//  Map<String, Double> monthlyDebits = chartService.getMonthlyDebitsForYear(currentYear);
+//
+//  // Generate labels and data for the chart
+//  List<String> labels = new ArrayList<>();
+//  List<Double> credits = new ArrayList<>();
+//  List<Double> debits = new ArrayList<>();
+//
+//  for (Map.Entry<String, Double> entry : monthlyCredits.entrySet()) {
+//   String month = entry.getKey();
+//   double creditTotal = monthlyCredits.getOrDefault(month, 0.0);
+//   double debitTotal = monthlyDebits.getOrDefault(month, 0.0);
+//
+//   labels.add(month);
+//   credits.add(creditTotal);
+//   debits.add(debitTotal);
+//  }
+//
+//  model.addAttribute("labels", labels);
+//  model.addAttribute("credits", credits);
+//  model.addAttribute("debits", debits);
+//  model.addAttribute("currentYear", currentYear);
+//
+//  // Set previous and next year for pagination
+//  model.addAttribute("prevYear", previousYear);
+//  model.addAttribute("nextYear", nextYear);
+//
+//  return "chart-months";
+// }
 
 
 
