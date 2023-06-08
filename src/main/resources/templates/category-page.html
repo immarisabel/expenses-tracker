@@ -66,10 +66,10 @@
     <table class="table table-categories">
         <thead>
         <tr>
-            <th scope="col">Category Name</th>
-            <th scope="col">Transactions</th>
-            <th scope="col">Edit</th>
-            <th scope="col">Delete</th>
+            <th scope="col" style="width:80%">Category Name</th>
+            <th scope="col" style="width:10%">Transactions</th>
+            <th scope="col" style="width:5%">Edit</th>
+            <th scope="col" style="width:5%">Delete</th>
         </tr>
         </thead>
         <tbody th:each="c : ${categories}">
@@ -83,15 +83,9 @@
                 <p th:text="${c.expenses.size()}"></p>
             </td>
             <td>
-                <form th:if="${category}" th:action="@{/categories/update}" method="post" th:object="${category}">
-                    <input type="hidden" th:field="*{id}">
-                  <div>
-                      <input class="form-control" style="float:left; width:80%;" type="text" th:field="*{category}" placeholder="Category Name">
-                      <button type="submit" style="float:right;" class="myButton">Update</button>
-                  </div>
-
-                </form>
-
+                <a th:href="@{/categories/update(id=${c.id})}" class="myButton" style="color:white;" alt="update ${c.category}">
+                    update
+                </a>
             </td>
             <td>
                 <form th:action="@{/categories/delete}" method="post">
@@ -105,11 +99,14 @@
         </tbody>
     </table>
 
-    <h2>Add Category</h2>
-    <form th:action="@{/categories/add}" method="post" th:object="${newCategory}">
-        <input class="form-control" type="text" th:field="*{category}" placeholder="New Category">
-        <button type="submit" class="btn btn-primary">Add Category</button>
-    </form>
+
+    <div th:replace="~{fragments/add-category-form}">update shelf</div>
+
+    <!--    <h2>Add Category</h2>-->
+<!--    <form th:action="@{/categories/add}" method="post" th:object="${newCategory}">-->
+<!--        <input class="form-control" type="text" th:field="*{category}" placeholder="New Category">-->
+<!--        <button type="submit" class="btn btn-primary">Add Category</button>-->
+<!--    </form>-->
 </div>
 </body>
 </html>

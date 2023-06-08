@@ -29,7 +29,7 @@ public class CategoryController {
         List<CategoryEntity> categories = categoryService.getCategories();
         model.addAttribute("categories", categories);
         model.addAttribute("newCategory", new CategoryEntity());
-        model.addAttribute("category", new CategoryEntity()); // Add this line
+        model.addAttribute("category", new CategoryEntity());
         return "category-page";
     }
 
@@ -43,20 +43,18 @@ public class CategoryController {
     @GetMapping("/update")
     public String showFormForUpdatingCategory(@RequestParam("id") Long id, Model model) {
         CategoryEntity category = categoryService.getCategory(id);
-        model.addAttribute("categories", categoryService.getCategories());
-        model.addAttribute("newCategory", new CategoryEntity());
         model.addAttribute("category", category);
-        log.info(".... updated "+ category.getId() + category.getCategory());
+        List<CategoryEntity> categories = categoryService.getCategories();
+        model.addAttribute("categories", categories);
         return "category-page";
     }
-
 
     @PostMapping("/update")
     public String updateCategory(@ModelAttribute("category") CategoryEntity category) {
         categoryService.saveOrUpdate(category);
-        log.info(".... updating");
         return "redirect:/categories";
     }
+
 
     @PostMapping("/delete")
     public String deleteCategory(@RequestParam("id") Long id, Model model, ExpenseEntity expense) {
