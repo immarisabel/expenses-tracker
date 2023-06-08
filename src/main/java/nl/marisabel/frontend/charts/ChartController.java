@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.Year;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -38,21 +40,27 @@ public class ChartController {
  }
 
 
-
  @GetMapping("/chart")
  public String showChartWithMonths(Model model) {
-  Map<String, Double> monthlyCredits = chartService.getMonthlyCredits();
-  Map<String, Double> monthlyDebits = chartService.getMonthlyDebits();
 
- log.info(".... Debits Mapped from service" + monthlyDebits);
-  log.info(".... Credits Mapped from service" + monthlyCredits);
+  // Generate years for header and link navigation
+  Year year = Year.now();
+  int currentYear = year.getValue();
+  log.info(".... the year is " + currentYear);
 
+  int previousYear = currentYear - 1;
+  int nextYear = currentYear + 1;
+
+  log.info(".... previous and next = " + previousYear + " | " + nextYear);
+
+  // Get data for the current year
+  Map<String, Double> monthlyCredits = chartService.getMonthlyCreditsForYear(currentYear);
+  Map<String, Double> monthlyDebits = chartService.getMonthlyDebitsForYear(currentYear);
+
+  // Generate labels and data for the chart
   List<String> labels = new ArrayList<>();
   List<Double> credits = new ArrayList<>();
   List<Double> debits = new ArrayList<>();
-
-  log.info(".... Debits List created" + debits);
-  log.info(".... Credits List created" + credits);
 
   for (Map.Entry<String, Double> entry : monthlyCredits.entrySet()) {
    String month = entry.getKey();
@@ -64,14 +72,57 @@ public class ChartController {
    debits.add(debitTotal);
   }
 
-  log.info("CREDITS: "+ monthlyCredits.size() + " | DEBITS: " + monthlyDebits.size());
-
   model.addAttribute("labels", labels);
   model.addAttribute("credits", credits);
   model.addAttribute("debits", debits);
+  model.addAttribute("currentYear", currentYear);
+
+  // Set previous and next year for pagination
+  model.addAttribute("prevYear", previousYear);
+  model.addAttribute("nextYear", nextYear);
 
   return "chart-months";
  }
+
+
+
+
+
+//WORKING CODE
+//
+// @GetMapping("/chart")
+// public String showChartWithMonths(Model model) {
+//  Map<String, Double> monthlyCredits = chartService.getMonthlyCredits();
+//  Map<String, Double> monthlyDebits = chartService.getMonthlyDebits();
+//
+// log.info(".... Debits Mapped from service" + monthlyDebits);
+//  log.info(".... Credits Mapped from service" + monthlyCredits);
+//
+//  List<String> labels = new ArrayList<>();
+//  List<Double> credits = new ArrayList<>();
+//  List<Double> debits = new ArrayList<>();
+//
+//  log.info(".... Debits List created" + debits);
+//  log.info(".... Credits List created" + credits);
+//
+//  for (Map.Entry<String, Double> entry : monthlyCredits.entrySet()) {
+//   String month = entry.getKey();
+//   double creditTotal = monthlyCredits.getOrDefault(month, 0.0);
+//   double debitTotal = monthlyDebits.getOrDefault(month, 0.0);
+//
+//   labels.add(month);
+//   credits.add(creditTotal);
+//   debits.add(debitTotal);
+//  }
+//
+//  log.info("CREDITS: "+ monthlyCredits.size() + " | DEBITS: " + monthlyDebits.size());
+//
+//  model.addAttribute("labels", labels);
+//  model.addAttribute("credits", credits);
+//  model.addAttribute("debits", debits);
+//
+//  return "chart-months";
+// }
 
 
 

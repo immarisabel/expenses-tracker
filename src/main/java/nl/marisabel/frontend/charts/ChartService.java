@@ -94,10 +94,11 @@ public class ChartService {
   return monthlyTotals;
  }
 
- // CHART MONTHLY INCOME
+ public Map<String, Double> getMonthlyCreditsForYear(int year) {
+  LocalDate startDate = YearMonth.of(year, 1).atDay(1);
+  LocalDate endDate = YearMonth.of(year, 12).atEndOfMonth();
 
- public Map<String, Double> getMonthlyCredits() {
-  List<ExpenseEntity> allExpenses = expenseRepository.findAll();
+  List<ExpenseEntity> allExpenses = expenseRepository.findByDateBetween(startDate, endDate);
   Map<String, Double> monthlyCredits = new LinkedHashMap<>();
   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMyyyy");
 
@@ -114,10 +115,11 @@ public class ChartService {
   return monthlyCredits;
  }
 
- // CHART MONTHLY EXPENSES
+ public Map<String, Double> getMonthlyDebitsForYear(int year) {
+  LocalDate startDate = YearMonth.of(year, 1).atDay(1);
+  LocalDate endDate = YearMonth.of(year, 12).atEndOfMonth();
 
- public Map<String, Double> getMonthlyDebits() {
-  List<ExpenseEntity> allExpenses = expenseRepository.findAll();
+  List<ExpenseEntity> allExpenses = expenseRepository.findByDateBetween(startDate, endDate);
   Map<String, Double> monthlyDebits = new LinkedHashMap<>();
   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMyyyy");
 
@@ -133,6 +135,50 @@ public class ChartService {
 
   return monthlyDebits;
  }
+
+
+
+
+//
+// // CHART MONTHLY INCOME
+//
+// public Map<String, Double> getMonthlyCredits() {
+//  List<ExpenseEntity> allExpenses = expenseRepository.findAll();
+//  Map<String, Double> monthlyCredits = new LinkedHashMap<>();
+//  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMyyyy");
+//
+//  for (ExpenseEntity expense : allExpenses) {
+//   String monthYear = expense.getDate().format(formatter);
+//   double amount = expense.getAmount();
+//   String creditOrDebit = expense.getCreditOrDebit();
+//
+//   if ("credit".equalsIgnoreCase(creditOrDebit)) {
+//    monthlyCredits.merge(monthYear, amount, Double::sum);
+//   }
+//  }
+//
+//  return monthlyCredits;
+// }
+//
+// // CHART MONTHLY EXPENSES
+//
+// public Map<String, Double> getMonthlyDebits() {
+//  List<ExpenseEntity> allExpenses = expenseRepository.findAll();
+//  Map<String, Double> monthlyDebits = new LinkedHashMap<>();
+//  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMyyyy");
+//
+//  for (ExpenseEntity expense : allExpenses) {
+//   String monthYear = expense.getDate().format(formatter);
+//   double amount = expense.getAmount();
+//   String creditOrDebit = expense.getCreditOrDebit();
+//
+//   if ("debit".equalsIgnoreCase(creditOrDebit)) {
+//    monthlyDebits.merge(monthYear, amount, Double::sum);
+//   }
+//  }
+//
+//  return monthlyDebits;
+// }
 
  // CHART MONTHLY INCOME  WITH CATEGORIES
 

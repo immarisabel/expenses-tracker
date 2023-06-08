@@ -15,14 +15,14 @@
     <div style="display: flex; justify-content: space-between;">
         <!-- UPLOAD-->
         <form action="/upload" method="post" enctype="multipart/form-data"
-              style="display: flex; align-items: center; gap: 10px;">
+              style="display: flex; align-items: center; gap: 1px;">
             <input id="file" type="file" name="file" class="form-control"/>
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
             <input class="myButton" type="submit" value="upload"/>
         </form>
 
         <!-- search by keyword -->
-        <form th:action="@{/expenses/search}" method="get" style="display: flex; align-items: center; gap: 10px;">
+        <form th:action="@{/expenses/search}" method="get" style="display: flex; align-items: center; gap: 1px;">
             <input type="hidden" name="searchTerm" th:value="${searchTerm}"/>
             <input  class="form-control" id="searchTermInput" type="text" name="searchTermInput" placeholder="Search expenses..." required
                    th:value="${searchTerm}"/>
@@ -31,7 +31,7 @@
 
 
         <!-- Filter by date -->
-        <form th:action="@{/expenses/filter}" method="get" style="display: flex; align-items: center; gap: 10px;">
+        <form th:action="@{/expenses/filter}" method="get" style="display: flex; align-items: center; gap: 1px;">
             <label for="startDate">from:</label>
             <input  class="form-control" id="startDate" type="date" name="startDate" required>
             <label for="endDate">to:</label>
@@ -71,7 +71,7 @@
 <!--UPDATE CATEGORIES-->
 <form th:action="@{/expenses/updateCategory(searchTerm=${searchTerm})}" method="post" th:withQueryString="true">
     <select name="categoryId">
-        <option value="">Select Category</option>
+        <option value="">add category to transaction</option>
         <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.category}"></option>
     </select>
     <button type="submit">Update</button>

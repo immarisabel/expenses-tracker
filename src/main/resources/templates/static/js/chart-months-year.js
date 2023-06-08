@@ -1,29 +1,4 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-
-<header>
-    <div th:replace="~{fragments/header :: header}"></div>
-
-</header>
-<body>
-<div th:replace="~{fragments/navbar :: navbar}"></div>
-
-<div class="container">
-
-    <div style="margin: 1rem 0 1rem 0;">
-        <a th:href="@{/chart(year=${prevYear})}" class="myButton">Previous Year</a>
-        <span th:text="${currentYear}"></span>
-        <a th:href="@{/chart(year=${nextYear})}" class="myButton">Next Year</a>
-    </div>
-
-
-
-    <canvas id="chart" class="chart-canvas" margin="1rem"></canvas>
-
-
-    <script th:inline="javascript">
-
-      /* Retrieve the data from the server-side */
+    /* Retrieve the data from the server-side */
         var labels = /*[[${labels}]]*/ [];
         var credits = /*[[${credits}]]*/ [];
         var debits = /*[[${debits}]]*/ [];
@@ -134,10 +109,3 @@
                 }
             }
         });
-
-</script>
-
-</div>
-</body>
-</html>
-
