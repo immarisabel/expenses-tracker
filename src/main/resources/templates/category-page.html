@@ -1,24 +1,105 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+
+
 <header>
     <div th:replace="~{fragments/header :: header}"></div>
 </header>
+
+
+<style>
+        .table-categories {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+        }
+
+        .table-categories th,
+        .table-categories td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+            background-color: #fff;
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: #fff;
+        }
+
+        .table-categories th {
+            background-color: #f2f2f2;
+        }
+
+        .table-categories tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .table-categories tbody tr:hover {
+            background-color: #e6e6e6;
+        }
+
+        .table-categories a {
+            color: #000000;
+            text-decoration: none;
+        }
+
+        .table-categories a:hover {
+            text-decoration: underline;
+        }
+
+        .table-categories p {
+            margin: 0;
+        }
+
+        .table-categories li {
+            list-style-type: none;
+        }
+    </style>
+</head>
+
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div class="containerB">
-    <table>
+
+<div class="container">
+
+    <table class="table table-categories">
         <thead>
         <tr>
-            <th>Category</th>
-            <th></th>
+            <th scope="col">Category Name</th>
+            <th scope="col">Transactions</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
         </tr>
         </thead>
-        <tbody>
-        <tr th:each="category : ${categories}">
-            <td th:text="${category.category}"></td>
+        <tbody th:each="c : ${categories}">
+        <tr>
             <td>
-                <a th:href="@{/categories/delete/{id}(id=${category.id})}" class="myButton">del</a>
+                <a href="#" th:href="@{'/categories/category/' + ${c.id}}">
+                    <li th:text="${c.category}"></li>
+                </a>
+            </td>
+            <td>
+                <p th:text="${c.expenses.size()}"></p>
+            </td>
+            <td>
+                <form th:if="${category}" th:action="@{/categories/update}" method="post" th:object="${category}">
+                    <input type="hidden" th:field="*{id}">
+                  <div>
+                      <input class="form-control" style="float:left; width:80%;" type="text" th:field="*{category}" placeholder="Category Name">
+                      <button type="submit" style="float:right;" class="myButton">Update</button>
+                  </div>
+
+                </form>
+
+            </td>
+            <td>
+                <form th:action="@{/categories/delete}" method="post">
+                    <input type="hidden" name="id" th:value="${c.id}">
+                    <button class="myButton" type="submit" onclick="return confirm('Delete category?')">
+                       delete
+                    </button>
+                </form>
             </td>
         </tr>
         </tbody>
@@ -27,10 +108,8 @@
     <h2>Add Category</h2>
     <form th:action="@{/categories/add}" method="post" th:object="${newCategory}">
         <input class="form-control" type="text" th:field="*{category}" placeholder="New Category">
-        <button type="submit" class="myButton">Add Category</button>
+        <button type="submit" class="btn btn-primary">Add Category</button>
     </form>
 </div>
 </body>
-
-
 </html>

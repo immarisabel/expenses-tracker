@@ -1,18 +1,32 @@
+
+
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <header>
   <div th:replace="~{fragments/header :: header}"></div>
 </header>
+
+
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
+
+
 <div class="container">
 
-  <canvas id="chart" class="chart-canvas" margin="1rem"></canvas>
+  <div class="pagination-controls" style="margin:1rem 0 1rem 0;">
+    <a th:href="@{/chart/{month}(month=${previousMonth})}" class="myButton">Previous Month</a>
+    <span th:text="${fulldate}" style="margin:1rem;"></span>
+    <a th:href="@{/chart/{month}(month=${nextMonth})}" class="myButton">Next Month</a>
+  </div>
 
 
+  <h1 th:text="${fullDate}"></h1>
 
+
+  <canvas id="chart"  style="padding:2rem;"></canvas>
 
 
   <script th:inline="javascript">
@@ -20,7 +34,7 @@
     var labels = /*[[${labels}]]*/ [];
     var credits = /*[[${credits}]]*/ [];
     var debits = /*[[${debits}]]*/ [];
-    var debits = /*[[${savings}]]*/ [];
+
 
     /* Create the chart */
     var ctx = document.getElementById('chart').getContext('2d');

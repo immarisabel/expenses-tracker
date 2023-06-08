@@ -74,42 +74,6 @@ public class ChartController {
  }
 
 
- @GetMapping("/chart/{month}")
- public String showChartByMonthlyCategories(@PathVariable String month, Model model) {
-  // Parse the month from the request
-  DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMyyyy");
-  YearMonth yearMonth = YearMonth.parse(month, monthFormatter);
-
-  // Fetch the monthly totals for the given month
-  // You will need to add a method in your service that accepts YearMonth and returns monthly totals
-  Map<String, Double> monthlyCreditsByCategory = chartService.getMonthlyCreditsByCategory(yearMonth);
-  Map<String, Double> monthlyDebitsByCategory = chartService.getMonthlyDebitsByCategory(yearMonth);
-
-  List<String> labels = new ArrayList<>();
-  List<Double> credits = new ArrayList<>();
-  List<Double> debits = new ArrayList<>();
-  List<Double> savings = new ArrayList<>();
-
-  for (Map.Entry<String, Double> entry : monthlyCreditsByCategory.entrySet()) {
-   String category = entry.getKey();
-   double creditTotal = monthlyCreditsByCategory.getOrDefault(category, 0.0);
-   double debitTotal = monthlyDebitsByCategory.getOrDefault(category, 0.0);
-
-   labels.add(category);
-   credits.add(creditTotal);
-   debits.add(debitTotal);
-   savings.add(creditTotal - debitTotal); // Compute savings for each category
-  }
-
-  model.addAttribute("labels", labels);
-  model.addAttribute("credits", credits);
-  model.addAttribute("debits", debits);
-  model.addAttribute("savings", savings);
-
-
-  return "chart-monthly-categories";
- }
-
 
 
 }

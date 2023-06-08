@@ -44,12 +44,13 @@ public class SecurityConfig {
 
           .authorizeHttpRequests((requests) -> requests
                   .requestMatchers("/css/**", "/", "/403", "/errorpage", "/simulateError").permitAll()
-                  .requestMatchers("/chart/**", "/expenses/**", "/categories/**").hasRole("ADMIN")
-                  .requestMatchers("/upload").hasRole("ADMIN")
-                  .requestMatchers("/expenses/updateCategory/**").hasRole("ADMIN")
-                  .requestMatchers("/expenses/filter").hasRole("ADMIN")
-                  .requestMatchers("/categories/delete/**").hasRole("ADMIN")
-                  .requestMatchers("/goals/**").hasRole("ADMIN")
+                          .requestMatchers("/**").permitAll()
+//                  .requestMatchers("/chart/**", "/expenses/**", "/categories/**").hasRole("ADMIN")
+//                  .requestMatchers("/upload").hasRole("ADMIN")
+//                  .requestMatchers("/expenses/updateCategory/**").hasRole("ADMIN")
+//                  .requestMatchers("/expenses/filter").hasRole("ADMIN")
+//                  .requestMatchers("/categories/delete/**").hasRole("ADMIN")
+//                  .requestMatchers("/goals/**").hasRole("ADMIN")
 
 
           )

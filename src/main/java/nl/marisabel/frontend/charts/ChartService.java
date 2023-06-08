@@ -28,13 +28,14 @@ public class ChartService {
   this.categoryRepository = categoryRepository;
  }
 
- public DefaultCategoryDataset generateExpenseIncomeDataset() {
-  List<ExpenseEntity> expenses = expenseRepository.findAll(); // Replace with your actual query
 
-  // Create a dataset for the chart
+ // DATA SETS FOR ALL CHARTS
+
+ public DefaultCategoryDataset generateExpenseIncomeDataset() {
+  List<ExpenseEntity> expenses = expenseRepository.findAll();
+
   DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-  // Calculate total income and expenses
   double totalIncome = 0;
   double totalExpenses = 0;
 
@@ -46,13 +47,11 @@ public class ChartService {
    }
   }
 
-  // Add total income and expenses to the dataset
   dataset.addValue(totalIncome, "Income", "");
   dataset.addValue(totalExpenses, "Expenses", "");
 
   return dataset;
  }
-
 
  public String[] getCreditOrDebitArray() {
   List<String> creditOrDebitList = expenseRepository.findAll()
@@ -63,13 +62,10 @@ public class ChartService {
   return creditOrDebitList.toArray(new String[0]);
  }
 
-
  public int[] getAmountsArray() {
   List<Integer> amountsList = expenseRepository.findAllAmounts();
   return amountsList.stream().mapToInt(Integer::intValue).toArray();
  }
-
-
 
  public int getTotalCredits() {
   return expenseRepository.calculateTotalCredits();
@@ -80,14 +76,16 @@ public class ChartService {
  }
 
 
+ /////////////////////////////// CHARTS
+
+ // CHART MONTHLY BALANCES
+
  public Map<String, Double> getMonthlyTotals() {
   List<ExpenseEntity> allExpenses = expenseRepository.findAll();
-
   Map<String, Double> monthlyTotals = new LinkedHashMap<>();
 
-  // Calculate totals for each month
   for (ExpenseEntity expense : allExpenses) {
-   String month = expense.getDate().getMonth().toString(); // Get the month (e.g., "JANUARY")
+   String month = expense.getDate().getMonth().toString();
    double amount = expense.getAmount();
 
    monthlyTotals.merge(month, amount, Double::sum);
@@ -96,12 +94,13 @@ public class ChartService {
   return monthlyTotals;
  }
 
+ // CHART MONTHLY INCOME
+
  public Map<String, Double> getMonthlyCredits() {
   List<ExpenseEntity> allExpenses = expenseRepository.findAll();
-
   Map<String, Double> monthlyCredits = new LinkedHashMap<>();
-
   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMyyyy");
+
   for (ExpenseEntity expense : allExpenses) {
    String monthYear = expense.getDate().format(formatter);
    double amount = expense.getAmount();
@@ -115,11 +114,13 @@ public class ChartService {
   return monthlyCredits;
  }
 
+ // CHART MONTHLY EXPENSES
+
  public Map<String, Double> getMonthlyDebits() {
   List<ExpenseEntity> allExpenses = expenseRepository.findAll();
-
   Map<String, Double> monthlyDebits = new LinkedHashMap<>();
   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMyyyy");
+
   for (ExpenseEntity expense : allExpenses) {
    String monthYear = expense.getDate().format(formatter);
    double amount = expense.getAmount();
@@ -133,28 +134,22 @@ public class ChartService {
   return monthlyDebits;
  }
 
-
- // CATEGORY FILTER
-
+ // CHART MONTHLY INCOME  WITH CATEGORIES
 
  public Map<String, Double> getMonthlyCreditsByCategory(YearMonth yearMonth) {
   LocalDate startDate = yearMonth.atDay(1);
   LocalDate endDate = yearMonth.atEndOfMonth();
 
-  List<CategoryEntity> categories = categoryRepository.findAll();  // Assuming you have a repository for categories
-
+  List<CategoryEntity> categories = categoryRepository.findAll();
   Map<String, Double> monthlyCredits = new LinkedHashMap<>();
 
   if (!categories.isEmpty()) {
    for (CategoryEntity category : categories) {
     List<ExpenseEntity> expenses = expenseRepository.findAllByDateBetweenAndCategory(startDate, endDate, category);
-    double total = 0.0;
-
-    for (ExpenseEntity expense : expenses) {
-     if ("credit".equalsIgnoreCase(expense.getCreditOrDebit())) {
-      total += expense.getAmount();
-     }
-    }
+    double total = expenses.stream()
+            .filter(expense -> "credit".equalsIgnoreCase(expense.getCreditOrDebit()))
+            .mapToDouble(ExpenseEntity::getAmount)
+            .sum();
 
     monthlyCredits.put(category.getCategory(), total);
    }
@@ -163,24 +158,24 @@ public class ChartService {
   return monthlyCredits;
  }
 
+ // CHART MONTHLY EXPENSES  WITH CATEGORIES
+
+
+
  public Map<String, Double> getMonthlyDebitsByCategory(YearMonth yearMonth) {
   LocalDate startDate = yearMonth.atDay(1);
   LocalDate endDate = yearMonth.atEndOfMonth();
 
-  List<CategoryEntity> categories = categoryRepository.findAll();  // Assuming you have a repository for categories
-
+  List<CategoryEntity> categories = categoryRepository.findAll();
   Map<String, Double> monthlyDebits = new LinkedHashMap<>();
 
   if (!categories.isEmpty()) {
    for (CategoryEntity category : categories) {
     List<ExpenseEntity> expenses = expenseRepository.findAllByDateBetweenAndCategory(startDate, endDate, category);
-    double total = 0.0;
-
-    for (ExpenseEntity expense : expenses) {
-     if ("debit".equalsIgnoreCase(expense.getCreditOrDebit())) {
-      total += expense.getAmount();
-     }
-    }
+    double total = expenses.stream()
+            .filter(expense -> "debit".equalsIgnoreCase(expense.getCreditOrDebit()))
+            .mapToDouble(ExpenseEntity::getAmount)
+            .sum();
 
     monthlyDebits.put(category.getCategory(), total);
    }
@@ -188,7 +183,4 @@ public class ChartService {
 
   return monthlyDebits;
  }
-
-
-
 }
