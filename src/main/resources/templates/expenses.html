@@ -59,12 +59,22 @@
 
 
 
-<!--&lt;!&ndash; Pagination Controls &ndash;&gt;-->
+<!-- Pagination Controls -->
 <div>
+    <a th:if="${currentPage > 0 && searchTerm != null}" th:href="@{/expenses/search(searchTerm=${searchTerm}, page=${currentPage - 1})}">Previous</a>
+    <a th:if="${currentPage > 0 && startDate != null && endDate != null}" th:href="@{/expenses/filter(startDate=${startDate}, endDate=${endDate}, page=${currentPage - 1})}">Previous</a>
     <a th:if="${currentPage > 0}" th:href="@{/expenses(page=${currentPage - 1})}">Previous</a>
+
     <span th:text="${currentPage + 1}"></span> / <span th:text="${totalPages}"></span>
+
+    <a th:if="${currentPage + 1 < totalPages && searchTerm != null}" th:href="@{/expenses/search(searchTerm=${searchTerm}, page=${currentPage + 1})}">Next</a>
+    <a th:if="${currentPage + 1 < totalPages && startDate != null && endDate != null}" th:href="@{/expenses/filter(startDate=${startDate}, endDate=${endDate}, page=${currentPage + 1})}">Next</a>
     <a th:if="${currentPage + 1 < totalPages}" th:href="@{/expenses(page=${currentPage + 1})}">Next</a>
 </div>
+
+<!-- keyword: http://localhost:9191/expenses?page=1-->
+<!-- date broken -->
+<!-- normal : working-->
 
 <div th:if="${message}">
     <p th:text="${message}" class="success-message"></p>
