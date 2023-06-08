@@ -30,11 +30,12 @@ public class ExpenseEntity {
  @Column(columnDefinition = "TEXT")
  private String description;
 
- public void setAmount(String amount) throws ParseException {
+
+ public void setAmount() throws ParseException {
   DecimalFormatSymbols symbols = new DecimalFormatSymbols();
   symbols.setDecimalSeparator(',');
   DecimalFormat decimalFormat = new DecimalFormat("#0.00", symbols);
-  this.amount = decimalFormat.parse(amount).doubleValue();
+  this.amount = decimalFormat.parse(String.valueOf(amount)).doubleValue();
  }
 
  public void setDate(String date) {

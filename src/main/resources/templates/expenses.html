@@ -66,6 +66,9 @@
     <a th:if="${currentPage + 1 < totalPages}" th:href="@{/expenses(page=${currentPage + 1})}">Next</a>
 </div>
 
+<div th:if="${message}">
+    <p th:text="${message}" class="success-message"></p>
+</div>
 
 
 <!--UPDATE CATEGORIES-->
@@ -75,6 +78,8 @@
         <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.category}"></option>
     </select>
     <button type="submit">Update</button>
+
+
 
 <table>
     <colgroup>
@@ -100,6 +105,9 @@
         <th>
             <input type="checkbox" id="selectAll"/>
         </th>
+        <th>
+            Delete
+        </th>
     </tr>
     </thead>
 
@@ -114,6 +122,13 @@
         <td style="text-align: center;">
             <input type="checkbox" name="selectedExpenseIds" th:value="${expense.id}"/>
         </td>
+        <td>
+            <form th:action="@{/expenses/delete}" method="post">
+                <input type="hidden" name="id" th:value="${expense.id}">
+                <button class="myButton" type="submit" onclick="return confirm('Delete transaction?')">delete</button>
+            </form>
+        </td>
+
     </tr>
     </tbody>
 </table>

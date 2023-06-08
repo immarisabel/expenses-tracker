@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Component
 @Log4j2
@@ -27,7 +29,6 @@ public class ExpensesCvsReaderING {
     }
 
     public ExpenseUploadResult read(InputStream file) throws Exception {
-
         CSVReader csvReader = null;
 
         try {
@@ -50,24 +51,31 @@ public class ExpensesCvsReaderING {
                 try {
                     String description = record[8];
                     String entity = record[1];
+                    String creditOrDebit = record[5];
+                    double amount = Double.parseDouble(record[6]);
 
                     // Check for duplicates before adding to the database
-                    boolean isDuplicate = expenseRepository.existsByDescriptionIgnoreCaseAndEntityIgnoreCase(description, entity);
+                    boolean isDuplicate = expenseRepository.transactionExists(
+                            LocalDate.parse(record[0], DateTimeFormatter.ofPattern("yyyyMMdd")),
+                            entity,
+                            creditOrDebit,
+                            amount,
+                            description);
 
                     if (!isDuplicate) {
                         ExpenseEntity expense = new ExpenseEntity();
-                        expense.setDate(record[0]);  // This now parses the date string to LocalDate
-                        expense.setEntity(record[1]);
-                        expense.setCreditOrDebit(record[5]);
-                        expense.setAmount(record[6]);
+                        expense.setDate(record[0]);
+                        expense.setEntity(entity);
+                        expense.setCreditOrDebit(creditOrDebit);
+                        expense.setAmount(amount);
                         expense.setDescription(description);
                         expenseRepository.save(expense);
 
-                        nonDuplicateCount++;  // Increase non-duplicate counter
+                        nonDuplicateCount++; // Increase non-duplicate counter
 
                         log.info("Expense added: {}", expense);
                     } else {
-                        duplicateCount++;  // Increase duplicate counter
+                        duplicateCount++; // Increase duplicate counter
 
                         log.info("Duplicate expense found at line {}: {}", currentLine, description);
                     }

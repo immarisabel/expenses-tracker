@@ -5,7 +5,9 @@ import nl.marisabel.backend.transactions.entity.ExpenseEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,9 +21,13 @@ public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long> {
 
  List<ExpenseEntity> findByDateBetween(LocalDate startDate, LocalDate endDate);
 
- boolean existsByDescriptionIgnoreCase(String description);
- boolean existsByDescriptionIgnoreCaseAndEntityIgnoreCase(String description, String entity);
-
+ @Query("SELECT COUNT(e) > 0 FROM ExpenseEntity e WHERE e.date = :date AND e.entity = :entity AND e.creditOrDebit = :creditOrDebit AND e.amount = :amount AND e.description = :description")
+ boolean transactionExists(
+         @Param("date") LocalDate date,
+         @Param("entity") String entity,
+         @Param("creditOrDebit") String creditOrDebit,
+         @Param("amount") double amount,
+         @Param("description") String description);
 
  @Query("SELECT e FROM ExpenseEntity e JOIN e.categories c WHERE e.date BETWEEN :startDate AND :endDate AND c = :category")
  List<ExpenseEntity> findAllByDateBetweenAndCategory(LocalDate startDate, LocalDate endDate, CategoryEntity category);
@@ -34,4 +40,5 @@ public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long> {
 
  @Query("SELECT COALESCE(SUM(amount), 0) FROM ExpenseEntity WHERE creditOrDebit = 'Debit' OR (creditOrDebit = 'Af' AND 'Debit' = 'Debit')")
  int calculateTotalDebits();
+
 }

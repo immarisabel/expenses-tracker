@@ -212,5 +212,11 @@ public class ExpenseController {
   return "expenses";
  }
 
+ @PostMapping("/expenses/delete")
+ public String deleteExpenses(@RequestParam("id") Long id, Model model) {
+  expenseRepository.deleteById(id);
+  log.info(".... deleting transaction #" + id);
+  return "redirect:/expenses";
+ }
 
 }
