@@ -60,26 +60,21 @@
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-
 <div class="container">
-
-    <H2>Overviews</H2>
-  <ul>
-      <li><a href="charts/year">Yearly overview</a></li>
-      <li><a th:href="${chartsMonthLink}">Monthly overview with categories</a></li>
-  </ul>
-    <h2>Categories Yearly Views</h2>
-    <ul>
-        <li th:each="c : ${categories}">
-            <a th:href="@{/charts/categories/{categoryId}(categoryId=${c.id})}">
-                <span th:text="${c.category}"></span>
-            </a>
-        </li>
+    <h2>Overviews</h2>
+    <ul class="overviews">
+        <li><a href="charts/year">Yearly overview</a></li>
+        <li><a th:href="${chartsMonthLink}">Monthly overview</a></li>
     </ul>
 
-
-
-
+    <h2>Categories Yearly Views</h2>
+    <ul class="categories">
+        <li th:each="c : ${categories}">
+            <a th:href="@{/charts/categories/{categoryId}(categoryId=${c.id})}" th:text="${c.category}"></a>
+        </li>
+    </ul>
 </div>
+
+
 </body>
 </html>

@@ -10,12 +10,13 @@
 
 <div class="container">
 
+    <div class="pagination-controls" style="margin:1rem 0 1rem 0;">
 
         <a th:href="@{'/charts/year?year=' + ${prevYear}}" class="myButton">Previous Year</a>
         <span th:text="${currentYear}"></span>
         <a th:href="@{'/charts/year?year=' + ${nextYear}}" class="myButton">Next Year</a>
 
-
+    </div>
 
     <canvas id="chart" class="chart-canvas" margin="1rem"></canvas>
 
