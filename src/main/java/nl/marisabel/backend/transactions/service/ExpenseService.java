@@ -7,6 +7,7 @@ import nl.marisabel.backend.transactions.entity.ExpenseEntity;
 import nl.marisabel.backend.transactions.repository.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -47,5 +48,9 @@ public class ExpenseService {
 
  public List<ExpenseEntity> filterExpensesByDate(LocalDate startDate, LocalDate endDate) {
   return expenseRepository.findByDateBetween(startDate, endDate);
+ }
+
+ public Page<ExpenseEntity> filterExpensesByDate(LocalDate startDate, LocalDate endDate, PageRequest of) {
+  return expenseRepository.findByDateBetween(startDate, endDate, of);
  }
 }

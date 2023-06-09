@@ -52,6 +52,10 @@ public class ExpensesCvsReaderING {
             DecimalFormat decimalFormat = new DecimalFormat("0.00", symbols);
 
             int currentLine = 2; // Start from line 2 (after the header row)
+            DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+            symbols.setDecimalSeparator(',');
+            symbols.setGroupingSeparator('.');
+            DecimalFormat decimalFormat = new DecimalFormat("0.00", symbols);
 
             String[] record;
             while ((record = csvReader.readNext()) != null) {

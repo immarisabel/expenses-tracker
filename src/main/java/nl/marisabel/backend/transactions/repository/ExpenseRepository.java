@@ -3,6 +3,7 @@ package nl.marisabel.backend.transactions.repository;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.transactions.entity.ExpenseEntity;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -47,4 +48,5 @@ public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long> {
  @Query("SELECT COALESCE(SUM(amount), 0) FROM ExpenseEntity WHERE creditOrDebit = 'Debit' OR (creditOrDebit = 'Af' AND 'Debit' = 'Debit')")
  int calculateTotalDebits();
 
+ Page<ExpenseEntity> findByDateBetween(LocalDate startDate, LocalDate endDate, PageRequest of);
 }
