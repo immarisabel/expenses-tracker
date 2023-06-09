@@ -10,10 +10,9 @@
 
 <div class="container">
 
-
-        <a th:href="@{'/charts/year?year=' + ${prevYear}}" class="myButton">Previous Year</a>
+        <a th:href="@{'/charts/categories/' + ${category.id} + '?year=' + ${prevYear}}" class="myButton">Previous Year</a>
         <span th:text="${currentYear}"></span>
-        <a th:href="@{'/charts/year?year=' + ${nextYear}}" class="myButton">Next Year</a>
+        <a th:href="@{'/charts/categories/' + ${category.id} + '?year=' + ${nextYear}}" class="myButton">Next Year</a>
 
 
 

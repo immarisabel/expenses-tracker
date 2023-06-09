@@ -15,10 +15,7 @@ import java.time.LocalDate;
 import java.time.Year;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Log4j2
 @Controller
@@ -33,18 +30,36 @@ public class CategoriesChartController {
     }
 
     @GetMapping("/charts/categories/{categoryId}")
-    public String showCategoryCharts(@PathVariable Long categoryId, Model model) {
+    public String showCategoryCharts(@PathVariable Long categoryId,
+                                     @RequestParam(value = "year", required = false) Integer year,
+                                     Model model) {
+
         CategoryEntity category = categoryService.getCategory(categoryId);
+        int currentYear = Year.now().getValue();
 
         if (category == null) {
             return "error";
         }
 
-        log.info("Category: " + category.getCategory());
+        if (year == null || year == 0) {
+            year = currentYear;
+        }
 
-        // Get data for the specified category
-        Map<String, Double> monthlyCredits = chartService.getMonthlyCreditsByCategory(YearMonth.now(), category);
-        Map<String, Double> monthlyDebits = chartService.getMonthlyDebitsByCategory(YearMonth.now(), category);
+        log.info("Category: " + category.getCategory());
+        log.info(".... the year is " + year);
+
+        // Get data for the specified category and year
+        YearMonth startYearMonth = YearMonth.of(year, 1);
+        YearMonth endYearMonth = YearMonth.of(year, 12);
+
+        Map<String, Double> monthlyCredits = new LinkedHashMap<>();
+        Map<String, Double> monthlyDebits = new LinkedHashMap<>();
+
+        for (int month = 1; month <= 12; month++) {
+            YearMonth yearMonth = YearMonth.of(year, month);
+            monthlyCredits.putAll(chartService.getMonthlyCreditsByCategory(yearMonth, category));
+            monthlyDebits.putAll(chartService.getMonthlyDebitsByCategory(yearMonth, category));
+        }
 
         List<String> labels = new ArrayList<>();
         List<Double> credits = new ArrayList<>();
@@ -64,8 +79,15 @@ public class CategoriesChartController {
         model.addAttribute("credits", credits);
         model.addAttribute("debits", debits);
         model.addAttribute("category", category);
+        model.addAttribute("currentYear", year);
 
-        return "charts/chart-months";
+        // Set previous and next year for pagination
+        int previousYear = year - 1;
+        int nextYear = year + 1;
+        model.addAttribute("prevYear", previousYear);
+        model.addAttribute("nextYear", nextYear);
+
+        return "charts/chart-yearly-categories";
     }
 
 
