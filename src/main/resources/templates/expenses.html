@@ -60,17 +60,20 @@
 
 
 <!-- Pagination Controls -->
-<div>
-    <a th:if="${currentPage > 0 && searchTerm != null}" th:href="@{/expenses/search(searchTerm=${searchTerm}, page=${currentPage - 1})}">Previous</a>
-    <a th:if="${currentPage > 0 && startDate != null && endDate != null}" th:href="@{/expenses/filter(startDate=${startDate}, endDate=${endDate}, page=${currentPage - 1})}">Previous</a>
-    <a th:if="${currentPage > 0}" th:href="@{/expenses(page=${currentPage - 1})}">Previous</a>
+<div th:if="${totalPages > 0}" class="pagination">
+    <th:block th:each="pageNumber : ${#numbers.sequence(1, totalPages)}">
+        <a th:if="${searchTerm != null}"
+           th:href="@{/expenses/search(searchTerm=${searchTerm}, page=${pageNumber - 1})}"
+           th:text=${pageNumber}
+           th:class="${pageNumber == currentPage + 1 ? 'active' : ''}"></a>
 
-    <span th:text="${currentPage + 1}"></span> / <span th:text="${totalPages}"></span>
-
-    <a th:if="${currentPage + 1 < totalPages && searchTerm != null}" th:href="@{/expenses/search(searchTerm=${searchTerm}, page=${currentPage + 1})}">Next</a>
-    <a th:if="${currentPage + 1 < totalPages && startDate != null && endDate != null}" th:href="@{/expenses/filter(startDate=${startDate}, endDate=${endDate}, page=${currentPage + 1})}">Next</a>
-    <a th:if="${currentPage + 1 < totalPages}" th:href="@{/expenses(page=${currentPage + 1})}">Next</a>
+        <a th:if="${startDate != null && endDate != null}"
+           th:href="@{/expenses/filter(startDate=${startDate}, endDate=${endDate}, page=${pageNumber - 1})}"
+           th:text=${pageNumber}
+           th:class="${pageNumber == currentPage + 1 ? 'active' : ''}"></a>
+    </th:block>
 </div>
+
 
 <!-- keyword: http://localhost:9191/expenses?page=1-->
 <!-- date broken -->

@@ -25,6 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -202,13 +203,25 @@ public class ExpenseController {
  }
 
  @GetMapping("/expenses/filter")
- public String filterExpensesByDate(@RequestParam("startDate") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate startDate,
-                                    @RequestParam("endDate") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate endDate,
-                                    Model model) {
-  List<ExpenseEntity> filteredResults = expenseService.filterExpensesByDate(startDate, endDate);
-  model.addAttribute("expenses", filteredResults);
-  model.addAttribute("filteredCount", filteredResults.size());
-  model.addAttribute("currentPage", 0);
+ public String filterExpensesByDate(
+         @RequestParam("startDate") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate startDate,
+         @RequestParam("endDate") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate endDate,
+         @RequestParam("page") Optional<Integer> page,
+         @RequestParam("size") Optional<Integer> size,
+         Model model) {
+
+  int currentPage = page.orElse(1) - 1; // Default to page 1 if not specified
+  int pageSize = size.orElse(25); // Default to 10 items per page if not specified
+
+  Page<ExpenseEntity> expensePage = expenseService.filterExpensesByDate(
+          startDate, endDate, PageRequest.of(currentPage, pageSize)
+  );
+
+  model.addAttribute("expenses", expensePage.getContent());
+  model.addAttribute("filteredCount", expensePage.getTotalElements());
+  model.addAttribute("currentPage", currentPage);
+  model.addAttribute("totalPages", expensePage.getTotalPages());
+
   return "expenses";
  }
 
