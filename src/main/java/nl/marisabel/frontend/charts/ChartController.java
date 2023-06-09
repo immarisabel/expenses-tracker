@@ -37,7 +37,7 @@ public class ChartController {
 
   List<CategoryEntity> categories = categoryService.getCategories();
 
-  model.addAttribute("chartsMonthLink", "/charts/months/" + month);
+  model.addAttribute("chartsMonthLink", "/charts/month/" + month);
 
   model.addAttribute("categories", categories);
   return "charts/charts";
