@@ -1,0 +1,76 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<header>
+    <div th:replace="~{fragments/header :: header}"></div>
+</header>
+
+
+<style>
+        .table-categories {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+        }
+
+        .table-categories th,
+        .table-categories td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+            background-color: #fff;
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: #fff;
+        }
+
+        .table-categories th {
+            background-color: #f2f2f2;
+        }
+
+        .table-categories tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .table-categories tbody tr:hover {
+            background-color: #e6e6e6;
+        }
+
+        .table-categories a {
+            color: #000000;
+            text-decoration: none;
+        }
+
+        .table-categories a:hover {
+            text-decoration: underline;
+        }
+
+        .table-categories p {
+            margin: 0;
+        }
+
+        .table-categories li {
+            list-style-type: none;
+        }
+    </style>
+</head>
+
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+
+<div class="container">
+
+    <H2>Overviews</H2>
+  <ul>
+      <li>Yearly overview</li>
+      <li>Monthly overview with categories</li>
+  </ul>
+    <h2>Categories Yearly Views</h2>
+    <li>my-category</li>
+
+</div>
+</body>
+</html>

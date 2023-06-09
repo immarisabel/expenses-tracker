@@ -28,9 +28,9 @@ public class ExpenseService {
   this.categoryRepository = categoryRepository;
  }
 
- public Page<ExpenseEntity> searchExpenses(String searchTerm, Pageable pageable) {
+ public List<ExpenseEntity> searchExpenses(String searchTerm) {
   String searchTermLower = searchTerm.toLowerCase();
-  return expenseRepository.findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(searchTermLower, pageable);
+  return expenseRepository.findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(searchTermLower);
  }
 
  @Transactional
@@ -39,8 +39,8 @@ public class ExpenseService {
           .orElseThrow(() -> new RuntimeException("Category not found with id " + categoryId));
 
   for (ExpenseEntity expense : expenses) {
-   expense.getCategories().clear(); // clear all existing categories
-   expense.addCategory(category); // update category
+   expense.getCategories().clear();
+   expense.addCategory(category);
    expenseRepository.save(expense);
   }
  }

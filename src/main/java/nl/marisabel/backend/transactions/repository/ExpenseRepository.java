@@ -14,12 +14,19 @@ import java.util.List;
 
 public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long> {
 
+ // SEARCHING & FILTERING
+
  Page<ExpenseEntity> findAll(Pageable pageable);
 
  @Query("SELECT e FROM ExpenseEntity e WHERE lower(e.entity) LIKE lower(concat('%', :searchTerm, '%')) OR lower(e.description) LIKE lower(concat('%', :searchTerm, '%'))")
- Page<ExpenseEntity> findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String searchTerm, Pageable pageable);
+ List<ExpenseEntity> findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(@Param("searchTerm") String searchTerm);
 
  List<ExpenseEntity> findByDateBetween(LocalDate startDate, LocalDate endDate);
+
+ @Query("SELECT amount FROM ExpenseEntity")
+ List<Integer> findAllAmounts();
+
+// UPLOADING
 
  @Query("SELECT COUNT(e) > 0 FROM ExpenseEntity e WHERE e.date = :date AND e.entity = :entity AND e.creditOrDebit = :creditOrDebit AND e.amount = :amount AND e.description = :description")
  boolean transactionExists(
@@ -29,11 +36,10 @@ public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long> {
          @Param("amount") double amount,
          @Param("description") String description);
 
+//  CHARTS
+
  @Query("SELECT e FROM ExpenseEntity e JOIN e.categories c WHERE e.date BETWEEN :startDate AND :endDate AND c = :category")
  List<ExpenseEntity> findAllByDateBetweenAndCategory(LocalDate startDate, LocalDate endDate, CategoryEntity category);
-
- @Query("SELECT amount FROM ExpenseEntity")
- List<Integer> findAllAmounts();
 
  @Query("SELECT COALESCE(SUM(amount), 0) FROM ExpenseEntity WHERE creditOrDebit = 'Credit' OR (creditOrDebit = 'Bij' AND 'Credit' = 'Credit')")
  int calculateTotalCredits();

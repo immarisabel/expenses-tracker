@@ -23,11 +23,12 @@
 
         <!-- search by keyword -->
         <form th:action="@{/expenses/search}" method="get" style="display: flex; align-items: center; gap: 1px;">
-            <input type="hidden" name="searchTerm" th:value="${searchTerm}"/>
-            <input  class="form-control" id="searchTermInput" type="text" name="searchTermInput" placeholder="Search expenses..." required
+            <input class="form-control" id="searchTerm" type="text" name="searchTerm" placeholder="Search expenses..." required
                    th:value="${searchTerm}"/>
-            <button class="myButton" type="submit">search</button>
+            <button class="myButton" type="submit">Search</button>
         </form>
+
+
 
 
         <!-- Filter by date -->
@@ -58,13 +59,15 @@
 </div>
 
 
+<!-- PAGINATION CONTROL -->
+<!--<div th:unless="${searchResults}">
+    <div>
+        <a th:if="${expenses.hasPrevious()} == true" th:href="@{/expenses(page=${expenses.number - 1})}">Previous</a>
+        <span th:text="${expenses.number + 1}"></span> / <span th:text="${expenses.totalPages}"></span>
+        <a th:if="${expenses.hasNext()} == true" th:href="@{/expenses(page=${expenses.number + 1})}">Next</a>
+    </div>
+</div>-->
 
-<!--&lt;!&ndash; Pagination Controls &ndash;&gt;-->
-<div>
-    <a th:if="${currentPage > 0}" th:href="@{/expenses(page=${currentPage - 1})}">Previous</a>
-    <span th:text="${currentPage + 1}"></span> / <span th:text="${totalPages}"></span>
-    <a th:if="${currentPage + 1 < totalPages}" th:href="@{/expenses(page=${currentPage + 1})}">Next</a>
-</div>
 
 <div th:if="${message}">
     <p th:text="${message}" class="success-message"></p>

@@ -48,34 +48,9 @@ public class ExpenseController {
   this.expenseService = expenseService;
  }
 
- @GetMapping("/expenses")
- public String showExpenses(
-         @RequestParam(defaultValue = "0") int page,
-         @RequestParam(value = "searchTerm", required = false) String searchTerm,
-         Model model
- ) {
-  int size = 25;
-  Pageable pageable = PageRequest.of(page, size);
-  Page<ExpenseEntity> expensePage;
 
-  if (searchTerm != null && !searchTerm.trim().isEmpty()) {
-   expensePage = expenseService.searchExpenses(searchTerm, pageable);
-  } else {
-   expensePage = expenseRepository.findAll(pageable);
-  }
 
-  List<ExpenseEntity> expenses = expensePage.getContent();
-  List<CategoryEntity> categories = categoryRepository.findAll();
-
-  model.addAttribute("expenses", expenses);
-  model.addAttribute("categories", categories);
-  model.addAttribute("expenseForm", new ExpenseFormDto());
-  model.addAttribute("totalCount", expensePage.getTotalElements());
-  model.addAttribute("currentPage", expensePage.getNumber());
-  model.addAttribute("totalPages", expensePage.getTotalPages());
-
-  return "expenses";
- }
+ //..........UPLOAD FILE
 
  @PostMapping("/upload")
  public String handleFileUpload(
@@ -104,6 +79,8 @@ public class ExpenseController {
   return "redirect:/expenses";
  }
 
+
+ //..........UPDATE CATEGORY IN BATCH
  @PostMapping("/expenses/updateCategory")
  public String batchUpdateCategory(
          @RequestParam("categoryId") Long categoryId,
@@ -137,7 +114,10 @@ public class ExpenseController {
  }
 
 
- @PostMapping("/expenses/clearCategory")
+
+ //.......... CLEAR CATEGORY FROM TRANSACTION
+
+  @PostMapping("/expenses/clearCategory")
  public String batchClearCategory(
          @RequestParam("categoryId") Long categoryId,
          @RequestParam("selectedExpenseIds") String[] selectedExpenseIds,
@@ -173,45 +153,7 @@ public class ExpenseController {
  }
 
 
- @GetMapping("/expenses/search")
- public String searchExpenses(
-         @RequestParam(value = "searchTerm", required = false) String searchTerm,
-         @RequestParam(value = "searchTermInput", required = false) String searchTermInput,
-         @RequestParam(defaultValue = "0") int page,
-         Model model
- ) {
-  if (searchTermInput != null) {
-   searchTerm = searchTermInput;
-   log.info(".... SEARCHING FOR: " + searchTerm);
-  }
-  int size = 25;
-  Pageable pageable = PageRequest.of(page, size);
-  Page<ExpenseEntity> expensePage = expenseService.searchExpenses(searchTerm, pageable);
-
-  List<ExpenseEntity> searchResults = expensePage.getContent();
-  List<CategoryEntity> categories = categoryRepository.findAll();
-
-  model.addAttribute("expenses", searchResults);
-  model.addAttribute("searchCount", searchResults.size());
-  model.addAttribute("categories", categories);
-  model.addAttribute("searchTerm", searchTerm);
-  model.addAttribute("currentPage", expensePage.getNumber());
-  model.addAttribute("totalPages", expensePage.getTotalPages());
-
-  return "expenses";
- }
-
- @GetMapping("/expenses/filter")
- public String filterExpensesByDate(@RequestParam("startDate") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate startDate,
-                                    @RequestParam("endDate") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate endDate,
-                                    Model model) {
-  List<ExpenseEntity> filteredResults = expenseService.filterExpensesByDate(startDate, endDate);
-  model.addAttribute("expenses", filteredResults);
-  model.addAttribute("filteredCount", filteredResults.size());
-  model.addAttribute("currentPage", 0);
-  return "expenses";
- }
-
+ //.......... DELETE EXPENSE
  @PostMapping("/expenses/delete")
  public String deleteExpenses(@RequestParam("id") Long id, Model model) {
   expenseRepository.deleteById(id);

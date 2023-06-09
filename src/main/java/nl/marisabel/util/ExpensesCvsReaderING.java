@@ -11,8 +11,11 @@ import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 @Component
 @Log4j2
@@ -43,6 +46,10 @@ public class ExpensesCvsReaderING {
                 log.error("No header row found in the CSV file");
                 return null;
             }
+            DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+            symbols.setDecimalSeparator(',');
+            symbols.setGroupingSeparator('.');
+            DecimalFormat decimalFormat = new DecimalFormat("0.00", symbols);
 
             int currentLine = 2; // Start from line 2 (after the header row)
 
@@ -52,7 +59,7 @@ public class ExpensesCvsReaderING {
                     String description = record[8];
                     String entity = record[1];
                     String creditOrDebit = record[5];
-                    double amount = Double.parseDouble(record[6]);
+                    double amount = decimalFormat.parse(record[6]).doubleValue();
 
                     // Check for duplicates before adding to the database
                     boolean isDuplicate = expenseRepository.transactionExists(
