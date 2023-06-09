@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long> {
 
@@ -47,6 +48,7 @@ public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long> {
 
  @Query("SELECT COALESCE(SUM(amount), 0) FROM ExpenseEntity WHERE creditOrDebit = 'Debit' OR (creditOrDebit = 'Af' AND 'Debit' = 'Debit')")
  int calculateTotalDebits();
+
 
  Page<ExpenseEntity> findByDateBetween(LocalDate startDate, LocalDate endDate, PageRequest of);
 }

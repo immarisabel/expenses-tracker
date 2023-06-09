@@ -1,5 +1,4 @@
 package nl.marisabel.util;
-
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
@@ -20,27 +19,22 @@ import java.util.Locale;
 @Component
 @Log4j2
 public class ExpensesCvsReaderING {
-
     private final ExpenseRepository expenseRepository;
     private final ExpenseUploadResult result;
     private int duplicateCount = 0;
     private int nonDuplicateCount = 0;
-
     public ExpensesCvsReaderING(ExpenseRepository expenseRepository, ExpenseUploadResult result) {
         this.expenseRepository = expenseRepository;
         this.result = result;
     }
-
     public ExpenseUploadResult read(InputStream file) throws Exception {
         CSVReader csvReader = null;
-
         try {
             csvReader = new CSVReaderBuilder(new InputStreamReader(file))
                     .withCSVParser(new CSVParserBuilder()
                             .withSeparator(';')
                             .build())
                     .build();
-
             String[] headers = csvReader.readNext(); // Skip header row
             if (headers == null) {
                 log.error("No header row found in the CSV file");
@@ -52,10 +46,6 @@ public class ExpensesCvsReaderING {
             DecimalFormat decimalFormat = new DecimalFormat("0.00", symbols);
 
             int currentLine = 2; // Start from line 2 (after the header row)
-            DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
-            symbols.setDecimalSeparator(',');
-            symbols.setGroupingSeparator('.');
-            DecimalFormat decimalFormat = new DecimalFormat("0.00", symbols);
 
             String[] record;
             while ((record = csvReader.readNext()) != null) {
@@ -72,7 +62,6 @@ public class ExpensesCvsReaderING {
                             creditOrDebit,
                             amount,
                             description);
-
                     if (!isDuplicate) {
                         ExpenseEntity expense = new ExpenseEntity();
                         expense.setDate(record[0]);
@@ -81,19 +70,15 @@ public class ExpensesCvsReaderING {
                         expense.setAmount(amount);
                         expense.setDescription(description);
                         expenseRepository.save(expense);
-
                         nonDuplicateCount++; // Increase non-duplicate counter
-
                         log.info("Expense added: {}", expense);
                     } else {
                         duplicateCount++; // Increase duplicate counter
-
                         log.info("Duplicate expense found at line {}: {}", currentLine, description);
                     }
                 } catch (Exception e) {
                     log.error("Error parsing record at line {}: {}", currentLine, e.getMessage());
                 }
-
                 currentLine++;
             }
         } finally {
@@ -101,15 +86,11 @@ public class ExpensesCvsReaderING {
                 csvReader.close();
             }
         }
-
         result.setNonDuplicates(nonDuplicateCount);
         result.setDuplicates(duplicateCount);
-
         // Log the duplicate and non-duplicate counts
         log.info("Total non-duplicate records: {}", nonDuplicateCount);
         log.info("Total duplicate records: {}", duplicateCount);
         return result;
     }
-
-
 }

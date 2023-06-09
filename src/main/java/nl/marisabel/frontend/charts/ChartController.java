@@ -1,18 +1,17 @@
 package nl.marisabel.frontend.charts;
 
 import lombok.extern.log4j.Log4j2;
+import nl.marisabel.backend.categories.entity.CategoryEntity;
+import nl.marisabel.backend.categories.service.CategoryService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.Year;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -21,17 +20,36 @@ import java.util.Map;
 public class ChartController {
 
  private final ChartService chartService;
+ private final CategoryService categoryService;
 
- public ChartController(ChartService chartService) {
+ public ChartController(ChartService chartService, CategoryService categoryService) {
   this.chartService = chartService;
+  this.categoryService = categoryService;
  }
 
- @GetMapping("/grandTotalChart")
+
+ @GetMapping("/charts")
+ public String showChartsMenu(Model model) {
+
+  YearMonth currentYearMonth = YearMonth.now();
+  String month = currentYearMonth.format(DateTimeFormatter.ofPattern("MMyyyy"));
+  log.info(".... link generated for categories chart charts/" + month);
+
+  List<CategoryEntity> categories = categoryService.getCategories();
+
+  model.addAttribute("chartsMonthLink", "/charts/months/" + month);
+
+  model.addAttribute("categories", categories);
+  return "charts/charts";
+ }
+
+
+ @GetMapping("/charts/grandTotalChart")
  public String showChart(Model model) {
   int totalCredits = chartService.getTotalCredits();
   int totalDebits = chartService.getTotalDebits();
 
-  log.info("CREDIT: "+ totalCredits + " DEBIT: " + totalDebits);
+  log.info("CREDIT: " + totalCredits + " DEBIT: " + totalDebits);
 
   // Pass data to the view
   model.addAttribute("totalCredits", totalCredits);
@@ -41,10 +59,7 @@ public class ChartController {
  }
 
 
-
-
-
- @GetMapping("/chart")
+ @GetMapping("/charts/year")
  public String showChartWithMonths(@RequestParam(value = "year", required = false) Integer year, Model model) {
   int currentYear = Year.now().getValue();
 
@@ -86,13 +101,6 @@ public class ChartController {
 
   return "charts/chart-months";
  }
-
-
-
-
-
-
-
 
 
 }

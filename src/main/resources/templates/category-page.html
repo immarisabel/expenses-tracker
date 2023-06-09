@@ -75,9 +75,7 @@
         <tbody th:each="c : ${categories}">
         <tr>
             <td>
-                <a href="#" th:href="@{'/categories/category/' + ${c.id}}">
                     <li th:text="${c.category}"></li>
-                </a>
             </td>
             <td>
                 <p th:text="${c.expenses.size()}"></p>

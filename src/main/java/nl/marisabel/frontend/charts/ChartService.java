@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -138,48 +139,6 @@ public class ChartService {
 
 
 
-
-//
-// // CHART MONTHLY INCOME
-//
-// public Map<String, Double> getMonthlyCredits() {
-//  List<ExpenseEntity> allExpenses = expenseRepository.findAll();
-//  Map<String, Double> monthlyCredits = new LinkedHashMap<>();
-//  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMyyyy");
-//
-//  for (ExpenseEntity expense : allExpenses) {
-//   String monthYear = expense.getDate().format(formatter);
-//   double amount = expense.getAmount();
-//   String creditOrDebit = expense.getCreditOrDebit();
-//
-//   if ("credit".equalsIgnoreCase(creditOrDebit)) {
-//    monthlyCredits.merge(monthYear, amount, Double::sum);
-//   }
-//  }
-//
-//  return monthlyCredits;
-// }
-//
-// // CHART MONTHLY EXPENSES
-//
-// public Map<String, Double> getMonthlyDebits() {
-//  List<ExpenseEntity> allExpenses = expenseRepository.findAll();
-//  Map<String, Double> monthlyDebits = new LinkedHashMap<>();
-//  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMyyyy");
-//
-//  for (ExpenseEntity expense : allExpenses) {
-//   String monthYear = expense.getDate().format(formatter);
-//   double amount = expense.getAmount();
-//   String creditOrDebit = expense.getCreditOrDebit();
-//
-//   if ("debit".equalsIgnoreCase(creditOrDebit)) {
-//    monthlyDebits.merge(monthYear, amount, Double::sum);
-//   }
-//  }
-//
-//  return monthlyDebits;
-// }
-
  // CHART MONTHLY INCOME  WITH CATEGORIES
 
  public Map<String, Double> getMonthlyCreditsByCategory(YearMonth yearMonth) {
@@ -229,4 +188,42 @@ public class ChartService {
 
   return monthlyDebits;
  }
+
+// CATEGORIES FILTERING
+
+ public Map<String, Double> getMonthlyCreditsByCategory(YearMonth yearMonth, CategoryEntity categoryEntity) {
+  LocalDate startDate = yearMonth.atDay(1);
+  LocalDate endDate = yearMonth.atEndOfMonth();
+
+  Map<String, Double> monthlyCredits = new LinkedHashMap<>();
+
+  List<ExpenseEntity> expenses = expenseRepository.findAllByDateBetweenAndCategory(startDate, endDate, categoryEntity);
+  double total = expenses.stream()
+          .filter(expense -> "credit".equalsIgnoreCase(expense.getCreditOrDebit()))
+          .mapToDouble(ExpenseEntity::getAmount)
+          .sum();
+
+  monthlyCredits.put(categoryEntity.getCategory(), total);
+
+  return monthlyCredits;
+ }
+
+ public Map<String, Double> getMonthlyDebitsByCategory(YearMonth yearMonth, CategoryEntity categoryEntity) {
+  LocalDate startDate = yearMonth.atDay(1);
+  LocalDate endDate = yearMonth.atEndOfMonth();
+
+  Map<String, Double> monthlyDebits = new LinkedHashMap<>();
+
+  List<ExpenseEntity> expenses = expenseRepository.findAllByDateBetweenAndCategory(startDate, endDate, categoryEntity);
+  double total = expenses.stream()
+          .filter(expense -> "debit".equalsIgnoreCase(expense.getCreditOrDebit()))
+          .mapToDouble(ExpenseEntity::getAmount)
+          .sum();
+
+  monthlyDebits.put(categoryEntity.getCategory(), total);
+
+  return monthlyDebits;
+ }
+
+
 }

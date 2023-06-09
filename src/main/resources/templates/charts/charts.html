@@ -65,11 +65,20 @@
 
     <H2>Overviews</H2>
   <ul>
-      <li>Yearly overview</li>
-      <li>Monthly overview with categories</li>
+      <li><a href="charts/year">Yearly overview</a></li>
+      <li><a th:href="${chartsMonthLink}">Monthly overview with categories</a></li>
   </ul>
     <h2>Categories Yearly Views</h2>
-    <li>my-category</li>
+    <ul>
+        <li th:each="c : ${categories}">
+            <a th:href="@{/charts/categories/{categoryId}(categoryId=${c.id})}">
+                <span th:text="${c.category}"></span>
+            </a>
+        </li>
+    </ul>
+
+
+
 
 </div>
 </body>

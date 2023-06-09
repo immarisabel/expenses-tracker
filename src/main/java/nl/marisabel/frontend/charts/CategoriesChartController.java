@@ -1,6 +1,7 @@
 package nl.marisabel.frontend.charts;
 
 import lombok.extern.log4j.Log4j2;
+import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.service.CategoryService;
 import nl.marisabel.frontend.charts.ChartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
+import java.time.Year;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -27,21 +32,56 @@ public class CategoriesChartController {
         this.chartService = chartService;
     }
 
+    @GetMapping("/charts/categories/{categoryId}")
+    public String showCategoryCharts(@PathVariable Long categoryId, Model model) {
+        CategoryEntity category = categoryService.getCategory(categoryId);
 
-    // TODO FULL CHART CATEGORIES
-    // TODO chart-monthly-categories.html controller here
-        //Server-Side Pagination:
-            //Modify your backend controller to support pagination parameters, such as page number and page size.
-            //On the frontend, make an AJAX request to the backend controller to fetch the data for each page.
-            //Display the fetched data on the page, showing 12 months per page.
-            //Implement pagination controls on the frontend to trigger the AJAX requests and update the displayed data.
-            //This approach reduces the initial data load by fetching only the necessary data for each page.
+        if (category == null) {
+            return "error";
+        }
 
-    @GetMapping("/chart/{month}")
+        log.info("Category: " + category.getCategory());
+
+        // Get data for the specified category
+        Map<String, Double> monthlyCredits = chartService.getMonthlyCreditsByCategory(YearMonth.now(), category);
+        Map<String, Double> monthlyDebits = chartService.getMonthlyDebitsByCategory(YearMonth.now(), category);
+
+        List<String> labels = new ArrayList<>();
+        List<Double> credits = new ArrayList<>();
+        List<Double> debits = new ArrayList<>();
+
+        for (Map.Entry<String, Double> entry : monthlyCredits.entrySet()) {
+            String month = entry.getKey();
+            double creditTotal = monthlyCredits.getOrDefault(month, 0.0);
+            double debitTotal = monthlyDebits.getOrDefault(month, 0.0);
+
+            labels.add(month);
+            credits.add(creditTotal);
+            debits.add(debitTotal);
+        }
+
+        model.addAttribute("labels", labels);
+        model.addAttribute("credits", credits);
+        model.addAttribute("debits", debits);
+        model.addAttribute("category", category);
+
+        return "charts/chart-months";
+    }
+
+
+
+
+
+
+    @GetMapping("/charts/month/{month}")
     public String showChartByMonthlyCategories(@PathVariable String month, Model model) {
         // Parse the month from the request
-
         log.info("Original YearMonth: " + month);
+
+        if (month == null || month.isEmpty()) {
+            YearMonth currentYearMonth = YearMonth.now();
+            month = currentYearMonth.format(DateTimeFormatter.ofPattern("MMyyyy"));
+        }
 
         // Original formatting
         DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMyyyy");
@@ -86,7 +126,7 @@ public class CategoriesChartController {
         model.addAttribute("previousMonth", previousMonth.format(monthFormatter));
         model.addAttribute("nextMonth", nextMonth.format(monthFormatter));
 
-        return "chart-monthly-categories";
+        return "charts/chart-monthly-categories";
     }
 
 
