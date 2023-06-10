@@ -1,0 +1,65 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="filterbar">
+
+    <div class="form-container">
+
+        <div style="display: flex; justify-content: space-between;">
+
+            <!-- UPLOAD-->
+            <form action="/upload" method="post" enctype="multipart/form-data"
+                  style="display: flex; align-items: center; gap: 1px;">
+                <input id="file" type="file" name="file" class="form-control"/>
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <input class="myButton" type="submit" value="upload"/>
+            </form>
+
+            <!-- search by keyword -->
+            <form th:action="@{/transactions/search}" method="get"
+                  style="display: flex; align-items: center; gap: 1px;">
+                <input class="form-control" id="searchTerm" type="text" name="searchTerm"
+                       placeholder="Search transactions..."
+                       required
+                       th:value="${searchTerm}"/>
+                <button class="myButton" type="submit">Search</button>
+            </form>
+
+
+            <!-- Filter by date -->
+            <form th:action="@{/transactions/filter}" method="get"
+                  style="display: flex; align-items: center; gap: 1px;">
+                <label for="startDate">from:</label>
+                <input class="form-control" id="startDate" type="date" name="startDate" required>
+                <label for="endDate">to:</label>
+                <input class="form-control" id="endDate" type="date" name="endDate" required>
+                <button class="myButton" type="submit">filter</button>
+            </form>
+
+            <!-- Filter by category -->
+            <form th:action="@{/transactions/filter}" method="get"
+                  style="display: flex; align-items: center; gap: 1px;">
+                <select class="form-control" id="category" name="category">
+                    <option value="">All Categories</option>
+                    <option th:each="category : ${categories}" th:value="${category}" th:text="${category}"></option>
+                </select>
+                <button class="myButton" type="submit">Filter</button>
+            </form>
+
+
+            <!-- Clear Filters -->
+            <a href="/transactions" class="myButton" style="height:50%; margin-top:1rem;">clear filters</a>
+
+
+            <!-- Upload summary -->
+            <div th:if="${result != null}">
+                <p>Total uploaded: <span th:text="${result.nonDuplicates}"></span></p>
+                <p>Duplicates found: <span th:text="${result.duplicates}"></span></p>
+                <div th:if="${result.nonDuplicates == 0}">
+                    <p>No data uploaded.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

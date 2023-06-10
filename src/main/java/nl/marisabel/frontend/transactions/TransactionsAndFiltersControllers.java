@@ -37,7 +37,7 @@ public class TransactionsAndFiltersControllers {
  //.......... D E F A U L T
  @GetMapping("/transactions")
  public String showTransactions(@RequestParam(defaultValue = "0") int page, Model model) {
-  int size = 25;
+  int size = 300;
   Page<TransactionEntity> transactions = transactionRepository.findAll(PageRequest.of(page, size));
   List<CategoryEntity> categories = categoryRepository.findAll();
   model.addAttribute("transactions", transactions);
