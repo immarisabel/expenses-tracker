@@ -9,10 +9,12 @@ import nl.marisabel.backend.transactions.repository.TransactionRepository;
 import nl.marisabel.backend.transactions.service.TransactionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
@@ -20,14 +22,14 @@ import java.util.List;
 
 @Controller
 @Log4j2
-public class TransactionsAndFiltersControllers {
+public class TransactionsAndFiltersController {
 
 
  private final TransactionService transactionService;
  private final TransactionRepository transactionRepository;
  private final CategoryRepository categoryRepository;
 
- public TransactionsAndFiltersControllers(TransactionService transactionService, TransactionRepository transactionRepository, CategoryRepository categoryRepository) {
+ public TransactionsAndFiltersController(TransactionService transactionService, TransactionRepository transactionRepository, CategoryRepository categoryRepository) {
   this.transactionService = transactionService;
   this.transactionRepository = transactionRepository;
   this.categoryRepository = categoryRepository;
@@ -39,7 +41,7 @@ public class TransactionsAndFiltersControllers {
  public String showTransactions(@RequestParam(defaultValue = "0") int page, Model model) {
   int size = 300;
   Page<TransactionEntity> transactions = transactionRepository.findAll(PageRequest.of(page, size));
-  List<CategoryEntity> categories = categoryRepository.findAll();
+  List<CategoryEntity> categories = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category"));
   model.addAttribute("transactions", transactions);
   model.addAttribute("categories", categories);
   model.addAttribute("transactionsForm", new TransactionForm());
@@ -80,6 +82,31 @@ model.addAttribute("message", searchResults.size()+" transactions found");
   model.addAttribute("filteredCount", filteredResults.size());
   model.addAttribute("currentPage", 0);
   return "transactions/filtered-page";
+ }
+
+
+ //.......... CATEGORY FILTER
+ @GetMapping("/transactions/categories")
+ public String showCategoryCharts(@RequestParam("categoryId") Long categoryId, Model model) {
+  List<TransactionEntity> filteredResults = transactionService.getTransactionsByCategory(categoryId);
+  model.addAttribute("transactions", filteredResults);
+  model.addAttribute("filteredCount", filteredResults.size());
+  model.addAttribute("currentPage", 0);
+  return "transactions/filtered-page";
+ }
+
+
+ //.......... NO CATEGORY FILTER
+
+ @GetMapping("/transactions/categories/none")
+ public String showTransactionsWithoutCategory(@RequestParam(defaultValue = "0") int page, Model model) {
+  int size = 300;
+  Page<TransactionEntity> transactions = transactionRepository.findByCategoriesIsEmpty(PageRequest.of(page, size));
+  List<CategoryEntity> categories = categoryRepository.findAll();
+  model.addAttribute("transactions", transactions);
+  model.addAttribute("categories", categories);
+  model.addAttribute("transactionsForm", new TransactionForm());
+  return "transactions/transactions";
  }
 
 }

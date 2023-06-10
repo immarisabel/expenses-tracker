@@ -37,29 +37,34 @@
             </form>
 
             <!-- Filter by category -->
-            <form th:action="@{/transactions/filter}" method="get"
-                  style="display: flex; align-items: center; gap: 1px;">
-                <select class="form-control" id="category" name="category">
-                    <option value="">All Categories</option>
-                    <option th:each="category : ${categories}" th:value="${category}" th:text="${category}"></option>
+            <form th:action="@{/transactions/categories}" method="get" style="display: flex; align-items: center; gap: 1px;">
+                <select class="form-control" id="category" name="categoryId" style="width:10rem;">
+                    <option value="">by category</option>
+                    <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.category}"></option>
                 </select>
                 <button class="myButton" type="submit">Filter</button>
             </form>
+
+
+            <a href="/transactions/categories/none" class="myButton" style="height:50%; margin-top:1rem;">no category</a>
+
 
 
             <!-- Clear Filters -->
             <a href="/transactions" class="myButton" style="height:50%; margin-top:1rem;">clear filters</a>
 
 
-            <!-- Upload summary -->
-            <div th:if="${result != null}">
-                <p>Total uploaded: <span th:text="${result.nonDuplicates}"></span></p>
-                <p>Duplicates found: <span th:text="${result.duplicates}"></span></p>
-                <div th:if="${result.nonDuplicates == 0}">
-                    <p>No data uploaded.</p>
-                </div>
-            </div>
         </div>
 
+        <!-- Upload summary -->
+
     </div>
+
+    <div th:if="${result != null}">
+    <p>Total uploaded: <span th:text="${result.nonDuplicates}"></span></p>
+    <p>Duplicates found: <span th:text="${result.duplicates}"></span></p>
+    <div th:if="${result.nonDuplicates == 0}">
+        <p>No data uploaded.</p>
+    </div>
+</div>
 </div>

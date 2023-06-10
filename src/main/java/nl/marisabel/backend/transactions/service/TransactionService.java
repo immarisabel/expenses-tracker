@@ -52,4 +52,8 @@ public class TransactionService {
  public Page<TransactionEntity> filterTransactionByDate(LocalDate startDate, LocalDate endDate, PageRequest of) {
   return transactionRepository.findByDateBetween(startDate, endDate, of);
  }
+
+ public List<TransactionEntity> getTransactionsByCategory(Long categoryId) {
+  return transactionRepository.findByCategoryId(categoryId);
+ }
 }

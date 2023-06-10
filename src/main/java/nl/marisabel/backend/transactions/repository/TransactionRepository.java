@@ -18,6 +18,9 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
 
  Page<TransactionEntity> findAll(Pageable pageable);
 
+ @Query("SELECT t FROM TransactionEntity t WHERE t.categories IS EMPTY")
+ Page<TransactionEntity> findByCategoriesIsEmpty(Pageable pageable);
+
  @Query("SELECT e FROM TransactionEntity e WHERE lower(e.entity) LIKE lower(concat('%', :searchTerm, '%')) OR lower(e.description) LIKE lower(concat('%', :searchTerm, '%'))")
  List<TransactionEntity> findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(@Param("searchTerm") String searchTerm);
 
@@ -25,6 +28,9 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
 
  @Query("SELECT amount FROM TransactionEntity")
  List<Integer> findAllAmounts();
+
+ @Query("SELECT e FROM TransactionEntity e JOIN e.categories c WHERE c.id = :categoryId")
+ List<TransactionEntity> findByCategoryId(@Param("categoryId") Long categoryId);
 
 // UPLOADING
 
