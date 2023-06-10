@@ -139,6 +139,8 @@ public class CategoriesChartController {
             savings.add(creditTotal - debitTotal); // Compute savings for each category
         }
 
+        log.info(previousMonth.format(monthFormatter) + " | "+  month + " | "+ nextMonth.format(monthFormatter));
+
         model.addAttribute("labels", labels);
         model.addAttribute("credits", credits);
         model.addAttribute("debits", debits);

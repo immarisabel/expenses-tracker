@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import nl.marisabel.backend.transactions.entity.ExpenseEntity;
+import nl.marisabel.backend.transactions.entity.TransactionEntity;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -26,5 +26,5 @@ public class CategoryEntity {
     @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @Fetch(FetchMode.JOIN)
-    private Set<ExpenseEntity> expenses = new HashSet<>();
+    private Set<TransactionEntity> transactions = new HashSet<>();
 }

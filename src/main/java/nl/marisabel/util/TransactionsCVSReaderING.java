@@ -3,9 +3,9 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import lombok.extern.log4j.Log4j2;
-import nl.marisabel.backend.transactions.repository.ExpenseRepository;
-import nl.marisabel.backend.transactions.entity.ExpenseEntity;
-import nl.marisabel.frontend.upload.ExpenseUploadResult;
+import nl.marisabel.backend.transactions.repository.TransactionRepository;
+import nl.marisabel.backend.transactions.entity.TransactionEntity;
+import nl.marisabel.frontend.upload.TransactionUploadResult;
 import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
@@ -18,16 +18,16 @@ import java.util.Locale;
 
 @Component
 @Log4j2
-public class ExpensesCvsReaderING {
-    private final ExpenseRepository expenseRepository;
-    private final ExpenseUploadResult result;
+public class TransactionsCVSReaderING {
+    private final TransactionRepository transactionRepository;
+    private final TransactionUploadResult result;
     private int duplicateCount = 0;
     private int nonDuplicateCount = 0;
-    public ExpensesCvsReaderING(ExpenseRepository expenseRepository, ExpenseUploadResult result) {
-        this.expenseRepository = expenseRepository;
+    public TransactionsCVSReaderING(TransactionRepository transactionRepository, TransactionUploadResult result) {
+        this.transactionRepository = transactionRepository;
         this.result = result;
     }
-    public ExpenseUploadResult read(InputStream file) throws Exception {
+    public TransactionUploadResult read(InputStream file) throws Exception {
         CSVReader csvReader = null;
         try {
             csvReader = new CSVReaderBuilder(new InputStreamReader(file))
@@ -56,25 +56,25 @@ public class ExpensesCvsReaderING {
                     double amount = decimalFormat.parse(record[6]).doubleValue();
 
                     // Check for duplicates before adding to the database
-                    boolean isDuplicate = expenseRepository.transactionExists(
+                    boolean isDuplicate = transactionRepository.transactionExists(
                             LocalDate.parse(record[0], DateTimeFormatter.ofPattern("yyyyMMdd")),
                             entity,
                             creditOrDebit,
                             amount,
                             description);
                     if (!isDuplicate) {
-                        ExpenseEntity expense = new ExpenseEntity();
-                        expense.setDate(record[0]);
-                        expense.setEntity(entity);
-                        expense.setCreditOrDebit(creditOrDebit);
-                        expense.setAmount(amount);
-                        expense.setDescription(description);
-                        expenseRepository.save(expense);
+                        TransactionEntity transaction = new TransactionEntity();
+                        transaction.setDate(record[0]);
+                        transaction.setEntity(entity);
+                        transaction.setCreditOrDebit(creditOrDebit);
+                        transaction.setAmount(amount);
+                        transaction.setDescription(description);
+                        transactionRepository.save(transaction);
                         nonDuplicateCount++; // Increase non-duplicate counter
-                        log.info("Expense added: {}", expense);
+                        log.info("transaction added: {}", transaction);
                     } else {
                         duplicateCount++; // Increase duplicate counter
-                        log.info("Duplicate expense found at line {}: {}", currentLine, description);
+                        log.info("Duplicate transaction found at line {}: {}", currentLine, description);
                     }
                 } catch (Exception e) {
                     log.error("Error parsing record at line {}: {}", currentLine, e.getMessage());

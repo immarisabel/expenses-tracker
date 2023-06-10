@@ -78,7 +78,7 @@
                     <li th:text="${c.category}"></li>
             </td>
             <td>
-                <p th:text="${c.expenses.size()}"></p>
+                <p th:text="${c.transactions.size()}"></p>
             </td>
             <td>
                 <a th:href="@{/categories/update(id=${c.id})}" class="myButton" style="color:white;" alt="update ${c.category}">

@@ -17,9 +17,9 @@
 <div class="container">
 
   <div class="pagination-controls" style="margin:1rem 0 1rem 0;">
-    <a th:href="@{/chart/{month}(month=${previousMonth})}" class="myButton">Previous Month</a>
+    <a th:href="@{/charts/month/{month}(month=${previousMonth})}" class="myButton">Previous Month</a>
     <span th:text="${fulldate}" style="margin:1rem;"></span>
-    <a th:href="@{/chart/{month}(month=${nextMonth})}" class="myButton">Next Month</a>
+    <a th:href="@{/charts/month/{month}(month=${nextMonth})}" class="myButton">Next Month</a>
   </div>
 
 

@@ -3,13 +3,12 @@ package nl.marisabel.backend.categories.controller;
 import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.service.CategoryService;
-import nl.marisabel.backend.transactions.entity.ExpenseEntity;
+import nl.marisabel.backend.transactions.entity.TransactionEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -57,7 +56,7 @@ public class CategoryController {
 
 
     @PostMapping("/delete")
-    public String deleteCategory(@RequestParam("id") Long id, Model model, ExpenseEntity expense) {
+    public String deleteCategory(@RequestParam("id") Long id, Model model, TransactionEntity transaction) {
         CategoryEntity categoryEntity = categoryService.getCategory(id);
         categoryEntity.setCategory("");
         categoryService.saveOrUpdate(categoryEntity);

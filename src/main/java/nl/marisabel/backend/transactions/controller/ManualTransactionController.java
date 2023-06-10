@@ -1,7 +1,7 @@
 package nl.marisabel.backend.transactions.controller;
 
-import nl.marisabel.backend.transactions.entity.ExpenseEntity;
-import nl.marisabel.backend.transactions.repository.ExpenseRepository;
+import nl.marisabel.backend.transactions.entity.TransactionEntity;
+import nl.marisabel.backend.transactions.repository.TransactionRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,24 +11,24 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class ManualTransactionController {
-    private final ExpenseRepository expenseRepository;
+    private final TransactionRepository transactionRepository;
 
 
 
-    public ManualTransactionController(ExpenseRepository expenseRepository) {
-        this.expenseRepository = expenseRepository;
+    public ManualTransactionController(TransactionRepository transactionRepository) {
+        this.transactionRepository = transactionRepository;
     }
 
     @GetMapping("/transactions/new")
     public String showAddTransactionForm(Model model) {
-        model.addAttribute("transaction", new ExpenseEntity());
-        return "manual-transaction";
+        model.addAttribute("transaction", new TransactionEntity());
+        return "transactions/manual-transaction";
     }
 
     @PostMapping("/transactions")
-    public String addTransaction(@ModelAttribute("transaction") ExpenseEntity transaction, RedirectAttributes redirectAttributes) {
-        ExpenseEntity savedTransaction = expenseRepository.save(transaction);
+    public String addTransaction(@ModelAttribute("transaction") TransactionEntity transaction, RedirectAttributes redirectAttributes) {
+        TransactionEntity savedTransaction = transactionRepository.save(transaction);
         redirectAttributes.addFlashAttribute("message", "Transaction added successfully. ID: " + savedTransaction.getId());
-        return "redirect:/expenses";
+        return "redirect:/transactions";
     }
 }

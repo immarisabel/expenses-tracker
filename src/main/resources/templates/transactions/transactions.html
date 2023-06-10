@@ -22,8 +22,8 @@
         </form>
 
         <!-- search by keyword -->
-        <form th:action="@{/expenses/search}" method="get" style="display: flex; align-items: center; gap: 1px;">
-            <input class="form-control" id="searchTerm" type="text" name="searchTerm" placeholder="Search expenses..." required
+        <form th:action="@{/transactions/search}" method="get" style="display: flex; align-items: center; gap: 1px;">
+            <input class="form-control" id="searchTerm" type="text" name="searchTerm" placeholder="Search transaction..." required
                    th:value="${searchTerm}"/>
             <button class="myButton" type="submit">Search</button>
         </form>
@@ -32,16 +32,14 @@
 
 
         <!-- Filter by date -->
-        <form th:action="@{/expenses/filter}" method="get" style="display: flex; align-items: center; gap: 1px;">
+        <form th:action="@{/transactions/filter}" method="get" style="display: flex; align-items: center; gap: 1px;">
             <label for="startDate">from:</label>
             <input  class="form-control" id="startDate" type="date" name="startDate" required>
             <label for="endDate">to:</label>
             <input  class="form-control" id="endDate" type="date" name="endDate" required>
             <button class="myButton" type="submit">filter</button>
         </form>
-        <form>
-        <button class="myButton" onclick="window.location.href='expenses/'">clear filters</button>
-    </form>
+        <a href="/transactions" class="myButton">clear filters</a>
 
 
 
@@ -60,13 +58,11 @@
 
 
 <!-- PAGINATION CONTROL -->
-<!--<div th:unless="${searchResults}">
     <div>
-        <a th:if="${expenses.hasPrevious()} == true" th:href="@{/expenses(page=${expenses.number - 1})}">Previous</a>
-        <span th:text="${expenses.number + 1}"></span> / <span th:text="${expenses.totalPages}"></span>
-        <a th:if="${expenses.hasNext()} == true" th:href="@{/expenses(page=${expenses.number + 1})}">Next</a>
+        <a th:if="${transactions.hasPrevious()} == true" th:href="@{/transactions(page=${transactions.number - 1})}">Previous</a>
+        <span th:text="${transactions.number + 1}"></span> / <span th:text="${transactions.totalPages}"></span>
+        <a th:if="${transactions.hasNext()} == true" th:href="@{/transactions(page=${transactions.number + 1})}">Next</a>
     </div>
-</div>-->
 
 
 <div th:if="${message}">
@@ -75,7 +71,7 @@
 
 
 <!--UPDATE CATEGORIES-->
-<form th:action="@{/expenses/updateCategory(searchTerm=${searchTerm})}" method="post" th:withQueryString="true">
+<form th:action="@{/transactions/updateCategory(searchTerm=${searchTerm})}" method="post" th:withQueryString="true">
     <select name="categoryId">
         <option value="">add category to transaction</option>
         <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.category}"></option>
@@ -115,19 +111,19 @@
     </thead>
 
     <tbody>
-    <tr th:each="expense : ${expenses}">
-        <td data-title="Date" th:text="${expense.date}"></td>
-        <td data-title="Entity" th:text="${expense.entity}"></td>
-        <td data-title="Credit/Debit" th:text="${expense.creditOrDebit}"></td>
-        <td data-title="Amount" th:text="${expense.amount}"></td>
-        <td data-title="Description" th:text="${expense.description}"></td>
-        <td data-title="Category"  th:text="${expense.categories.size() > 0 ? expense.categories[0].category : ''}"></td>
+    <tr th:each="transaction : ${transactions}">
+        <td data-title="Date" th:text="${transaction.date}"></td>
+        <td data-title="Entity" th:text="${transaction.entity}"></td>
+        <td data-title="Credit/Debit" th:text="${transaction.creditOrDebit}"></td>
+        <td data-title="Amount" th:text="${transaction.amount}"></td>
+        <td data-title="Description" th:text="${transaction.description}"></td>
+        <td data-title="Category"  th:text="${transaction.categories.size() > 0 ? transaction.categories[0].category : ''}"></td>
         <td style="text-align: center;">
-            <input type="checkbox" name="selectedExpenseIds" th:value="${expense.id}"/>
+            <input type="checkbox" name="selectedTransactionsIds" th:value="${transaction.id}"/>
         </td>
         <td>
-            <form th:action="@{/expenses/delete}" method="post">
-                <input type="hidden" name="id" th:value="${expense.id}">
+            <form th:action="@{/transactions/delete}" method="post">
+                <input type="hidden" name="id" th:value="${transaction.id}">
                 <button class="myButton" type="submit" onclick="return confirm('Delete transaction?')">delete</button>
             </form>
         </td>
@@ -141,7 +137,7 @@
 <script>
     // Function to toggle the selection of all checkboxes
     function toggleSelectAll() {
-      const checkboxes = document.querySelectorAll('input[name="selectedExpenseIds"]');
+      const checkboxes = document.querySelectorAll('input[name="selectedTransactionsIds"]');
       const selectAllCheckbox = document.getElementById('selectAll');
 
       checkboxes.forEach((checkbox) => {

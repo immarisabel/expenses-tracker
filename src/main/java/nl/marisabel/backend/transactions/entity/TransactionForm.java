@@ -8,13 +8,13 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ExpenseFormDto {
+public class TransactionForm {
 
-    private List<Long> selectedExpenseIds;
+    private List<Long> selectedTransactionIds;
     private Long categoryId;
 
-    public ExpenseFormDto() {
-        this.selectedExpenseIds = new ArrayList<>();
+    public TransactionForm() {
+        this.selectedTransactionIds = new ArrayList<>();
     }
 
 }

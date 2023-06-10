@@ -19,7 +19,7 @@ import java.util.Set;
 @Setter
 @ToString(exclude = "categories")  // excluding the relationship field from toString()
 @Table(name = "expenses")
-public class ExpenseEntity {
+public class TransactionEntity {
  @Id
  @GeneratedValue(strategy = GenerationType.AUTO)
  private Long id;
@@ -53,11 +53,11 @@ public class ExpenseEntity {
 
  public void addCategory(CategoryEntity category) {
   categories.add(category);
-  category.getExpenses().add(this);
+  category.getTransactions().add(this);
  }
 
  public void removeCategory(CategoryEntity category) {
   categories.remove(category);
-  category.getExpenses().remove(this);
+  category.getTransactions().remove(this);
  }
 }
