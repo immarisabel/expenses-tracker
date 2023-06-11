@@ -61,7 +61,7 @@ public class TransactionsAndFiltersController {
    log.info(".... SEARCHING FOR: " + searchTerm);
   }
   List<TransactionEntity> searchResults = transactionRepository.findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(searchTerm);
-  List<CategoryEntity> categories = categoryRepository.findAll();
+  List<CategoryEntity> categories = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category"));
   model.addAttribute("transactions", searchResults);
   model.addAttribute("searchCount", searchResults.size());
   model.addAttribute("categories", categories);
@@ -78,6 +78,10 @@ model.addAttribute("message", searchResults.size()+" transactions found");
                                         @RequestParam("endDate") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate endDate,
                                         Model model) {
   List<TransactionEntity> filteredResults = transactionService.filterTransactionByDate(startDate, endDate);
+
+  List<CategoryEntity> categories = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category"));
+  model.addAttribute("categories", categories);
+
   model.addAttribute("transactions", filteredResults);
   model.addAttribute("filteredCount", filteredResults.size());
   model.addAttribute("currentPage", 0);
@@ -89,6 +93,9 @@ model.addAttribute("message", searchResults.size()+" transactions found");
  @GetMapping("/transactions/categories")
  public String showCategoryCharts(@RequestParam("categoryId") Long categoryId, Model model) {
   List<TransactionEntity> filteredResults = transactionService.getTransactionsByCategory(categoryId);
+  List<CategoryEntity> categories = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category"));
+  model.addAttribute("categories", categories);
+
   model.addAttribute("transactions", filteredResults);
   model.addAttribute("filteredCount", filteredResults.size());
   model.addAttribute("currentPage", 0);
@@ -102,7 +109,7 @@ model.addAttribute("message", searchResults.size()+" transactions found");
  public String showTransactionsWithoutCategory(@RequestParam(defaultValue = "0") int page, Model model) {
   int size = 300;
   Page<TransactionEntity> transactions = transactionRepository.findByCategoriesIsEmpty(PageRequest.of(page, size));
-  List<CategoryEntity> categories = categoryRepository.findAll();
+  List<CategoryEntity> categories = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category"));
   model.addAttribute("transactions", transactions);
   model.addAttribute("categories", categories);
   model.addAttribute("transactionsForm", new TransactionForm());
