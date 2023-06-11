@@ -61,5 +61,17 @@ public class SavingsController {
  // edit goals - add amount and name, remove, edit amount and name
 
 
+ // METHODS I NEED (or controllers or service WTEVER):
+ // - automate amount to distruibute
+ // - save a new goal
+ // - save the amounts allocated to savings
+ // - display chart of savings per month
+ // - display amount saved TOTAL next to each goal
+ // PAGES I NEED:
+ // - goals settings (make, edit, delete)
+ // - goals overview (table with totals and descriptions, and if reached)
+ // - goal chart (per ID) (graphic not bars - per month)
+ // - left over per month chart (graphic, not bars)
+ // - savings allocation (sliders, in progress)
 }
 
