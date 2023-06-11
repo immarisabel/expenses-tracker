@@ -3,7 +3,7 @@ package nl.marisabel.frontend.charts;
 import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.service.CategoryService;
-import nl.marisabel.frontend.charts.ChartService;
+import nl.marisabel.backend.transactions.entity.TransactionEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,17 +34,23 @@ public class CategoriesChartController {
                                      @RequestParam(value = "year", required = false) Integer year,
                                      Model model) {
 
+        // Load the category
         CategoryEntity category = categoryService.getCategory(categoryId);
+
+        // Set up the current year
         int currentYear = Year.now().getValue();
 
+        // If the category is not found, return an error view
         if (category == null) {
             return "error";
         }
 
+        // If the year is not specified or 0, use the current year
         if (year == null || year == 0) {
             year = currentYear;
         }
 
+        // Logging category and year information
         log.info("Category: " + category.getCategory());
         log.info(".... the year is " + year);
 
@@ -52,34 +58,38 @@ public class CategoriesChartController {
         YearMonth startYearMonth = YearMonth.of(year, 1);
         YearMonth endYearMonth = YearMonth.of(year, 12);
 
-        Map<String, Double> monthlyCredits = new LinkedHashMap<>();
-        Map<String, Double> monthlyDebits = new LinkedHashMap<>();
 
-        for (int month = 1; month <= 12; month++) {
-            YearMonth yearMonth = YearMonth.of(year, month);
-            monthlyCredits.putAll(chartService.getMonthlyCreditsByCategory(yearMonth, category));
-            monthlyDebits.putAll(chartService.getMonthlyDebitsByCategory(yearMonth, category));
-        }
+        // Get data for the specified year
+        Map<String, Double> monthlyCredits = chartService.getMonthlyCreditsByCategoryForCategory(year, category);
+        Map<String, Double> monthlyDebits = chartService.getMonthlyDebitsByCategoryForCategory(year, category);
 
+
+        // Initialize lists to store chart data
         List<String> labels = new ArrayList<>();
         List<Double> credits = new ArrayList<>();
         List<Double> debits = new ArrayList<>();
 
-        for (Map.Entry<String, Double> entry : monthlyCredits.entrySet()) {
-            String month = entry.getKey();
-            double creditTotal = monthlyCredits.getOrDefault(month, 0.0);
-            double debitTotal = monthlyDebits.getOrDefault(month, 0.0);
+        // Populate the labels, credits, and debits lists
+        for (int month = 1; month <= 12; month++) {
+            String monthLabel = month < 10 ? "0" + month : String.valueOf(month);
+            String monthKey = monthLabel + year; // Concatenate month and year to create the key
+            double creditTotal = monthlyCredits.getOrDefault(monthKey, 0.0);
+            double debitTotal = monthlyDebits.getOrDefault(monthKey, 0.0);
 
-            labels.add(month);
+            labels.add(monthLabel);
             credits.add(creditTotal);
             debits.add(debitTotal);
         }
 
+
+
+        // Add attributes to the model for use in the view
         model.addAttribute("labels", labels);
         model.addAttribute("credits", credits);
         model.addAttribute("debits", debits);
         model.addAttribute("category", category);
         model.addAttribute("currentYear", year);
+
 
         // Set previous and next year for pagination
         int previousYear = year - 1;
@@ -87,6 +97,7 @@ public class CategoriesChartController {
         model.addAttribute("prevYear", previousYear);
         model.addAttribute("nextYear", nextYear);
 
+        // Return the name of the view template
         return "charts/chart-yearly-categories";
     }
 
@@ -94,6 +105,7 @@ public class CategoriesChartController {
 
 
 
+// CORRECTLY DISPLAYING CHART ✔
 
     @GetMapping("/charts/month/{month}")
     public String showChartByMonthlyCategories(@PathVariable String month, Model model) {
@@ -120,8 +132,8 @@ public class CategoriesChartController {
         YearMonth nextMonth = yearMonth.plusMonths(1);
 
         // Fetch the monthly totals for the given month
-        Map<String, Double> monthlyCreditsByCategory = chartService.getMonthlyCreditsByCategory(yearMonth);
-        Map<String, Double> monthlyDebitsByCategory = chartService.getMonthlyDebitsByCategory(yearMonth);
+        Map<String, Double> monthlyCreditsByCategory = chartService.getMonthlyCreditsByCategoryForMonth(yearMonth);
+        Map<String, Double> monthlyDebitsByCategory = chartService.getMonthlyDebitsByCategoryForMonth(yearMonth);
 
         List<String> labels = new ArrayList<>();
         List<Double> credits = new ArrayList<>();
@@ -155,3 +167,4 @@ public class CategoriesChartController {
 
 
 }
+
