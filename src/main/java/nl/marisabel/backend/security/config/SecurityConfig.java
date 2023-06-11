@@ -42,6 +42,8 @@ public class SecurityConfig {
           .cors(withDefaults())
           .csrf(withDefaults())
 
+//TODO turn security back on when project is fully finalized
+
           .authorizeHttpRequests((requests) -> requests
                   .requestMatchers("/css/**", "/", "/403", "/errorpage", "/simulateError").permitAll()
                           .requestMatchers("/**").permitAll()

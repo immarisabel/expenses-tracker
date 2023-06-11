@@ -29,6 +29,8 @@ public class CategoriesChartController {
         this.chartService = chartService;
     }
 
+    //TODO add cat link for transaction table
+    //TODO add category name as header
     @GetMapping("/charts/categories/{categoryId}")
     public String showCategoryCharts(@PathVariable Long categoryId,
                                      @RequestParam(value = "year", required = false) Integer year,

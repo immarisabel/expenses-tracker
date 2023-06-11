@@ -16,9 +16,14 @@
 
 <!--    CHART PAGE-->
 
+.container{
+width:90%;
+padding:1rem;
+}
+
 /* Overviews list */
 
-.overviews, .categories {
+.overviews {
     list-style-type: none;
     padding-left: 0;
     text-align: center;
@@ -54,34 +59,48 @@ ul.overviews li a:hover {
     background-color: #5563c1;
 }
 
-/* Categories list */
-ul.categories {
-    list-style-type: none;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-}
+  /* Categories list */
 
-ul.categories li {
-    background-color: #9aa4ec;
-    margin: 10px 0;
-    border-radius: 5px;
-    width: 80%;
-    text-align: center;
-}
+       .wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1em;
+        }
 
-ul.categories li a {
-    display: block;
-    color: #fff;
-    padding: 10px 15px;
-    text-decoration: none;
-}
+        ol {
+            columns: 3;
+            list-style: none;
+            color: white;
+        }
 
-ul.categories li a:hover {
-    background-color: #8995c8;
-}
+
+    ul.categories {
+        list-style-type: none;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    ul.categories li {
+        background-color: #9aa4ec;
+        margin: 10px 0;
+        border-radius: 5px;
+        width: 80%;
+        text-align: center;
+    }
+
+    ul.categories li a {
+        display: block;
+        color: #fff;
+        padding: 10px 15px;
+        text-decoration: none;
+    }
+
+    ul.categories li a:hover {
+        background-color: #8995c8;
+    }
 
 
 
@@ -136,6 +155,12 @@ h2 {
  .navbar li a:hover {
      background-color: #111;
 }
+ .form-row {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
  .form-control{
      display:block;
      width:100%;
@@ -251,30 +276,19 @@ h2 {
  .myButton {
      background-color: #6474e5;
      color: #ffff;
-    /* Text color */
      border: none;
-    /* Removes the default button border */
      padding: 5px 10px;
-    /* Top-bottom padding, left-right padding */
      text-align: center;
-    /* Center the text */
      text-decoration: none;
-    /* Remove default underline */
      display: inline-block;
      font-size: 16px;
-    /* Size of the text */
      margin: 2px 2px;
-    /* Top-bottom margin, left-right margin */
      cursor: pointer;
-    /* Makes the cursor a hand when hovering over the button */
      border-radius: 8px;
-    /* Rounds the corners of the button */
      transition-duration: 0.4s;
-    /* Creates a nice fade effect when hovering over the button */
 }
  .myButton:hover {
      background-color: #f4a4a4;
-    /* Changes the color when hovering */
      color: white;
 }
  .slider {
@@ -309,6 +323,7 @@ h2 {
      margin-left: 1em;
      font-size: 1.5em;
 }
+
 
 
     </style>

@@ -7,6 +7,7 @@
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
+<div class="container">
 
 <h1>Allocate your funds</h1>
 
@@ -16,7 +17,6 @@
         <input type="range" min="0" th:attr="max=${goal.max}, value=${goal.value}" class="slider" th:id="${goal.name + 'Slider'}">
         <p class="amount" th:id="${goal.name + 'Amount'}" th:text="${goal.value}"></p>
     </div>
-
 </div>
 
 <p>Total allocated: <span id="totalAllocated" th:text="${totalAllocated}"></span> / <span id="totalToAllocate" th:text="${totalToAllocate}"></span></p>
@@ -67,7 +67,7 @@
 </script>
 
 
-
+</div>
 
 
 </body>

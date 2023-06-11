@@ -8,6 +8,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.*;
 
 import java.time.Month;
+import java.time.Year;
 
 @Entity
 @Getter
@@ -24,8 +25,10 @@ public class SavingsEntity {
 
     private double amount;
     private Month savingsMonth;
+    private Year savingYear;
 
     @ManyToOne
     private GoalEntity goal;
+
 
 }

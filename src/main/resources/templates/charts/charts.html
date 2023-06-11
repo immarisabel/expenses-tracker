@@ -8,6 +8,9 @@
 
 
 <style>
+
+
+
         .table-categories {
             width: 100%;
             border-collapse: collapse;
@@ -62,16 +65,18 @@
 
 <div class="container">
     <h2>Overviews</h2>
-    <ul class="overviews">
+    <ul class="overviews" >
         <li><a href="charts/year">Yearly overview</a></li>
         <li><a th:href="${chartsMonthLink}">Monthly overview</a></li>
     </ul>
 
     <h2>Categories Yearly Views</h2>
-    <ul class="categories">
+    <ul class="categories wrapper">
+        <ol>
         <li th:each="c : ${categories}">
             <a th:href="@{/charts/categories/{categoryId}(categoryId=${c.id})}" th:text="${c.category}"></a>
         </li>
+        </ol>
     </ul>
 </div>
 

@@ -81,6 +81,7 @@ public class TransactionController {
             RedirectAttributes redirectAttributes,
             HttpServletRequest request
     ) {
+
         List<Long> transactionsId = Arrays.stream(selectedTransactionsIds)
                 .map(Long::valueOf)
                 .collect(Collectors.toList());
@@ -90,8 +91,9 @@ public class TransactionController {
         int endIndex = Math.min(startIndex + pageSize, transactionsId.size());
         List<Long> paginatedTransactionIds = transactionsId.subList(startIndex, endIndex);
 
-        List<TransactionEntity> transactions = transactionRepository.findAllById(paginatedTransactionIds);
-        log.info("....transactions updated: " + transactions);
+        List<TransactionEntity> transactions = transactionRepository.findAllById(transactionsId);
+
+        log.info("....transactions updated: " + transactions.size());
 
         try {
             transactionService.batchUpdateCategory(categoryId, transactions);
