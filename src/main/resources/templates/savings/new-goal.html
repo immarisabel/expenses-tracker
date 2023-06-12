@@ -1,0 +1,51 @@
+<!-- goals.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Savings Goals</title>
+</head>
+<body>
+<h2>Create New Goal</h2>
+<form th:action="@{/savings/goals}" th:object="${goal}" method="post">
+    <!-- form fields for creating a new goal -->
+    <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name" th:field="*{name}" required>
+    </div>
+    <div>
+        <label for="description">Description:</label>
+        <input type="text" id="description" th:field="*{description}" required>
+    </div>
+    <div>
+        <label for="maxAmount">Max Amount:</label>
+        <input type="number" id="maxAmount" th:field="*{maxAmount}" step="0.01" required>
+    </div>
+    <div>
+        <label for="reached">Reached:</label>
+        <input type="checkbox" id="reached" th:field="*{reached}">
+    </div>
+    <button type="submit">Create</button>
+</form>
+
+<h2>Savings Goals List</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Max Amount</th>
+        <th>Reached</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="goal : ${goals}">
+        <td th:text="${goal.name}"></td>
+        <td th:text="${goal.description}"></td>
+        <td th:text="${goal.maxAmount}"></td>
+        <td th:text="${goal.reached}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

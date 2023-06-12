@@ -95,7 +95,7 @@ public class SavingsController {
   // store in transactions allocated }
   // }
 
-  return "goals";
+  return "savings/goals";
  }
 
 
