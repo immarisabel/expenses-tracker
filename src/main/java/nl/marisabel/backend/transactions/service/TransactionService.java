@@ -11,7 +11,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TransactionService {
@@ -56,4 +58,21 @@ public class TransactionService {
  public List<TransactionEntity> getTransactionsByCategory(Long categoryId) {
   return transactionRepository.findByCategoryId(categoryId);
  }
+
+ public double calculateTotalCreditsByMonth(LocalDate startDate, LocalDate endDate) {
+  return transactionRepository.calculateTotalCreditsByMonth(startDate, endDate);
+ }
+
+ public double calculateTotalDebitsByMonth(LocalDate startDate, LocalDate endDate) {
+  return transactionRepository.calculateTotalDebitsByMonth(startDate, endDate);
+ }
+
+
+ public double calculateRemainingFundsByMonth(LocalDate startDate, LocalDate endDate) {
+  double totalCredits = transactionRepository.calculateTotalCreditsByMonth(startDate, endDate);
+  double totalDebits = transactionRepository.calculateTotalDebitsByMonth(startDate, endDate);
+  return totalCredits - totalDebits;
+ }
+
+
 }

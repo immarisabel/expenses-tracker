@@ -11,6 +11,8 @@
 
 <h1>Allocate your funds</h1>
 
+    <h2 th:text${monthToAllocate}></h2>
+
 <div th:each="goal : ${goals}" class="goal">
     <p th:text="${goal.name}"></p>
     <div class="slider-container">

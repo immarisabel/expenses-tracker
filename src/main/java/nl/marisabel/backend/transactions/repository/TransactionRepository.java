@@ -16,7 +16,6 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
 
  // SEARCHING & FILTERING
 
-
  Page<TransactionEntity> findAll(Pageable pageable);
 
  @Query("SELECT t FROM TransactionEntity t WHERE t.categories IS EMPTY")
@@ -54,6 +53,14 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
  @Query("SELECT COALESCE(SUM(amount), 0) FROM TransactionEntity WHERE creditOrDebit = 'Debit' OR (creditOrDebit = 'Af' AND 'Debit' = 'Debit')")
  int calculateTotalDebits();
 
-
  Page<TransactionEntity> findByDateBetween(LocalDate startDate, LocalDate endDate, PageRequest of);
+
+ // SAVINGS
+
+ @Query("SELECT COALESCE(SUM(amount), 0.0) FROM TransactionEntity WHERE creditOrDebit = 'Credit' AND date BETWEEN :startDate AND :endDate")
+ double calculateTotalCreditsByMonth(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+ @Query("SELECT COALESCE(SUM(amount), 0.0) FROM TransactionEntity WHERE creditOrDebit = 'Debit' AND date BETWEEN :startDate AND :endDate")
+ double calculateTotalDebitsByMonth(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
 }
