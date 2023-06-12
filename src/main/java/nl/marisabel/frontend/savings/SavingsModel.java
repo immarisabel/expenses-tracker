@@ -1,7 +1,19 @@
 package nl.marisabel.frontend.savings;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.Month;
+import java.time.Year;
+
+@Getter
+@Setter
 public class SavingsModel {
 
- // for the charts: year, month, amount, goal name
+ private Long goalId;
+ private double amount;
+ private String monthYear;
 
-}
+ }
+
+

@@ -1,5 +1,6 @@
 package nl.marisabel.backend.transactions.controller;
 
+import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.transactions.entity.TransactionEntity;
 import nl.marisabel.backend.transactions.repository.TransactionRepository;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
+@Log4j2
 public class ManualTransactionController {
     private final TransactionRepository transactionRepository;
 
@@ -28,6 +30,7 @@ public class ManualTransactionController {
     @PostMapping("/transactions")
     public String addTransaction(@ModelAttribute("transaction") TransactionEntity transaction, RedirectAttributes redirectAttributes) {
         TransactionEntity savedTransaction = transactionRepository.save(transaction);
+        log.info(transaction.getDate());
         redirectAttributes.addFlashAttribute("message", "Transaction added successfully. ID: " + savedTransaction.getId());
         return "redirect:/transactions";
     }

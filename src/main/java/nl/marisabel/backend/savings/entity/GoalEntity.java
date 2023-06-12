@@ -1,10 +1,9 @@
 package nl.marisabel.backend.savings.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Setter
@@ -14,7 +13,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GoalEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -24,6 +22,9 @@ public class GoalEntity {
     private double maxAmount;
     private double lastAmount;
     private boolean reached;
+
+    @OneToMany(mappedBy = "goal")
+    private List<SavingsEntity> savingsEntities;
 
 }
 

@@ -1,10 +1,6 @@
 package nl.marisabel.backend.savings.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Month;
@@ -26,9 +22,11 @@ public class SavingsEntity {
     private double amount;
     private Month savingsMonth;
     private Year savingYear;
+    private String monthYear;
+
 
     @ManyToOne
+    @JoinColumn(name = "goal_id")
     private GoalEntity goal;
-
 
 }

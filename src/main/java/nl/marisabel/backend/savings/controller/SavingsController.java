@@ -1,17 +1,24 @@
 package nl.marisabel.backend.savings.controller;
 
 import lombok.extern.log4j.Log4j2;
+import nl.marisabel.backend.error.ResourceNotFoundException;
 import nl.marisabel.backend.savings.entity.GoalEntity;
+import nl.marisabel.backend.savings.entity.SavingsEntity;
 import nl.marisabel.backend.savings.service.GoalService;
 import nl.marisabel.backend.savings.service.SavingsService;
 import nl.marisabel.backend.transactions.service.TransactionService;
+import nl.marisabel.frontend.savings.SavingsModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.time.Year;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -23,11 +30,45 @@ public class SavingsController {
  private final SavingsService savingsService;
  private final TransactionService transactionService;
  private final GoalService goalService;
+
  public SavingsController(SavingsService savingsService, TransactionService transactionService, GoalService goalService) {
   this.savingsService = savingsService;
   this.transactionService = transactionService;
   this.goalService = goalService;
  }
+
+
+ @PostMapping("/savings/allocate-savings/{month}")
+ public String allocateSavings(@PathVariable String month,
+                               @RequestBody List<SavingsModel> savingsDTOs,
+                               RedirectAttributes redirectAttributes) {
+
+  DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMyyyy");
+  YearMonth yearMonth = YearMonth.parse(month, monthFormatter);
+
+  for (SavingsModel dto : savingsDTOs) {
+   GoalEntity goal = goalService.getGoalById(dto.getGoalId())
+           .orElseThrow(() -> new ResourceNotFoundException("Goal not found with id: " + dto.getGoalId()));
+   log.info(goal.getSavingsEntities());
+   log.info(goal.getId());
+   SavingsEntity savingsEntity = new SavingsEntity();
+   savingsEntity.setAmount(dto.getAmount());
+   savingsEntity.setSavingsMonth(yearMonth.getMonth());
+   savingsEntity.setSavingYear(Year.of(yearMonth.getYear()));
+   savingsEntity.setGoal(goal);
+   savingsEntity.setMonthYear(dto.getMonthYear()); // Set the monthYear value
+
+   savingsService.save(savingsEntity);
+  }
+
+  log.info("Savings allocated successfully!");
+
+  return "savings/goals";
+ }
+
+
+ // THIS WORKS!
+
 
 // shows the savings allocation page with sliders
 
@@ -61,7 +102,7 @@ public class SavingsController {
   int year = yearMonth.getYear();
 
 
- //calculate amount to allocate
+  //calculate amount to allocate
   double difference = transactionService.calculateRemainingFundsByMonth(startOfMonth, endOfMonth);
   log.info("REMAINING FUNDS FOR : " + formattedDate + " [ " + difference + " ] ");
   double totalToAllocate = Math.round(difference * 100.00) / 100.00;

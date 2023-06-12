@@ -1,11 +1,11 @@
 <html lang="en" xmlns:th="www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-<form th:if="${category}" th:action="@{/categories/add}" method="post" th:object="${category}"
-      class="hide-submit form my-sm-2">
+<div class="container">
+  <div class="col">
+<form th:if="${category}" th:action="@{/categories/add}" method="post" th:object="${category}">
   <input type="hidden" th:field="*{id}">
   <div class="row">
-    <div class="col">
-      <input class="float-start form-control-sm" type="text" th:field="*{category}" placeholder="Category Name"
+      <input class="form-control" type="text" th:field="*{category}" placeholder="Category Name"
              id="name">
       <label>
         <button type="submit" class="myButton">
@@ -13,6 +13,6 @@
         </button>
       </label>
     </div>
-  </div>
 </form>
-
+</div>
+</div>

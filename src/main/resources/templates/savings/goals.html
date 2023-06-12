@@ -3,27 +3,104 @@
 
 <header>
     <div th:replace="~{fragments/header :: header}"></div>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <script>
+function submitAllocations() {
+    // Get the current month and year from the URL
+    const urlParts = window.location.pathname.split('/');
+    const monthYear = urlParts[urlParts.length - 1];
+
+    // Create an array to store all the savings entities
+    let savingsEntities = [];
+
+    // Get all the sliders
+    const sliders = document.getElementsByClassName('slider');
+    for (let i = 0; i < sliders.length; i++) {
+        // Get the current slider
+        let slider = sliders[i];
+
+        // Get the associated goal
+        let goalName = slider.id.replace('Slider', '');
+        let goals = document.querySelectorAll('.goal p');
+        let goal = Array.from(goals).find((element) => element.textContent.trim() === goalName);
+
+        // Check if the goal element exists
+        if (goal) {
+            // Create a savings entity for this slider
+            let savingsEntity = {
+                goalId: goal.id,
+                amount: slider.value
+            };
+
+            // Add the savings entity to the array
+            savingsEntities.push(savingsEntity);
+        } else {
+            console.error(`Goal element not found for ${goalName}`);
+        }
+    }
+
+    // Get CSRF token
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeaderName = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+    // Convert the array to JSON
+    let jsonData = JSON.stringify(savingsEntities);
+
+    // Create the URL with the formatted month and year
+    const url = `/savings/allocate-savings/${encodeURIComponent(monthYear)}`;
+
+    // Send the data to the server-side
+    fetch(url, {
+        method: 'POST',
+        body: jsonData,
+        headers: {
+            'Content-Type': 'application/json',
+            [csrfHeaderName]: csrfToken
+        }
+    })
+        .then((response) => {
+            if (response.ok) {
+                alert('Allocation saved!');
+            } else {
+                alert('Failed to save allocation!');
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+}
+    </script>
+
+    </script>
 </header>
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
 <div class="container">
 
-<h1>Allocate your funds</h1>
+    <h1>Allocate your funds</h1>
 
     <h2 th:text${monthToAllocate}></h2>
 
-<div th:each="goal : ${goals}" class="goal">
-    <p th:text="${goal.name}"></p>
-    <div class="slider-container">
-        <input type="range" min="0" th:attr="max=${goal.maxAmount}, value=${goal.lastAmount}" class="slider" th:id="${goal.name + 'Slider'}">
-        <p class="amount" th:id="${goal.name + 'Amount'}" th:text="${goal.lastAmount}"></p>
+    <div th:each="goal : ${goals}" class="goal" th:data-goal-id="${goal.id}">
+        <p th:text="${goal.name}"></p>
+        <div class="slider-container">
+            <input type="range" min="0" th:attr="max=${goal.maxAmount}, value=${goal.lastAmount}" class="slider"
+                   th:id="${goal.name + 'Slider'}">
+            <p class="amount" th:id="${goal.name + 'Amount'}" th:text="${goal.lastAmount}"></p>
+        </div>
     </div>
-</div>
 
-<p>Total allocated: <span id="totalAllocated" th:text="${totalAllocated}"></span> / <span id="totalToAllocate" th:text="${totalToAllocate}"></span></p>
+    <p>Total allocated: <span id="totalAllocated" th:text="${totalAllocated}"></span> / <span id="totalToAllocate"
+                                                                                              th:text="${totalToAllocate}"></span>
+    </p>
 
-<script th:inline="javascript">
+    <button onclick="submitAllocations()">Save</button>
+
+
+    <script th:inline="javascript">
   let totalAllocated = document.getElementById("totalAllocated");
   let goalContainers = document.getElementsByClassName("slider-container");
 
@@ -66,7 +143,10 @@
       updateTotalAllocated();
     };
   }
-</script>
+
+
+
+    </script>
 
 
 </div>

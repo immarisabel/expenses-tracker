@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<header><div th:replace="~{fragments/header :: header}"></div></header>
+<header>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+</header>
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 <div th:replace="~{fragments/filterbar :: filterbar}"></div>
 
 <div class="container">
 <h2>Add Transaction</h2>
-    <form action="#" th:action="@{/transactions}" th:object="${transaction}" method="post" >
+    <form action="#" th:action="@{/transactions}" th:object="${transaction}" method="post">
         <div class="form-row">
             <input type="text" th:field="*{date}" placeholder="yyyyMMdd" class="form-control" required/>
             <input type="text" th:field="*{entity}" placeholder="Organization or Name" class="form-control" required/>

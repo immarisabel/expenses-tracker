@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface SavingsRepository extends JpaRepository<SavingsEntity, Long> {
     List<SavingsEntity> findByGoal(GoalEntity goal);
+
 }
 
