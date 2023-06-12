@@ -77,28 +77,18 @@ public class SavingsController {
   model.addAttribute("totalToAllocate", roundedTotal);
   model.addAttribute("totalAllocated", totalAllocated);
   model.addAttribute("monthToAllocate", formattedDate);
-  //TODO
-  // if ((credit - debit)>0){
-  // load in amount to be allocated controller.
-  // load goals
-  // then allocate amounts per goal
-  // if(allocating > toAllocate) {
-  // return error - you do not have enough
-  // }  else{
-  // store in transactions allocated }
-  // }
 
   return "savings/goals";
  }
 
 
- // edit goals - add amount and name, remove, edit amount and name
+ // edit goals - [✔] add amount and name, [ ] remove, [ ] edit amount and name
 
 
  // METHODS I NEED (or controllers or service WTEVER):
- // - automate amount to distruibute
- // - save a new goal
- // - save the amounts allocated to savings
+ // - automate amount to distruibute ✔
+ // - save a new goal ✔
+ // - save the amounts allocated to savings 🅿
  // - display chart of savings per month
  // - display amount saved TOTAL next to each goal
  // PAGES I NEED:
