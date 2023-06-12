@@ -1,23 +1,20 @@
 package nl.marisabel.backend.savings.controller;
 
 import lombok.extern.log4j.Log4j2;
+import nl.marisabel.backend.savings.entity.GoalEntity;
+import nl.marisabel.backend.savings.service.GoalService;
 import nl.marisabel.backend.savings.service.SavingsService;
-import nl.marisabel.backend.transactions.entity.TransactionEntity;
 import nl.marisabel.backend.transactions.service.TransactionService;
-import nl.marisabel.frontend.savings.GoalModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @Log4j2
@@ -25,10 +22,11 @@ public class SavingsController {
 
  private final SavingsService savingsService;
  private final TransactionService transactionService;
-
- public SavingsController(SavingsService savingsService, TransactionService transactionService) {
+ private final GoalService goalService;
+ public SavingsController(SavingsService savingsService, TransactionService transactionService, GoalService goalService) {
   this.savingsService = savingsService;
   this.transactionService = transactionService;
+  this.goalService = goalService;
  }
 
 // shows the savings allocation page with sliders
@@ -72,13 +70,8 @@ public class SavingsController {
 
   double totalAllocated = 0;
 
-
   // DUMMY DATA
-  List<GoalModel> goals = new ArrayList<>();
-  goals.add(new GoalModel("Insurance", 150.00, 0, " ", false));
-  goals.add(new GoalModel("House", 150.00, 0, " ", false));
-  goals.add(new GoalModel("Clothes", 150.00, 0, " ", false));
-
+  List<GoalEntity> goals = goalService.getAllGoals();
 
   model.addAttribute("goals", goals);
   model.addAttribute("totalToAllocate", roundedTotal);

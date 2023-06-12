@@ -22,6 +22,7 @@ public class GoalEntity {
     private String name;
     private String description;
     private double maxAmount;
+    private double lastAmount;
     private boolean reached;
 
 }

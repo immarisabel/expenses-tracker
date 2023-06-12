@@ -35,7 +35,9 @@
         <th>Name</th>
         <th>Description</th>
         <th>Max Amount</th>
+        <th>Saved till now</th>
         <th>Reached</th>
+        <th>id</th>
     </tr>
     </thead>
     <tbody>
@@ -43,7 +45,9 @@
         <td th:text="${goal.name}"></td>
         <td th:text="${goal.description}"></td>
         <td th:text="${goal.maxAmount}"></td>
+        <td th:text="${goal.lastAmount}"></td>
         <td th:text="${goal.reached}"></td>
+        <td th:text="${goal.id}"></td>
     </tr>
     </tbody>
 </table>

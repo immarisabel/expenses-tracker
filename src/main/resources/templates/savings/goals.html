@@ -16,8 +16,8 @@
 <div th:each="goal : ${goals}" class="goal">
     <p th:text="${goal.name}"></p>
     <div class="slider-container">
-        <input type="range" min="0" th:attr="max=${goal.max}, value=${goal.value}" class="slider" th:id="${goal.name + 'Slider'}">
-        <p class="amount" th:id="${goal.name + 'Amount'}" th:text="${goal.value}"></p>
+        <input type="range" min="0" th:attr="max=${goal.maxAmount}, value=${goal.lastAmount}" class="slider" th:id="${goal.name + 'Slider'}">
+        <p class="amount" th:id="${goal.name + 'Amount'}" th:text="${goal.lastAmount}"></p>
     </div>
 </div>
 
