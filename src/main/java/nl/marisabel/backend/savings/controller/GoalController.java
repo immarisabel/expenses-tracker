@@ -1,7 +1,6 @@
 package nl.marisabel.backend.savings.controller;
 
 import lombok.extern.log4j.Log4j2;
-import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.savings.entity.GoalEntity;
 import nl.marisabel.backend.savings.service.GoalService;
 import nl.marisabel.backend.savings.service.SavingsService;
@@ -10,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.List;
 
 @Controller
 @Log4j2
@@ -27,7 +28,9 @@ public class GoalController {
 
  @GetMapping("/savings/goals")
  public String showAllGoals(@ModelAttribute ("goal") GoalEntity goal, Model model) {
-  model.addAttribute("goal", goal);
+  List<GoalEntity> goals = goalService.getAllGoals();
+  model.addAttribute("goals", goals);
+  model.addAttribute("goal", new GoalEntity());
   return "savings/new-goal";
  }
 
