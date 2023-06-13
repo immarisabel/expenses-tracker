@@ -22,4 +22,11 @@ public class SavingsService {
  public List<SavingsEntity> getAllSavings() {
   return savingsRepository.findAll();
  }
+
+
+ public List<SavingsEntity> findByGoalAndMonthYear(GoalEntity goal, String monthYear) {
+  return savingsRepository.findByGoalAndMonthYear(goal, monthYear);
+ }
+
+
 }
