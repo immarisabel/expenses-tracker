@@ -49,7 +49,7 @@ public class SavingsController {
   for (SavingsModel dto : savingsDTOs) {
    GoalEntity goal = goalService.getGoalById(dto.getGoalId())
            .orElseThrow(() -> new ResourceNotFoundException("Goal not found with id: " + dto.getGoalId()));
-   log.info(goal.getSavingsEntities());
+   log.info(goal.getSavingsEntities().size());
    log.info(goal.getId());
    SavingsEntity savingsEntity = new SavingsEntity();
    savingsEntity.setAmount(dto.getAmount());
@@ -66,11 +66,18 @@ public class SavingsController {
   return "savings/goals";
  }
 
+//TODO MMyyyy is empty on savings entity
+//TODO multiple goals saved?
+//TODO savings amount updated on goal?
+//TODO goal updates to reached when amount is reached?
+
 // example to use: http://localhost:9191/savings/allocate-savings/032017
 
+
+
+
+
  // THIS WORKS!
-
-
 // shows the savings allocation page with sliders
 
  @GetMapping("/savings/allocate-savings/{month}")
