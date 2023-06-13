@@ -152,15 +152,15 @@ public class SavingsController {
  // - automate amount to distruibute ✔
  // - save a new goal ✔
  // - save the amounts allocated to savings ✔
- // - display chart of savings per month
+ // TODO - display chart of savings per month
  // - display amount saved TOTAL next to each goal ✔
  // PAGES I NEED:
- // - goals settings (make✔ edit, delete)
- // - goals overview (table with totals and descriptions, ✔ and if reached (add a star or checkmark))
- // - goal chart (per ID) (graphic not bars - per month)
- // - left over per month chart (graphic, not bars)
+ // - goals settings (make✔ TODO edit, TODO delete)
+ // - goals overview (table with totals and descriptions, ✔ and TODO  if reached (add a star or checkmark))
+ // - TODO goal chart (per ID) (graphic not bars - per month)
+ // - TODO left over per month chart (graphic, not bars)
  // - savings allocation (sliders) ✔
- // - add a text box in case sliders are annoying to tim
- // - change color of saved if teh amount is lower or higher than the goal
+ // - TODO add a text box in case sliders are annoying to tim
+ // - TODO change color of saved if teh amount is lower or higher than the goal
 }
 
