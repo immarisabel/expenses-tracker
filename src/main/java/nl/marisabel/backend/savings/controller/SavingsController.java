@@ -161,5 +161,6 @@ public class SavingsController {
  // - left over per month chart (graphic, not bars)
  // - savings allocation (sliders) ✔
  // - add a text box in case sliders are annoying to tim
+ // - change color of saved if teh amount is lower or higher than the goal
 }
 
