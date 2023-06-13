@@ -78,6 +78,7 @@ for (let i = 0; i < sliders.length; i++) {
             console.error('Error:', error);
         });
 }
+
     </script>
 
     </script>
@@ -94,8 +95,10 @@ for (let i = 0; i < sliders.length; i++) {
     <div th:each="goal : ${goals}" class="goal" th:data-goal-id="${goal.id}">
         <p th:text="${goal.name}"></p>
         <div class="slider-container">
-            <input type="range" min="0" th:attr="max=${goal.maxAmount}, value=0" class="slider"
-                   th:id="${goal.name + 'Slider'}">
+            <!--            <input type="range" min="0" th:attr="max=${goal.maxAmount}, value=0" class="slider"-->
+            <!--                   th:id="${goal.name + 'Slider'}">-->
+            <input type="range" min="0" th:attr="max=${goal.maxAmount}, value=${goalAllocatedAmountMap[goal.id]}"
+                   class="slider" th:id="${goal.name + 'Slider'}">
             <p class="amount" th:id="${goal.name + 'Amount'}" th:text="0"></p>
         </div>
     </div>
@@ -150,6 +153,7 @@ for (let i = 0; i < sliders.length; i++) {
       updateTotalAllocated();
     };
   }
+
 
 
 

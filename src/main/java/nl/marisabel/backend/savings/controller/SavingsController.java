@@ -21,7 +21,9 @@ import java.time.LocalDate;
 import java.time.Year;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @Log4j2
@@ -88,72 +90,6 @@ public class SavingsController {
 // - load where in the sliders it is
 // - updated amounts
 
- /* PROMPT
- I have this controller to add savings to multiple goals.
-
-
- @PostMapping("/savings/allocate-savings/{month}")
- public String allocateSavings(@PathVariable String month,
-                               @RequestBody List<SavingsModel> savingsDTOs,
-                               RedirectAttributes redirectAttributes) {
-
-  DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMyyyy");
-  YearMonth yearMonth = YearMonth.parse(month, monthFormatter);
-
-  for (SavingsModel dto : savingsDTOs) {
-   GoalEntity goal = goalService.getGoalById(dto.getGoalId())
-           .orElseThrow(() -> new ResourceNotFoundException("Goal not found with id: " + dto.getGoalId()));
-
-   log.info("Last amount of goal: " + goal.getLastAmount());
-
-   goal.setLastAmount(goal.getLastAmount() + dto.getAmount());
-   if (goal.getLastAmount() >= goal.getMaxAmount()) {
-    goal.setReached(true);
-   }
-
-   log.info("New goal amount: " + goal.getName() + " : " + goal.getLastAmount());
-   log.info("Goal reached? "+  goal.isReached());
-
-   goalService.saveNewGoal(goal);
-
-   SavingsEntity savingsEntity = new SavingsEntity();
-   savingsEntity.setAmount(dto.getAmount());
-   savingsEntity.setSavingsMonth(yearMonth.getMonth());
-   savingsEntity.setSavingYear(Year.of(yearMonth.getYear()));
-   savingsEntity.setGoal(goal);
-   savingsEntity.setMonthYear(String.valueOf(yearMonth));
-
-   savingsService.save(savingsEntity);
-  }
-
-  log.info("Savings allocated successfully!");
-
-  return "savings/goals";
- }
-
-Right now, it is letting me add endlessly regardless of how much money there is.
-
-<p>Total allocated: <span id="totalAllocated" th:text="${totalAllocated}"></span> / <span id="totalToAllocate" th:text="${totalToAllocate}"></span>
-
-I need "totalAllocated" to load the amount already in the database for that month. So I know if I still need to allocate.
-
-Also, prefferably if it works, the same thing for the sliders here:
-
-    <div th:each="goal : ${goals}" class="goal" th:data-goal-id="${goal.id}">
-        <p th:text="${goal.name}"></p>
-        <div class="slider-container">
-            <input type="range" min="0" th:attr="max=${goal.maxAmount}, value=0" class="slider"
-                   th:id="${goal.name + 'Slider'}">
-            <p class="amount" th:id="${goal.name + 'Amount'}" th:text="0"></p>
-        </div>
-    </div>
-
-   It would be nice to initiate them, with the amount I already allocated for that month. So I can just add if needed or remove.
-   Then, I wish to same that update on the same amounts saved for those goals of that month. So no duplicated goals per month.
-
-  Provide me the code for teh controller for all of this to happen.
-
- */
 
 // example to use: http://localhost:9191/savings/allocate-savings/032017
 
@@ -186,28 +122,31 @@ Also, prefferably if it works, the same thing for the sliders here:
   LocalDate endOfMonth = yearMonth.atEndOfMonth();
   int year = yearMonth.getYear();
 
-  //calculate amount to allocate
+  double totalAllocated = 0;
+  Map<Long, Double> goalAllocatedAmountMap = new HashMap<>();
+  List<GoalEntity> goals = goalService.getAllGoals();
+
+  // calculate totalAllocated and populate goalAllocatedAmountMap
+  for (GoalEntity goal : goals) {
+   List<SavingsEntity> existingSavings = savingsService.findByGoalAndMonthYear(goal, String.valueOf(yearMonth));
+   double totalSavingsForGoal = existingSavings.stream().mapToDouble(SavingsEntity::getAmount).sum();
+   totalAllocated += totalSavingsForGoal;
+   goalAllocatedAmountMap.put(goal.getId(), totalSavingsForGoal);
+  }
+
+  // calculate amount to allocate
   double difference = transactionService.calculateRemainingFundsByMonth(startOfMonth, endOfMonth);
   log.info("REMAINING FUNDS FOR : " + formattedDate + " [ " + difference + " ] ");
   double totalToAllocate = Math.round(difference * 100.00) / 100.00;
   DecimalFormat decimalFormat = new DecimalFormat("#0.00");
   String roundedTotal = decimalFormat.format(totalToAllocate);
 
-  double totalAllocated = 0;
-
-  List<GoalEntity> goals = goalService.getAllGoals();
-
-  for (GoalEntity goal : goals) {
-   List<SavingsEntity> existingSavings = savingsService.findByGoalAndMonthYear(goal, String.valueOf(yearMonth));
-   for (SavingsEntity savings : existingSavings) {
-    totalAllocated += savings.getAmount();
-   }
-  }
-
   model.addAttribute("goals", goals);
   model.addAttribute("totalToAllocate", roundedTotal);
   model.addAttribute("totalAllocated", totalAllocated);
   model.addAttribute("monthToAllocate", formattedDate);
+  model.addAttribute("goalAllocatedAmountMap", goalAllocatedAmountMap);
+
 
   return "savings/goals";
  }
