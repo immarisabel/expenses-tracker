@@ -1,79 +1,115 @@
-<!-- goals.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Savings Goals</title>
-</head>
+
+<header>
+    <div th:replace="~{fragments/header :: header}"></div>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+<style>
+    table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #9aa4ec;
+    color: white;
+}
+
+
+.table-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+table {
+  flex: 1 0 50%; /* This will make tables take up 50% of the wrapper's width */
+  box-sizing: border-box;
+  padding: 1em;
+}
+
+@media screen and (max-width: 600px) {
+  table {
+    flex: 1 0 100%; /* On screens smaller than 600px, tables take up 100% of the width */
+  }
+}
+
+
+</style>
+</header>
 <body>
-<h2>Create New Goal</h2>
-<form th:action="@{/savings/goals}" th:object="${goal}" method="post">
-    <!-- form fields for creating a new goal -->
-    <div>
-        <label for="name">Name:</label>
-        <input type="text" id="name" th:field="*{name}" required>
-    </div>
-    <div>
-        <label for="description">Description:</label>
-        <input type="text" id="description" th:field="*{description}" required>
-    </div>
-    <div>
-        <label for="maxAmount">Max Amount:</label>
-        <input type="number" id="maxAmount" th:field="*{maxAmount}" step="0.01" required>
-    </div>
-    <div>
-        <label for="reached">Reached:</label>
-        <input type="checkbox" id="reached" th:field="*{reached}">
-    </div>
-    <button type="submit">Create</button>
-</form>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="form" style="display: flex; justify-content: center; align-items: center;">
+        <form th:action="@{/savings/goals}" th:object="${goal}" method="post" style="display: flex; justify-content: center; align-items: center; gap: 2rem;">
+        <h2>Create New Goal</h2>
+        <div class="form-row" style="width:20rem;">
+            <input type="text" placeholder="name of goal" id="name" th:field="*{name}" class="form-control" required>
+        </div>
+        <div class="form-row" style="width:20rem;">
+            <input type="text" placeholder="description" id="description" th:field="*{description}" class="form-control" required>
+        </div>
+        <div class="form-row" style="width:20rem;">
+            <input type="number" id="maxAmount" th:field="*{maxAmount}" step="0.01" class="form-control" required>
+        </div>
+        <button type="submit" class="myButton">Create</button>
+    </form>
+</div>
 
 <h2>Savings Goals List</h2>
 <table>
+    <colgroup>
+        <col style="width: 10%">
+        <col style="width: 25%">
+        <col style="width: 5%">
+        <col style="width: 10%">
+        <col style="width: 5%">
+    </colgroup>
     <thead>
-    <tr>
+    <tr class="header">
         <th>Name</th>
         <th>Description</th>
-        <th>Max Amount</th>
+        <th>Goal Amount</th>
         <th>Saved till now</th>
         <th>Reached</th>
-        <th>id</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="goal : ${goals}">
-        <td th:text="${goal.name}"></td>
-        <td th:text="${goal.description}"></td>
-        <td th:text="${goal.maxAmount}"></td>
-        <td th:text="${goal.lastAmount}"></td>
-        <td th:text="${goal.reached}"></td>
-        <td th:text="${goal.id}"></td>
+        <td data-title="Goal" th:text="${goal.name}"></td>
+        <td data-title="Description" th:text="${goal.description}"></td>
+        <td data-title="Goal Amount" th:text="${goal.maxAmount}"></td>
+        <td data-title="Saved so far" th:text="${goal.lastAmount}"></td>
+        <td data-title="Status" th:text="${goal.reached}"></td>
     </tr>
     </tbody>
 </table>
 
 <h3>Savings</h3>
+<div class="table-wrapper">
 <table>
     <thead>
     <tr>
         <th>Goal</th>
-        <th>month</th>
-        <th>year</th>
-        <th>MMyyyy</th>
+        <th>Date</th>
         <th>amount</th>
-        <th>id</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="saving : ${savings}">
         <td th:text="${saving.goal.name}"></td>
-        <td th:text="${saving.savingsMonth}"></td>
-        <td th:text="${saving.savingYear}"></td>
         <td th:text="${saving.monthYear}"></td>
         <th th:text="${saving.amount}"></th>
-        <td th:text="${saving.id}"></td>
     </tr>
     </tbody>
 </table>
+</div>
+
 </body>
 </html>

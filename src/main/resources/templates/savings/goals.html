@@ -86,7 +86,7 @@ for (let i = 0; i < sliders.length; i++) {
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div class="container">
+<div class="container" style="margin:0 3rem 0 3rem;">
 
     <h1>Allocate your funds</h1>
 
@@ -103,11 +103,11 @@ for (let i = 0; i < sliders.length; i++) {
         </div>
     </div>
 
-    <p>Total allocated: <span id="totalAllocated" th:text="${totalAllocated}"></span> / <span id="totalToAllocate"
-                                                                                              th:text="${totalToAllocate}"></span>
-    </p>
+    <h2>Total allocated:<br></br>
+        <span id="totalAllocated" th:text="${totalAllocated}"></span> / <span id="totalToAllocate" th:text="${totalToAllocate}"></span>
+    </h2>
 
-    <button onclick="submitAllocations()">Save</button>
+    <button class="myButton" onclick="submitAllocations()">Save</button>
 
 
     <script th:inline="javascript">

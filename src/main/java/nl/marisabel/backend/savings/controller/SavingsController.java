@@ -86,16 +86,9 @@ public class SavingsController {
   return "savings/goals";
  }
 
-//TODO don't allow new savings for the month, but load the current data if we need to edit
-// - load where in the sliders it is
-// - updated amounts
 
 
-// example to use: http://localhost:9191/savings/allocate-savings/032017
 
-
- // THIS WORKS!
-// shows the savings allocation page with sliders
 
  @GetMapping("/savings/allocate-savings/{month}")
  public String allocateSavingsInGoals(@PathVariable String month, Model model) {
@@ -158,14 +151,15 @@ public class SavingsController {
  // METHODS I NEED (or controllers or service WTEVER):
  // - automate amount to distruibute ✔
  // - save a new goal ✔
- // - save the amounts allocated to savings 🅿
+ // - save the amounts allocated to savings ✔
  // - display chart of savings per month
- // - display amount saved TOTAL next to each goal
+ // - display amount saved TOTAL next to each goal ✔
  // PAGES I NEED:
- // - goals settings (make, edit, delete)
- // - goals overview (table with totals and descriptions, and if reached)
+ // - goals settings (make✔ edit, delete)
+ // - goals overview (table with totals and descriptions, ✔ and if reached (add a star or checkmark))
  // - goal chart (per ID) (graphic not bars - per month)
  // - left over per month chart (graphic, not bars)
- // - savings allocation (sliders, in progress)
+ // - savings allocation (sliders) ✔
+ // - add a text box in case sliders are annoying to tim
 }
 
