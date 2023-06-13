@@ -51,5 +51,29 @@
     </tr>
     </tbody>
 </table>
+
+<h3>Savings</h3>
+<table>
+    <thead>
+    <tr>
+        <th>Goal</th>
+        <th>month</th>
+        <th>year</th>
+        <th>MMyyyy</th>
+        <th>amount</th>
+        <th>id</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="saving : ${savings}">
+        <td th:text="${saving.goal.name}"></td>
+        <td th:text="${saving.savingsMonth}"></td>
+        <td th:text="${saving.savingYear}"></td>
+        <td th:text="${saving.monthYear}"></td>
+        <th th:text="${saving.amount}"></th>
+        <td th:text="${saving.id}"></td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>

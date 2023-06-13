@@ -15,31 +15,38 @@ function submitAllocations() {
     // Create an array to store all the savings entities
     let savingsEntities = [];
 
-    // Get all the sliders
-    const sliders = document.getElementsByClassName('slider');
-    for (let i = 0; i < sliders.length; i++) {
-        // Get the current slider
-        let slider = sliders[i];
 
-        // Get the associated goal
-        let goalName = slider.id.replace('Slider', '');
-        let goals = document.querySelectorAll('.goal p');
-        let goal = Array.from(goals).find((element) => element.textContent.trim() === goalName);
 
-        // Check if the goal element exists
-        if (goal) {
-            // Create a savings entity for this slider
-            let savingsEntity = {
-                goalId: goal.id,
-                amount: slider.value
-            };
+// Get all the sliders
+const sliders = document.getElementsByClassName('slider');
+for (let i = 0; i < sliders.length; i++) {
+    // Get the current slider
+    let slider = sliders[i];
 
-            // Add the savings entity to the array
-            savingsEntities.push(savingsEntity);
-        } else {
-            console.error(`Goal element not found for ${goalName}`);
-        }
+    // Get the associated goal
+    let goalName = slider.id.replace('Slider', '');
+    let goalDivs = document.querySelectorAll('.goal');
+    let goalDiv = Array.from(goalDivs).find((element) => element.querySelector('p').textContent.trim() === goalName);
+
+    // Check if the goal element exists
+    if (goalDiv) {
+        // Get goal id from the data attribute
+        let goalId = goalDiv.getAttribute('data-goal-id');
+
+        // Create a savings entity for this slider
+        let savingsEntity = {
+            goalId: goalId,
+            amount: slider.value
+        };
+
+        // Add the savings entity to the array
+        savingsEntities.push(savingsEntity);
+    } else {
+        console.error(`Goal element not found for ${goalName}`);
     }
+}
+
+
 
     // Get CSRF token
     const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');

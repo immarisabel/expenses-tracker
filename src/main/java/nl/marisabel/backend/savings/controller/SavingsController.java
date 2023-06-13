@@ -66,6 +66,7 @@ public class SavingsController {
   return "savings/goals";
  }
 
+// example to use: http://localhost:9191/savings/allocate-savings/032017
 
  // THIS WORKS!
 
