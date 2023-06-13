@@ -49,6 +49,52 @@ public class SavingsController {
   for (SavingsModel dto : savingsDTOs) {
    GoalEntity goal = goalService.getGoalById(dto.getGoalId())
            .orElseThrow(() -> new ResourceNotFoundException("Goal not found with id: " + dto.getGoalId()));
+
+   log.info("Last amount of goal: " + goal.getLastAmount());
+
+   goal.setLastAmount(goal.getLastAmount() + dto.getAmount());
+   if (goal.getLastAmount() >= goal.getMaxAmount()) {
+    goal.setReached(true);
+   }
+
+   log.info("New goal amount: " + goal.getName() + " : " + goal.getLastAmount());
+   log.info("Goal reached? "+  goal.isReached());
+
+   goalService.saveNewGoal(goal);
+
+   SavingsEntity savingsEntity = new SavingsEntity();
+   savingsEntity.setAmount(dto.getAmount());
+   savingsEntity.setSavingsMonth(yearMonth.getMonth());
+   savingsEntity.setSavingYear(Year.of(yearMonth.getYear()));
+   savingsEntity.setGoal(goal);
+   savingsEntity.setMonthYear(String.valueOf(yearMonth));
+
+   savingsService.save(savingsEntity);
+  }
+
+  log.info("Savings allocated successfully!");
+
+  return "savings/goals";
+ }
+
+//TODO don't allow new savings for the month, but load the current data if we need to edit
+// - load where in the sliders it is
+// - updated amounts
+
+ /* PROMPT
+ I have this controller to add savings to multiple goals.
+
+ @PostMapping("/savings/allocate-savings/{month}")
+ public String allocateSavings(@PathVariable String month,
+                               @RequestBody List<SavingsModel> savingsDTOs,
+                               RedirectAttributes redirectAttributes) {
+
+  DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMyyyy");
+  YearMonth yearMonth = YearMonth.parse(month, monthFormatter);
+
+  for (SavingsModel dto : savingsDTOs) {
+   GoalEntity goal = goalService.getGoalById(dto.getGoalId())
+           .orElseThrow(() -> new ResourceNotFoundException("Goal not found with id: " + dto.getGoalId()));
    log.info(goal.getSavingsEntities().size());
    log.info(goal.getId());
    SavingsEntity savingsEntity = new SavingsEntity();
@@ -66,16 +112,14 @@ public class SavingsController {
   return "savings/goals";
  }
 
-//TODO multiple goals saved?
-//TODO savings amount updated on goal?
-//TODO goal updates to reached when amount is reached?
-//TODO don't allow new savings for the month, but load the current data if we need to edit
-// - load where in the sliders it is
-// - updated amounts
+ I need the goal entity to update the field 'lastAmount' to the sum of the previous 'lastAmount' + the added one from the month.
+ Each goal will update this amount everytime savings are added.
+ Once the amount matches the 'maxAmount', it should update automatically the boolean 'reached' to TRUE.
+ So far all the savings and new goals process. Now I need to link them like that.
+ Provide me the code for teh controller for all of this to happen automatically after submitting the savings.
+ */
 
 // example to use: http://localhost:9191/savings/allocate-savings/032017
-
-
 
 
 
