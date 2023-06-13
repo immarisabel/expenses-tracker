@@ -56,7 +56,7 @@ public class SavingsController {
    savingsEntity.setSavingsMonth(yearMonth.getMonth());
    savingsEntity.setSavingYear(Year.of(yearMonth.getYear()));
    savingsEntity.setGoal(goal);
-   savingsEntity.setMonthYear(dto.getMonthYear()); // Set the monthYear value
+   savingsEntity.setMonthYear(String.valueOf(yearMonth));
 
    savingsService.save(savingsEntity);
   }
@@ -66,10 +66,12 @@ public class SavingsController {
   return "savings/goals";
  }
 
-//TODO MMyyyy is empty on savings entity
 //TODO multiple goals saved?
 //TODO savings amount updated on goal?
 //TODO goal updates to reached when amount is reached?
+//TODO don't allow new savings for the month, but load the current data if we need to edit
+// - load where in the sliders it is
+// - updated amounts
 
 // example to use: http://localhost:9191/savings/allocate-savings/032017
 
