@@ -1,10 +1,12 @@
 package nl.marisabel.backend.savings.service;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.savings.entity.GoalEntity;
 import nl.marisabel.backend.savings.repository.GoalRepository;
 import nl.marisabel.backend.savings.repository.SavingsRepository;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,8 +30,10 @@ public class GoalService {
   return goalRepository.findAll();
  }
 
- public Optional<GoalEntity> getGoalById(Long goalId) {
-  return goalRepository.findById(goalId);
+ @Transactional
+ public Optional<GoalEntity> getGoalById(Long id) {
+  Optional<GoalEntity> goal = goalRepository.findById(id);
+  goal.ifPresent(g -> Hibernate.initialize(g.getSavingsEntities()));
+  return goal;
  }
-
 }

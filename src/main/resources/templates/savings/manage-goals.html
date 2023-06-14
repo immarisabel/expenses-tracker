@@ -82,12 +82,18 @@ table {
     </thead>
     <tbody>
     <tr th:each="goal : ${goals}">
-        <td data-title="Goal" th:text="${goal.name}"></td>
+        <td data-title="Goal">
+            <a th:href="@{'/charts/savings/' + ${goal.id}}" th:text="${goal.name}"></a>
+        </td>
         <td data-title="Description" th:text="${goal.description}"></td>
         <td data-title="Goal Amount" th:text="${goal.maxAmount}"></td>
         <td data-title="Saved so far" th:text="${goal.lastAmount}"></td>
-        <td data-title="Status" th:text="${goal.reached}"></td>
+        <td data-title="Status">
+            <span th:if="${goal.reached}">✔</span>
+            <span th:unless="${goal.reached}">❌</span>
+        </td>
     </tr>
+
     </tbody>
 </table>
 

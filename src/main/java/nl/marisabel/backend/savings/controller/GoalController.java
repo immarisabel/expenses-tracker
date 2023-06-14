@@ -10,11 +10,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
 @Controller
 @Log4j2
+@RequestMapping("/savings")
 public class GoalController {
 
  private final SavingsService savingsService;
@@ -27,7 +29,7 @@ public class GoalController {
  }
 
 
- @GetMapping("/savings/goals")
+ @GetMapping("/goals")
  public String showAllGoals(@ModelAttribute ("goal") GoalEntity goal, Model model) {
 
   // load data
@@ -37,15 +39,15 @@ public class GoalController {
   model.addAttribute("savings", savings);
 
   log.info("SAVINGS: " + savings.size());
-
+//TODO each goal link to the chart
 
   // save new goal
   model.addAttribute("goal", new GoalEntity());
-  return "savings/new-goal";
+  return "savings/manage-goals";
  }
 
 
- @PostMapping("/savings/goals")
+ @PostMapping("/goals")
  public String addGoal(@ModelAttribute ("goal") GoalEntity goal) {
   goalService.saveNewGoal(goal);
   log.info("Goal saved... "+ goal.getName());

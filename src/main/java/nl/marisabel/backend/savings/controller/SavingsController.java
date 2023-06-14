@@ -10,10 +10,7 @@ import nl.marisabel.backend.transactions.service.TransactionService;
 import nl.marisabel.frontend.savings.SavingsModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.text.DecimalFormat;
@@ -27,6 +24,7 @@ import java.util.Map;
 
 @Controller
 @Log4j2
+@RequestMapping("/savings")
 public class SavingsController {
 
  private final SavingsService savingsService;
@@ -40,7 +38,7 @@ public class SavingsController {
  }
 
 
- @PostMapping("/savings/allocate-savings/{month}")
+ @PostMapping("/allocate-savings/{month}")
  public String allocateSavings(@PathVariable String month,
                                @RequestBody List<SavingsModel> savingsDTOs,
                                RedirectAttributes redirectAttributes) {
@@ -83,16 +81,16 @@ public class SavingsController {
 
   log.info("Savings allocated successfully!");
 
-  return "savings/goals";
+  return "savings/allocate-savings";
  }
 
 
 
 
 
- @GetMapping("/savings/allocate-savings/{month}")
+ @GetMapping("/allocate-savings/{month}")
  public String allocateSavingsInGoals(@PathVariable String month, Model model) {
-
+// TODO add pagination
   log.info("Original YearMonth: " + month);
 
 // DATE FORMATTING FOR PAGINATION AND SAVING
@@ -141,25 +139,20 @@ public class SavingsController {
   model.addAttribute("goalAllocatedAmountMap", goalAllocatedAmountMap);
 
 
-  return "savings/goals";
+  return "savings/allocate-savings";
  }
 
-
- // edit goals - [✔] add amount and name, [ ] remove, [ ] edit amount and name
-
+// GOALS ENTITY
+ // [ ] TODO remove goal
+ // [ ] TODO edit amount and name
 
  // METHODS I NEED (or controllers or service WTEVER):
- // - automate amount to distruibute ✔
- // - save a new goal ✔
- // - save the amounts allocated to savings ✔
  // TODO - display chart of savings per month
- // - display amount saved TOTAL next to each goal ✔
  // PAGES I NEED:
  // - goals settings (make✔ TODO edit, TODO delete)
  // - goals overview (table with totals and descriptions, ✔ and TODO  if reached (add a star or checkmark))
  // - TODO goal chart (per ID) (graphic not bars - per month)
  // - TODO left over per month chart (graphic, not bars)
- // - savings allocation (sliders) ✔
  // - TODO add a text box in case sliders are annoying to tim
  // - TODO change color of saved if teh amount is lower or higher than the goal
 }

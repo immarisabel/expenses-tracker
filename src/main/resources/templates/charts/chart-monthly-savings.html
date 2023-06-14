@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<header>
+    <div th:replace="~{fragments/header :: header}"></div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</header>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container">
+
+    <div class="pagination-controls" style="margin:1rem 0 1rem 0;">
+
+        <a th:href="@{'/charts/year?year=' + ${prevYear}}" class="myButton">Previous Year</a>
+        <span th:text="${currentYear}"></span>
+        <a th:href="@{'/charts/year?year=' + ${nextYear}}" class="myButton">Next Year</a>
+
+    </div>
+
+    <canvas id="savingsChart" class="chart-canvas" margin="1rem"></canvas>
+
+
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+
+    // Get the data from the controller via Thymeleaf
+    const monthYearLabels = /*[[${monthYearLabels}]]*/ [];
+    const savingsAmounts = /*[[${savingsAmounts}]]*/ [];
+    const goalName = /*[[${goalName}]]*/ 'Goal';
+
+    const savingsChart = new Chart(document.getElementById('savingsChart'), {
+        type: 'line',
+        data: {
+            labels: monthYearLabels,
+            datasets: [{
+                data: savingsAmounts,
+                label: goalName,
+                borderColor: "#3e95cd",
+                fill: false
+            }]
+        }
+    });
+    /*]]>*/
+</script>
+
+</div>
+</body>
+</html>
+
