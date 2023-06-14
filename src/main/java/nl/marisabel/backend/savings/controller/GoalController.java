@@ -39,7 +39,6 @@ public class GoalController {
   model.addAttribute("savings", savings);
 
   log.info("SAVINGS: " + savings.size());
-//TODO each goal link to the chart
 
   // save new goal
   model.addAttribute("goal", new GoalEntity());

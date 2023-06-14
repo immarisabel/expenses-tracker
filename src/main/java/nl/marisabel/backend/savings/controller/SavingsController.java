@@ -142,18 +142,10 @@ public class SavingsController {
   return "savings/allocate-savings";
  }
 
-// GOALS ENTITY
- // [ ] TODO remove goal
- // [ ] TODO edit amount and name
 
- // METHODS I NEED (or controllers or service WTEVER):
- // TODO - display chart of savings per month
  // PAGES I NEED:
  // - goals settings (make✔ TODO edit, TODO delete)
- // - goals overview (table with totals and descriptions, ✔ and TODO  if reached (add a star or checkmark))
- // - TODO goal chart (per ID) (graphic not bars - per month)
  // - TODO left over per month chart (graphic, not bars)
  // - TODO add a text box in case sliders are annoying to tim
- // - TODO change color of saved if teh amount is lower or higher than the goal
 }
 
