@@ -74,6 +74,36 @@ table {
     </form>
 </div>
 
+
+
+<!--    ALLOCATE SAVINGS    -->
+<div class="form" style="width:20rem;">
+    <form id="savings-form" th:action="@{/savings/allocate-savings}" method="get">
+        <h3>allocate savings</h3>
+        <select id="month-select" name="month" class="form-control">
+            <option value="" disabled selected hidden>Select month</option>
+            <option th:each="entry : ${monthsYears.entrySet()}" th:value="${entry.value}" th:text="${entry.key}"></option>
+        </select>
+        <button type="button" class="myButton" style="margin-top:1rem;" onclick="submitForm()">Submit</button>
+    </form>
+</div>
+
+<script>
+function submitForm() {
+    var form = document.getElementById("savings-form");
+    var selectedMonth = document.getElementById("month-select").value;
+    if (selectedMonth) {
+        form.action += "/" + selectedMonth;
+    }
+    form.submit();
+}
+</script>
+
+
+
+
+
+
 <h2>Savings Goals List</h2>
 <table>
     <colgroup>

@@ -8,6 +8,8 @@ import nl.marisabel.backend.savings.service.GoalService;
 import nl.marisabel.backend.savings.service.SavingsService;
 import nl.marisabel.backend.transactions.service.TransactionService;
 import nl.marisabel.frontend.savings.SavingsModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -90,7 +92,7 @@ public class SavingsController {
 
  @GetMapping("/allocate-savings/{month}")
  public String allocateSavingsInGoals(@PathVariable String month, Model model) {
-// TODO add pagination
+
   log.info("Original YearMonth: " + month);
 
 // DATE FORMATTING FOR PAGINATION AND SAVING
@@ -107,6 +109,10 @@ public class SavingsController {
   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy");
   String formattedDate = yearMonth.format(formatter);
   log.info("Formatted Date: " + formattedDate);
+
+  // Calculate the previous and next months
+  YearMonth previousMonth = yearMonth.minusMonths(1);
+  YearMonth nextMonth = yearMonth.plusMonths(1);
 
   // Fetch the monthly totals for the given month
   LocalDate startOfMonth = yearMonth.atDay(1);
@@ -132,12 +138,15 @@ public class SavingsController {
   DecimalFormat decimalFormat = new DecimalFormat("#0.00");
   String roundedTotal = decimalFormat.format(totalToAllocate);
 
+  log.info(previousMonth.format(monthFormatter) + " | " + month + " | " + nextMonth.format(monthFormatter));
+
   model.addAttribute("goals", goals);
   model.addAttribute("totalToAllocate", roundedTotal);
   model.addAttribute("totalAllocated", totalAllocated);
   model.addAttribute("monthToAllocate", formattedDate);
   model.addAttribute("goalAllocatedAmountMap", goalAllocatedAmountMap);
-
+  model.addAttribute("previousMonth", previousMonth.format(monthFormatter));
+  model.addAttribute("nextMonth", nextMonth.format(monthFormatter));
 
   return "savings/allocate-savings";
  }

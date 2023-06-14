@@ -88,6 +88,13 @@ for (let i = 0; i < sliders.length; i++) {
 
 <div class="container" style="margin:0 3rem 0 3rem;">
 
+
+    <div class="pagination-controls" style="margin:1rem 0 1rem 0;">
+        <a th:href="@{/savings/allocate-savings/{month}(month=${previousMonth})}" class="myButton">Previous Month</a>
+        <span th:text="${fulldate}" style="margin:1rem;"></span>
+        <a th:href="@{/savings/allocate-savings/ ,.hfdt km 8{month}(month=${nextMonth})}" class="myButton">Next Month</a>
+    </div>
+
     <h1>Allocate your funds</h1>
 
     <h2 th:text${monthToAllocate}></h2>
