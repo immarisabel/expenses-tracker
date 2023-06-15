@@ -5,7 +5,6 @@ import nl.marisabel.backend.savings.entity.GoalEntity;
 import nl.marisabel.backend.savings.entity.SavingsEntity;
 import nl.marisabel.backend.savings.service.GoalService;
 import nl.marisabel.backend.savings.service.SavingsService;
-import nl.marisabel.backend.transactions.entity.TransactionEntity;
 import nl.marisabel.backend.transactions.service.TransactionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,12 +13,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.LinkedHashMap;
 
 
 @Controller
@@ -38,49 +33,33 @@ public class GoalController {
   this.transactionService = transactionService;
  }
 
-
  @GetMapping("/goals")
- public String showAllGoals(@ModelAttribute ("goal") GoalEntity goal, Model model) {
-
+ public String showAllGoals(@ModelAttribute("goal") GoalEntity goal, Model model) {
   // load data
   List<GoalEntity> goals = goalService.getAllGoals();
   List<SavingsEntity> savings = savingsService.getAllSavings();
-  List<TransactionEntity> transactions = transactionService.getAllTransactions();
+  Map<String, String> monthsYears = transactionService.getDistinctMonthsAndYears();
+
   model.addAttribute("goals", goals);
   model.addAttribute("savings", savings);
-
-  log.info("SAVINGS: " + savings.size());
-
-  // Generate distinct months and years from transactions
-  Map<String, String> monthsYears = transactions.stream()
-          .map(t -> YearMonth.from(t.getDate()))
-          .distinct()
-          .sorted()
-          .collect(Collectors.toMap(
-                  ym -> ym.format(DateTimeFormatter.ofPattern("MMMM yyyy")),
-                  ym -> ym.format(DateTimeFormatter.ofPattern("MMyyyy")),
-                  (a, b) -> b,
-                  LinkedHashMap::new));
-
   model.addAttribute("monthsYears", monthsYears);
-
 
   // save new goal
   model.addAttribute("goal", new GoalEntity());
+
+  log.info("SAVINGS: " + savings.size());
+
   return "savings/manage-goals";
  }
 
 
+
  @PostMapping("/goals")
- public String addGoal(@ModelAttribute ("goal") GoalEntity goal) {
+ public String addGoal(@ModelAttribute("goal") GoalEntity goal) {
   goalService.saveNewGoal(goal);
-  log.info("Goal saved... "+ goal.getName());
+  log.info("Goal saved... " + goal.getName());
   return "redirect:/savings/goals";
  }
-
-
- // display charts
- // display goals list
 
 
 }

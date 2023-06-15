@@ -60,4 +60,8 @@ public class TransactionEntity {
   categories.remove(category);
   category.getTransactions().remove(this);
  }
+
+ public void removeCategories() {
+  categories.clear();
+ }
 }

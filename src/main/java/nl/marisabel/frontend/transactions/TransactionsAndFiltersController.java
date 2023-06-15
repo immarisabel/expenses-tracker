@@ -42,6 +42,13 @@ public class TransactionsAndFiltersController {
   int size = 300;
   Page<TransactionEntity> transactions = transactionRepository.findAll(PageRequest.of(page, size));
   List<CategoryEntity> categories = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category"));
+
+  if (!transactions.isEmpty()) {
+   log.info("ID of the first transaction object: " + transactions.get().findFirst().get().getId());
+  } else {
+   log.info("Transactions list is empty");
+  }
+
   model.addAttribute("transactions", transactions);
   model.addAttribute("categories", categories);
   model.addAttribute("transactionsForm", new TransactionForm());

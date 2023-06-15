@@ -60,9 +60,9 @@
         <input type="checkbox" name="selectedTransactionsIds" th:value="${transaction.id}"/>
       </td>
       <td>
-        <form th:action="@{/transactions/delete}" method="post">
+        <form th:action="@{/transactions/clear-category}" method="post">
           <input type="hidden" name="id" th:value="${transaction.id}">
-          <button class="myButton" type="submit" onclick="return confirm('Delete transaction?')">delete</button>
+          <button class="myButton" type="submit">clear cat</button>
         </form>
       </td>
 

@@ -8,6 +8,7 @@ import nl.marisabel.backend.savings.service.GoalService;
 import nl.marisabel.backend.savings.service.SavingsService;
 import nl.marisabel.backend.transactions.service.TransactionService;
 import nl.marisabel.frontend.savings.SavingsModel;
+import nl.marisabel.util.DateUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -39,46 +40,18 @@ public class SavingsController {
   this.goalService = goalService;
  }
 
-
  @PostMapping("/allocate-savings/{month}")
  public String allocateSavings(@PathVariable String month,
                                @RequestBody List<SavingsModel> savingsDTOs,
                                RedirectAttributes redirectAttributes) {
 
-  DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMyyyy");
-  YearMonth yearMonth = YearMonth.parse(month, monthFormatter);
+  YearMonth yearMonth = DateUtils.parseToYearMonth(month);
 
   for (SavingsModel dto : savingsDTOs) {
    GoalEntity goal = goalService.getGoalById(dto.getGoalId())
            .orElseThrow(() -> new ResourceNotFoundException("Goal not found with id: " + dto.getGoalId()));
-
-   log.info("Last amount of goal: " + goal.getLastAmount());
-
-   goal.setLastAmount(goal.getLastAmount() + dto.getAmount());
-   if (goal.getLastAmount() >= goal.getMaxAmount()) {
-    goal.setReached(true);
-   }
-
-   log.info("New goal amount: " + goal.getName() + " : " + goal.getLastAmount());
-   log.info("Goal reached? " + goal.isReached());
-
-   goalService.saveNewGoal(goal);
-
-   List<SavingsEntity> existingSavings = savingsService.findByGoalAndMonthYear(goal, String.valueOf(yearMonth));
-   if (existingSavings.isEmpty()) {
-    SavingsEntity newSavings = new SavingsEntity();
-    newSavings.setAmount(dto.getAmount());
-    newSavings.setSavingsMonth(yearMonth.getMonth());
-    newSavings.setSavingYear(Year.of(yearMonth.getYear()));
-    newSavings.setGoal(goal);
-    newSavings.setMonthYear(String.valueOf(yearMonth));
-    savingsService.save(newSavings);
-   } else {
-    for (SavingsEntity savings : existingSavings) {
-     savings.setAmount(savings.getAmount() + dto.getAmount());
-     savingsService.save(savings);
-    }
-   }
+   goalService.updateGoalState(goal, dto.getAmount());
+   savingsService.updateSavings(goal, yearMonth, dto.getAmount());
   }
 
   log.info("Savings allocated successfully!");
@@ -87,66 +60,41 @@ public class SavingsController {
  }
 
 
-
-
-
  @GetMapping("/allocate-savings/{month}")
  public String allocateSavingsInGoals(@PathVariable String month, Model model) {
 
   log.info("Original YearMonth: " + month);
 
-// DATE FORMATTING FOR PAGINATION AND SAVING
-  if (month == null || month.isEmpty()) {
-   YearMonth currentYearMonth = YearMonth.now();
-   month = currentYearMonth.format(DateTimeFormatter.ofPattern("MMyyyy"));
-  }
-  // Original formatting
-  DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMyyyy");
-  YearMonth yearMonth = YearMonth.parse(month, monthFormatter);
+  YearMonth yearMonth = DateUtils.parseToYearMonth(month);
   log.info("Parsed YearMonth: " + yearMonth);
 
-  // Formatting for header
-  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy");
-  String formattedDate = yearMonth.format(formatter);
+  String formattedDate = DateUtils.formatForHeader(yearMonth);
   log.info("Formatted Date: " + formattedDate);
 
-  // Calculate the previous and next months
   YearMonth previousMonth = yearMonth.minusMonths(1);
   YearMonth nextMonth = yearMonth.plusMonths(1);
 
-  // Fetch the monthly totals for the given month
   LocalDate startOfMonth = yearMonth.atDay(1);
   LocalDate endOfMonth = yearMonth.atEndOfMonth();
-  int year = yearMonth.getYear();
 
-  double totalAllocated = 0;
-  Map<Long, Double> goalAllocatedAmountMap = new HashMap<>();
-  List<GoalEntity> goals = goalService.getAllGoals();
+  double totalAllocated = savingsService.calculateTotalAllocated(yearMonth);
+  Map<Long, Double> goalAllocatedAmountMap = savingsService.calculateGoalAllocatedAmountMap(yearMonth);
 
-  // calculate totalAllocated and populate goalAllocatedAmountMap
-  for (GoalEntity goal : goals) {
-   List<SavingsEntity> existingSavings = savingsService.findByGoalAndMonthYear(goal, String.valueOf(yearMonth));
-   double totalSavingsForGoal = existingSavings.stream().mapToDouble(SavingsEntity::getAmount).sum();
-   totalAllocated += totalSavingsForGoal;
-   goalAllocatedAmountMap.put(goal.getId(), totalSavingsForGoal);
-  }
-
-  // calculate amount to allocate
   double difference = transactionService.calculateRemainingFundsByMonth(startOfMonth, endOfMonth);
   log.info("REMAINING FUNDS FOR : " + formattedDate + " [ " + difference + " ] ");
   double totalToAllocate = Math.round(difference * 100.00) / 100.00;
   DecimalFormat decimalFormat = new DecimalFormat("#0.00");
   String roundedTotal = decimalFormat.format(totalToAllocate);
 
-  log.info(previousMonth.format(monthFormatter) + " | " + month + " | " + nextMonth.format(monthFormatter));
+  log.info(DateUtils.formatForMonth(previousMonth) + " | " + month + " | " + DateUtils.formatForMonth(nextMonth));
 
-  model.addAttribute("goals", goals);
+  model.addAttribute("goals", goalService.getAllGoals());
   model.addAttribute("totalToAllocate", roundedTotal);
   model.addAttribute("totalAllocated", totalAllocated);
   model.addAttribute("monthToAllocate", formattedDate);
   model.addAttribute("goalAllocatedAmountMap", goalAllocatedAmountMap);
-  model.addAttribute("previousMonth", previousMonth.format(monthFormatter));
-  model.addAttribute("nextMonth", nextMonth.format(monthFormatter));
+  model.addAttribute("previousMonth", DateUtils.formatForMonth(previousMonth));
+  model.addAttribute("nextMonth", DateUtils.formatForMonth(nextMonth));
 
   return "savings/allocate-savings";
  }
@@ -154,7 +102,6 @@ public class SavingsController {
 
  // PAGES I NEED:
  // - goals settings (make✔ TODO edit, TODO delete)
- // - TODO left over per month chart (graphic, not bars)
- // - TODO add a text box in case sliders are annoying to tim
+
 }
 

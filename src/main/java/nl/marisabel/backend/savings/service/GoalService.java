@@ -43,4 +43,19 @@ public class GoalService {
   goal.ifPresent(g -> Hibernate.initialize(g.getSavingsEntities()));
   return goal;
  }
+
+ public void updateGoalState(GoalEntity goal, double amount) {
+  log.info("Last amount of goal: " + goal.getLastAmount());
+
+  goal.setLastAmount(goal.getLastAmount() + amount);
+  if (goal.getLastAmount() >= goal.getMaxAmount()) {
+   goal.setReached(true);
+  }
+
+  log.info("New goal amount: " + goal.getName() + " : " + goal.getLastAmount());
+  log.info("Goal reached? " + goal.isReached());
+
+  this.saveNewGoal(goal);
+ }
+
 }

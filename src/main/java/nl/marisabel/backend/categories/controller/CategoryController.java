@@ -12,13 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@Log4j2
 @RequestMapping("/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @Autowired
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }

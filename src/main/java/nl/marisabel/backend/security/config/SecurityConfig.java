@@ -1,6 +1,5 @@
 package nl.marisabel.backend.security.config;
 
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -41,9 +40,10 @@ public class SecurityConfig {
   http
           .cors(withDefaults())
           .csrf(withDefaults())
+
 //TODO turn security back on when project is fully finalized
           .authorizeHttpRequests((requests) -> requests
-                  .requestMatchers("/css/**", "/", "/403", "/errorpage", "/simulateError").permitAll()
+                  .requestMatchers("/css/**", "/", "/403", "/errorpage", "/simulateError", "/h2-console/**").permitAll()
                           .requestMatchers("/**").permitAll()
 //                  .requestMatchers("/chart/**", "/expenses/**", "/categories/**").hasRole("ADMIN")
 //                  .requestMatchers("/upload").hasRole("ADMIN")
