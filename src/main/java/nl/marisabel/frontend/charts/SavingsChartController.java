@@ -72,11 +72,3 @@ public class SavingsChartController {
  }
 }
 
-
-
-
-/* PROMPT
-
-I have this entity and this chart.
-
- */
