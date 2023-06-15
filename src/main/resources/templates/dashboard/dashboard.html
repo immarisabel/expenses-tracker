@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <title>Dashboard</title>
-</head>
-<body>
-<h1>Dashboard</h1>
+<header>
+  <div th:replace="~{fragments/header :: header}"></div>
+</header>
 
-<div th:replace="dashboard/notes :: body"></div>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+
+<div th:replace="~{dashboard/notes :: body}"></div>
+<div th:replace="~{dashboard/monthly-expenses :: body}"></div>
+
+
 
 </body>
 </html>
