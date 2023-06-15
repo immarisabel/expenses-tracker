@@ -39,7 +39,7 @@ _Styling done with help of ChatGPT 👍_ saved a lot of time with the css and ht
 
 - Profile creation and login 🔨 (WIP) 
 - Custom CVS profiles to customize depending on the bank.
-  - It will display the entity fields and and input field to map to the file's corresponding column
+  - It will display the entity fields and input field to map to the file's corresponding column
 - Auto-categorize items
   - Via the category settings, you shoudl be able to add a list of Strings which will categorize each transaction upon uploading.
   - Each upload should then show you the list of transactions uploaded in case you need to modify any category manually

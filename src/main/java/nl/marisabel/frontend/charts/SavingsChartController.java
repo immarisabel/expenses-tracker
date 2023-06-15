@@ -24,6 +24,7 @@ public class SavingsChartController {
   this.goalService = goalService;
  }
 
+ //TODO fix next and previous year pagination
  @GetMapping("/savings/{goalId}")
  public String displaySavingsChartPerGoal(@PathVariable Long goalId,
                                           Model model) {
