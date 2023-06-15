@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @Log4j2
+@RequestMapping("/transactions")
 public class TransactionController {
     @Autowired
     private HttpServletRequest request;
@@ -40,7 +42,7 @@ public class TransactionController {
 
 
     //..........UPDATE CATEGORY IN BATCH
-    @PostMapping("/transactions/updateCategory")
+    @PostMapping("/updateCategory")
     public String batchUpdateCategory(
             @RequestParam("categoryId") Long categoryId,
             @RequestParam(value = "selectedTransactionsIds", required = false) String[] selectedTransactionsIds,
@@ -66,14 +68,14 @@ public class TransactionController {
     }
 
 
-    @PostMapping("/transactions/clear-category")
+    @PostMapping("/delete-transaction")
     public String clearsCategory(@RequestParam("id") Long id, Model model) {
         Optional<TransactionEntity> transactionOptional = transactionRepository.findById(id);
         if (transactionOptional.isPresent()) {
             TransactionEntity transaction = transactionOptional.get();
-            transaction.removeCategories(); // Remove all categories from the transaction
+            transaction.removeCategories();
             transactionRepository.deleteById(id);
-            log.info(".... cleared category from transaction " + id);
+            log.info(".... deleted transaction " + id);
         }
         return "redirect:/transactions";
     }

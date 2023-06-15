@@ -1,78 +1,85 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 <html xmlns:th="http://www.thymeleaf.org">
 
-<div th:fragment = "transactions-table" >
+<div th:fragment="transactions-table">
 
-<div th:if="${message}">
-  <p th:text="${message}" class="success-message"></p>
-</div>
-
-
-<!--UPDATE CATEGORIES-->
-<form th:action="@{/transactions/updateCategory(searchTerm=${searchTerm})}" method="post" th:withQueryString="true">
-  <select name="categoryId">
-    <option value="">add category to transaction</option>
-    <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.category}"></option>
-  </select>
-  <button type="submit">Update</button>
+    <div th:if="${message}">
+        <p th:text="${message}" class="success-message"></p>
+    </div>
 
 
+    <!--UPDATE CATEGORIES-->
+    <form th:action="@{/transactions/updateCategory(searchTerm=${searchTerm})}" method="post" th:withQueryString="true">
+        <select name="categoryId">
+            <option value="">add category to transaction</option>
+            <option th:each="category : ${categories}" th:value="${category.id}"
+                    th:text="${category.category}"></option>
+        </select>
+        <button type="submit">Update</button>
 
-  <table>
-    <colgroup>
-      <col style="width: 6%">
-      <col style="width: 25%">
-      <col style="width: 5%">
-      <col style="width: 10%">
-      <col style="width: 34%">
-      <col style="width: 5%">
-      <col style="width: 5%;
+
+        <table>
+            <colgroup>
+                <col style="width: 5%">
+                <col style="width: 20%">
+                <col style="width: 5%">
+                <col style="width: 5%">
+                <col style="width: 47%">
+                <col style="width: 5%">
+                <col style="width: 3%;
                     align-items: center;
                     justify-content: center;">
-    </colgroup>
 
-    <thead>
-    <tr class="header">
-      <th>Date</th>
-      <th>Entity</th>
-      <th>Credit/Debit</th>
-      <th>Amount</th>
-      <th>Description</th>
-      <th>Category</th>
-      <th>
-        <input type="checkbox" id="selectAll"/>
-      </th>
-      <th>
-        Delete
-      </th>
-    </tr>
-    </thead>
+            </colgroup>
 
-    <tbody>
-    <tr th:each="transaction : ${transactions}">
-      <td data-title="Date" th:text="${transaction.date}"></td>
-      <td data-title="Entity" th:text="${transaction.entity}"></td>
-      <td data-title="Credit/Debit" th:text="${transaction.creditOrDebit}"></td>
-      <td data-title="Amount" th:text="${transaction.amount}"></td>
-      <td data-title="Description" th:text="${transaction.description}"></td>
-      <td data-title="Category"  th:text="${transaction.categories.size() > 0 ? transaction.categories[0].category : ''}"></td>
-      <td style="text-align: center;">
-        <input type="checkbox" name="selectedTransactionsIds" th:value="${transaction.id}"/>
-      </td>
-      <td>
-        <form th:action="@{/transactions/clear-category}" method="post">
-          <input type="hidden" name="id" th:value="${transaction.id}">
-          <button class="myButton" type="submit">clear cat</button>
-        </form>
-      </td>
+            <thead>
+            <tr class="header">
+                <th>Date</th>
+                <th>Entity</th>
+                <th>Credit/Debit</th>
+                <th>Amount</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>
+                    add category
+                    <input type="checkbox" id="selectAll"/>
+                </th>
+                <th>
+                    Delete
+                </th>
 
-    </tr>
-    </tbody>
-  </table>
-</form>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="transaction : ${transactions}">
+                <td data-title="Date" th:text="${transaction.date}"></td>
+                <td data-title="Entity" th:text="${transaction.entity}"></td>
+                <td data-title="Credit/Debit" th:text="${transaction.creditOrDebit}"></td>
+                <td data-title="Amount" th:text="${transaction.amount}"></td>
+                <td data-title="Description" th:text="${transaction.description}"></td>
+                <td data-title="Category"
+                    th:text="${transaction.categories.size() > 0 ? transaction.categories[0].category : ''}"></td>
+                <td style="text-align: center;">
+                    <input type="checkbox" name="selectedTransactionsIds" th:value="${transaction.id}"/>
+                </td>
+                <td>
+                    <form th:action="@{/transactions/delete-transaction}" method="post">
+                        <input type="hidden" name="id" th:value="${transaction.id}">
+                        <button class="myButton" type="submit">
+                            delete
+                        </button>
+                    </form>
+                </td>
 
 
-<script>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+
+
+    <script>
     // Function to toggle the selection of all checkboxes
     function toggleSelectAll() {
       const checkboxes = document.querySelectorAll('input[name="selectedTransactionsIds"]');
@@ -87,14 +94,16 @@
     const selectAllCheckbox = document.getElementById('selectAll');
     selectAllCheckbox.addEventListener('change', toggleSelectAll);
 
-</script>
 
-<h2>NOTES:</h2>
-<ul>
-  <li>Searching string + space will search exact words</li>
-  <li>Searching string without space after, will look inside words ("ui" = "thuis")</li>
-  <li>upload CVS files from ING (both EN and NL work)</li>
-</ul>
+
+    </script>
+
+    <h2>NOTES:</h2>
+    <ul>
+        <li>Searching string + space will search exact words</li>
+        <li>Searching string without space after, will look inside words ("ui" = "thuis")</li>
+        <li>upload CVS files from ING (both EN and NL work)</li>
+    </ul>
 
 </div>
 

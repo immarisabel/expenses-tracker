@@ -39,7 +39,7 @@ public class TransactionsAndFiltersController {
  //.......... D E F A U L T
  @GetMapping("/transactions")
  public String showTransactions(@RequestParam(defaultValue = "0") int page, Model model) {
-  int size = 300;
+  int size = 100;
   Page<TransactionEntity> transactions = transactionRepository.findAll(PageRequest.of(page, size));
   List<CategoryEntity> categories = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category"));
 
