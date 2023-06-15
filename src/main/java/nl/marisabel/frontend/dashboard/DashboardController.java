@@ -39,7 +39,7 @@ public class DashboardController {
   dashboardService.loadCategorizedTransactions(model);
   return "dashboard/dashboard";
  }
-
+//TODO the note box is ok on its own page but not on dashboard
 
 }
 
