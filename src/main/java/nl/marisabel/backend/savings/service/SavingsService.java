@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.time.Year;
 import java.time.YearMonth;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,22 @@ public class SavingsService {
 
  public List<SavingsEntity> getAllSavings() {
   return savingsRepository.findAll();
+ }
+
+
+ public Map<String, Double> calculateMonthlySavings(List<SavingsEntity> savings) {
+  Map<String, Double> monthlySavings = new LinkedHashMap<>();
+
+  for (SavingsEntity saving : savings) {
+   String monthYear = saving.getMonthYear();
+   double amount = saving.getAmount();
+
+   monthYear = monthYear != null ? monthYear : "Unknown Month";
+
+   monthlySavings.merge(monthYear, amount, Double::sum);
+  }
+
+  return monthlySavings;
  }
 
 

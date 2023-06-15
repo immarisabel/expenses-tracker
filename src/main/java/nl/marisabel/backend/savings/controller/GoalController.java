@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,10 +40,12 @@ public class GoalController {
   List<GoalEntity> goals = goalService.getAllGoals();
   List<SavingsEntity> savings = savingsService.getAllSavings();
   Map<String, String> monthsYears = transactionService.getDistinctMonthsAndYears();
+  Map<String, Double> monthlySavings = savingsService.calculateMonthlySavings(savings); // Calculate monthly savings data
 
   model.addAttribute("goals", goals);
   model.addAttribute("savings", savings);
   model.addAttribute("monthsYears", monthsYears);
+  model.addAttribute("monthlySavings", monthlySavings); // Pass monthly savings data to the template
 
   // save new goal
   model.addAttribute("goal", new GoalEntity());

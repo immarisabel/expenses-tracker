@@ -68,18 +68,19 @@ public class TransactionController {
     }
 
 
+
     @PostMapping("/delete-transaction")
-    public String clearsCategory(@RequestParam("id") Long id, Model model) {
+    public String deletesTransaction(@RequestParam("id") Long id, Model model) {
         Optional<TransactionEntity> transactionOptional = transactionRepository.findById(id);
         if (transactionOptional.isPresent()) {
             TransactionEntity transaction = transactionOptional.get();
             transaction.removeCategories();
+            transactionRepository.save(transaction);
             transactionRepository.deleteById(id);
             log.info(".... deleted transaction " + id);
         }
         return "redirect:/transactions";
     }
-
 
 
 

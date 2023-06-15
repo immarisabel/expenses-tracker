@@ -1,6 +1,7 @@
 package nl.marisabel.backend.transactions.entity;
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -56,12 +57,17 @@ public class TransactionEntity {
   category.getTransactions().add(this);
  }
 
+ @Transactional
  public void removeCategory(CategoryEntity category) {
   categories.remove(category);
   category.getTransactions().remove(this);
  }
 
+ @Transactional
  public void removeCategories() {
-  categories.clear();
+  for (CategoryEntity category : this.categories) {
+   category.getTransactions().remove(this);
+  }
+  this.categories.clear();
  }
 }
