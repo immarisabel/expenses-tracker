@@ -70,4 +70,6 @@ public class TransactionEntity {
   }
   this.categories.clear();
  }
+
+
 }

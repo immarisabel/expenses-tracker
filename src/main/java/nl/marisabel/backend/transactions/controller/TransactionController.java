@@ -40,7 +40,8 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
-
+// TODO 2023-06-15T16:54:46.065+02:00  INFO 9060 --- [nio-9191-exec-2] n.m.b.t.c.TransactionController          : ....transactions to update: 65
+//  2023-06-15T16:54:46.084+02:00  INFO 9060 --- [nio-9191-exec-2] n.m.b.t.service.TransactionService       : ....transactions updated: 10
     //..........UPDATE CATEGORY IN BATCH
     @PostMapping("/updateCategory")
     public String batchUpdateCategory(

@@ -27,4 +27,6 @@ public class CategoryEntity {
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @Fetch(FetchMode.JOIN)
     private Set<TransactionEntity> transactions = new HashSet<>();
+
+
 }
