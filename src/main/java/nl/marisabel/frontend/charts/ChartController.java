@@ -48,20 +48,6 @@ public class ChartController {
  }
 
 
- @GetMapping("/charts/grandTotalChart")
- public String showChart(Model model) {
-  int totalCredits = chartService.getTotalCredits();
-  int totalDebits = chartService.getTotalDebits();
-
-  log.info("CREDIT: " + totalCredits + " DEBIT: " + totalDebits);
-
-  // Pass data to the view
-  model.addAttribute("totalCredits", totalCredits);
-  model.addAttribute("totalDebits", totalDebits);
-//TODO chart grand totals
-  return "chart";
- }
-
 
 
  @GetMapping("/charts/month/{month}")
