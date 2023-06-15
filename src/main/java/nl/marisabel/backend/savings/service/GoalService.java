@@ -33,10 +33,6 @@ public class GoalService {
   return goalRepository.findAll();
  }
 
- public Page<GoalEntity> getAllGoalsPageable(Pageable pageable) {
-  return goalRepository.findAll(pageable);
- }
-
  @Transactional
  public Optional<GoalEntity> getGoalById(Long id) {
   Optional<GoalEntity> goal = goalRepository.findById(id);

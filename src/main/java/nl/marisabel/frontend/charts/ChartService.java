@@ -168,7 +168,6 @@ public class ChartService {
  }
 
 
-
  public Map<String, Double> getMonthlyDebitsByCategoryForMonth(YearMonth yearMonth) {
   LocalDate startDate = yearMonth.atDay(1);
   LocalDate endDate = yearMonth.atEndOfMonth();
@@ -211,17 +210,14 @@ public class ChartService {
     monthlyCredits.merge(monthYear, amount, Double::sum);
    }
   }
-  log.info("getMonthlyCreditsByCategoryForCategory : "+ monthlyCredits);
+  log.info("getMonthlyCreditsByCategoryForCategory : " + monthlyCredits);
   return monthlyCredits;
  }
-
-
 
 
  public Map<String, Double> getMonthlyDebitsByCategoryForCategory(int year, CategoryEntity categoryEntity) {
   LocalDate startDate = YearMonth.of(year, 1).atDay(1);
   LocalDate endDate = YearMonth.of(year, 12).atEndOfMonth();
-
 
   List<TransactionEntity> allTransactions = transactionRepository.findAllByDateBetweenAndCategory(startDate, endDate, categoryEntity);
   Map<String, Double> monthlyDebits = new LinkedHashMap<>();

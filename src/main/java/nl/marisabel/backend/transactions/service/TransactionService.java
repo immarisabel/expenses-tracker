@@ -35,50 +35,17 @@ public class TransactionService {
   this.categoryRepository = categoryRepository;
  }
 
- public List<TransactionEntity> searchTransactions(String searchTerm) {
-  String searchTermLower = searchTerm.toLowerCase();
-  return transactionRepository.findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(searchTermLower);
- }
 
- @Transactional
- public void batchUpdateCategory(Long categoryId, List<Long> transactionIds, int pageNumber, int pageSize) {
-  CategoryEntity category = categoryRepository.findById(categoryId)
-          .orElseThrow(() -> new RuntimeException("Category not found with id " + categoryId));
-
-  int startIndex = pageNumber * pageSize;
-  int endIndex = Math.min(startIndex + pageSize, transactionIds.size());
-  List<Long> paginatedTransactionIds = transactionIds.subList(startIndex, endIndex);
-
-  List<TransactionEntity> transactions = transactionRepository.findAllById(paginatedTransactionIds);
-
-  log.info("....transactions updated: " + transactions.size());
-
-  for (TransactionEntity transaction : transactions) {
-   transaction.getCategories().clear();
-   transaction.addCategory(category);
-   transactionRepository.save(transaction);
-  }
- }
+ // FILTERS
 
 
  public List<TransactionEntity> filterTransactionByDate(LocalDate startDate, LocalDate endDate) {
   return transactionRepository.findByDateBetween(startDate, endDate);
  }
 
- public Page<TransactionEntity> filterTransactionByDate(LocalDate startDate, LocalDate endDate, PageRequest of) {
-  return transactionRepository.findByDateBetween(startDate, endDate, of);
- }
 
  public List<TransactionEntity> getTransactionsByCategory(Long categoryId) {
   return transactionRepository.findByCategoryId(categoryId);
- }
-
- public double calculateTotalCreditsByMonth(LocalDate startDate, LocalDate endDate) {
-  return transactionRepository.calculateTotalCreditsByMonth(startDate, endDate);
- }
-
- public double calculateTotalDebitsByMonth(LocalDate startDate, LocalDate endDate) {
-  return transactionRepository.calculateTotalDebitsByMonth(startDate, endDate);
  }
 
 
@@ -106,6 +73,29 @@ public class TransactionService {
                   (a, b) -> b,
                   LinkedHashMap::new));
  }
+
+ // MANIPULATION
+
+ @Transactional
+ public void batchUpdateCategory(Long categoryId, List<Long> transactionIds, int pageNumber, int pageSize) {
+  CategoryEntity category = categoryRepository.findById(categoryId)
+          .orElseThrow(() -> new RuntimeException("Category not found with id " + categoryId));
+
+  int startIndex = pageNumber * pageSize;
+  int endIndex = Math.min(startIndex + pageSize, transactionIds.size());
+  List<Long> paginatedTransactionIds = transactionIds.subList(startIndex, endIndex);
+
+  List<TransactionEntity> transactions = transactionRepository.findAllById(paginatedTransactionIds);
+
+  log.info("....transactions updated: " + transactions.size());
+
+  for (TransactionEntity transaction : transactions) {
+   transaction.getCategories().clear();
+   transaction.addCategory(category);
+   transactionRepository.save(transaction);
+  }
+ }
+
 
 
 
