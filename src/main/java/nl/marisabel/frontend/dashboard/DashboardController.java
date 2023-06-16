@@ -30,7 +30,7 @@ public class DashboardController {
   String noteContent = NoteUtil.readNote();
   NoteModel noteModel = new NoteModel();
   noteModel.setNote(noteContent);
-  model.addAttribute("noteModel", noteModel.getNote());
+  model.addAttribute("noteModel", noteModel);
 
   log.info(noteContent);
 
