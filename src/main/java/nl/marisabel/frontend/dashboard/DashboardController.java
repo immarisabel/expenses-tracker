@@ -1,35 +1,24 @@
 package nl.marisabel.frontend.dashboard;
 
-import nl.marisabel.backend.categories.entity.CategoryEntity;
-import nl.marisabel.backend.categories.service.CategoryService;
-import nl.marisabel.backend.savings.entity.SavingsEntity;
-import nl.marisabel.backend.savings.service.SavingsService;
-import nl.marisabel.backend.transactions.entity.TransactionEntity;
-import nl.marisabel.backend.transactions.service.TransactionService;
-import nl.marisabel.frontend.charts.ChartService;
+import lombok.extern.log4j.Log4j2;
+import nl.marisabel.frontend.notes.NoteModel;
+import nl.marisabel.util.NoteUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDate;
-import java.time.Year;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
 
 
 @Controller
+@Log4j2
 @RequestMapping("/dashboard")
 public class DashboardController {
 
- private final ChartService chartService;
  private final DashboardService dashboardService;
 
- public DashboardController(ChartService chartService, DashboardService dashboardService) {
-  this.chartService = chartService;
+ public DashboardController(DashboardService dashboardService) {
   this.dashboardService = dashboardService;
  }
 
@@ -37,8 +26,18 @@ public class DashboardController {
  public String dashboard(@RequestParam(value = "year", required = false) Integer year, Model model) {
   dashboardService.showChartForCurrentYear(model);
   dashboardService.loadCategorizedTransactions(model);
+
+  String noteContent = NoteUtil.readNote();
+  NoteModel noteModel = new NoteModel();
+  noteModel.setNote(noteContent);
+  model.addAttribute("noteModel", noteModel.getNote());
+
+  log.info(noteContent);
+
   return "dashboard/dashboard";
  }
+
+
 
 }
 

@@ -1,69 +1,72 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <header>
-  <div th:replace="~{fragments/header :: header}"></div>
-  <style>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+
+    <style>
     .container {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px 10px;
-    grid-template-areas: ". expenses expenses expenses ."
-                         ". categories savings notes .";
-}
+        display: flex;
+    }
 
-.expenses {
-    grid-area: expenses;
-}
+    .right {
+        flex: 2;
+        max-height: 80vh;
+        overflow: auto;
 
-.categories {
-    grid-area: categories;
-}
+    }
 
-.savings {
-    grid-area: savings;
-}
+    .left {
+        flex: 1;
+        max-height: 100vh;
+        overflow: auto;
+    }
 
-.notes {
-    grid-area: notes;
-}
+    .bottom {
+        flex: 1;
+        width: 90%;
+        background-color: #FDFD96;
+        padding:1rem;
+    }
 
-.container > div {
-    border: 0;
-    padding: 20px;
-    background-color: #fff;
-}
+ .savingsChart
+ {
+    width:80%;
+    }
 
-  </style>
+    .categoriesChart
+    {
+    width:50%;
+    }
+
+
+    </style>
 </header>
+
 
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
+<div class="container">
 
-
-
-
-
-<section id="charts">
-  <div class="container">
-    <div class="expenses">
-      <div th:replace="~{dashboard/monthly-expenses :: body}"></div>
+    <div class="right">
+        <div th:replace="~{dashboard/monthly-expenses :: body}"></div>
     </div>
-    <div class="categories">
-      <div th:replace="~{dashboard/last-month-categories :: body}"></div>
+    <div class="left">
+        <div class="categoriesChart">
+            <div th:replace="~{dashboard/last-month-categories :: body}"></div>
+        </div>
+        <div class="savingsChart">
+            <div th:replace="~{dashboard/monthly-savings :: body}"></div>
+        </div>
     </div>
-    <div class="savings">
-      <div th:replace="~{dashboard/monthly-savings :: body}"></div>
-    </div>
-    <div class="notes">
-<!--      <div th:replace="~{dashboard/notes :: body}"></div>-->
-    </div>
-  </div>
-</section>
+</div>
 
-<section id="transactions"></section>
-<section id="savings"></section>
-<section id="settings"></section>
+
+<div class="bottom" th:text="${noteModel}">
+
+</div>
+
 
 </body>
 </html>
