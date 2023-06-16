@@ -45,20 +45,26 @@ public class SavingsController {
  public String allocateSavings(@PathVariable String month,
                                @RequestBody List<SavingsModel> savingsDTOs,
                                RedirectAttributes redirectAttributes) {
-
-  YearMonth yearMonth = DateUtils.parseToYearMonth(month);
-
+  DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMyyyy");
+  YearMonth yearMonth = YearMonth.parse(month, monthFormatter);
   for (SavingsModel dto : savingsDTOs) {
    GoalEntity goal = goalService.getGoalById(dto.getGoalId())
            .orElseThrow(() -> new ResourceNotFoundException("Goal not found with id: " + dto.getGoalId()));
-   goalService.updateGoalState(goal, dto.getAmount());
-   savingsService.updateSavings(goal, yearMonth, dto.getAmount());
+   log.info(goal.getSavingsEntities());
+   log.info(goal.getSavingsEntities().size());
+   log.info(goal.getId());
+   SavingsEntity savingsEntity = new SavingsEntity();
+   savingsEntity.setAmount(dto.getAmount());
+   savingsEntity.setSavingsMonth(yearMonth.getMonth());
+   savingsEntity.setSavingYear(Year.of(yearMonth.getYear()));
+   savingsEntity.setGoal(goal);
+   savingsEntity.setMonthYear(dto.getMonthYear()); // Set the monthYear value
+   savingsService.save(savingsEntity);
   }
-
   log.info("Savings allocated successfully!");
-
   return "savings/allocate-savings";
  }
+
 
 
  @GetMapping("/allocate-savings/{month}")
