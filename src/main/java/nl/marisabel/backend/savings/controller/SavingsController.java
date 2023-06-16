@@ -40,7 +40,6 @@ public class SavingsController {
   this.goalService = goalService;
  }
 
- // TODO Next Month button is broken: http://localhost:9191/savings/allocate-savings/%20,.hfdt%20km%208022018
 
  @PostMapping("/allocate-savings/{month}")
  public String allocateSavings(@PathVariable String month,
@@ -102,8 +101,6 @@ public class SavingsController {
  }
 
 
- // PAGES I NEED:
- // - goals settings (make✔ TODO edit, TODO delete)
 
 }
 

@@ -35,11 +35,10 @@ public class DashboardController {
 
  @GetMapping
  public String dashboard(@RequestParam(value = "year", required = false) Integer year, Model model) {
-  dashboardService.showChartWithMonths(year, model);
+  dashboardService.showChartForCurrentYear(model);
   dashboardService.loadCategorizedTransactions(model);
   return "dashboard/dashboard";
  }
-//TODO the note box is ok on its own page but not on dashboard
 
 }
 

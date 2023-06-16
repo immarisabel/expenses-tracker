@@ -3,10 +3,7 @@
 <body>
 <h1>EXPENSES</h1>
 <canvas id="chart" class="chart-canvas" margin="1rem"></canvas>
-
-
 <script th:inline="javascript">
-
     /* Retrieve the data from the server-side */
     var labels = /*[[${labels}]]*/ [];
     var credits = /*[[${credits}]]*/ [];
@@ -42,7 +39,7 @@
     /* Create the chart */
     var ctx = document.getElementById('chart').getContext('2d');
     new Chart(ctx, {
-        type: 'line', // Change this to 'line'
+        type: 'line',
         data: {
             labels: displayLabels,
             datasets: [{
@@ -50,13 +47,15 @@
                 data: debits,
                 backgroundColor: 'rgba(244, 164, 164, 0.5)', // #f4a4a4 at 50% opacity
                 borderColor: 'rgb(244, 164, 164)', // #f4a4a4
-                borderWidth: 1
+                borderWidth: 1,
+                fill: false // Remove the background fill for line chart
             }, {
                 label: 'Credits',
                 data: credits,
                 backgroundColor: 'rgba(100, 116, 229, 0.5)', // #6474e5 at 50% opacity
                 borderColor: 'rgb(100, 116, 229)', // #6474e5
-                borderWidth: 1
+                borderWidth: 1,
+                fill: false // Remove the background fill for line chart
             }]
         },
         options: {
@@ -117,6 +116,7 @@
     });
 
 </script>
+
 
 </body>
 </html>

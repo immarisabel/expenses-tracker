@@ -91,7 +91,7 @@
     <div class="pagination-controls" style="margin:1rem 0 1rem 0;">
         <a th:href="@{/savings/allocate-savings/{month}(month=${previousMonth})}" class="myButton">Previous Month</a>
         <span th:text="${monthToAllocate}" style="margin:1rem;"></span>
-        <a th:href="@{/savings/allocate-savings/ ,.hfdt km 8{month}(month=${nextMonth})}" class="myButton">Next
+        <a th:href="@{/savings/allocate-savings/{month}(month=${nextMonth})}" class="myButton">Next
             Month</a>
     </div>
 
@@ -109,8 +109,7 @@
 
     </div>
     <h2>Total allocated:<br></br>
-        <span id="totalAllocated" th:text="${totalAllocated}"></span> / <span id="totalToAllocate"
-                                                                              th:text="${totalToAllocate}"></span>
+        <span id="totalAllocated" th:text="${totalAllocated}"></span>
     </h2>
 
     <button class="myButton" onclick="submitAllocations()">Save</button>

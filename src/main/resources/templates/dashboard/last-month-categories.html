@@ -2,103 +2,43 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <h1>Last Month's Expenses</h1>
-<div class="chart-wrapper">
-  <canvas id="pie-chart" style="padding: 2rem;"></canvas>
-</div>
+
+
+<canvas id="pieChart"></canvas>
+
 <script th:inline="javascript">
-    /* Retrieve the data from the server-side */
-    var categories = /*[[${categories}]]*/ [];
-    var totalAmountSpent = /*[[${totalAmountSpent}]]*/ 0;
-    var categoryPercentageMap = /*[[${categoryPercentageMap}]]*/ {};
+        /*<![CDATA[*/
+        // Retrieve the data from your controller
+        const categoryPercentageMap = /*[[${categoryPercentageMap}]]*/ {};
 
-    /* Generate dynamic colors for the chart */
-    var colors = generateColors(categories.length);
+        // Prepare the data for the chart
+        const pieChartLabels = Object.keys(categoryPercentageMap);
+        const pieChartData = Object.values(categoryPercentageMap);
 
-    /* Create the chart */
-    document.addEventListener("DOMContentLoaded", function() {
-        var ctx = document.getElementById('pie-chart').getContext('2d');
-        new Chart(ctx, {
+        // Set up the chart configuration
+        const config = {
             type: 'pie',
             data: {
-                labels: Object.keys(categoryPercentageMap),
+                labels: pieChartLabels,
                 datasets: [{
-                    label: 'Monthly Expenses',
-                    data: Object.values(categoryPercentageMap),
-                    backgroundColor: colors.backgroundColors,
-                    borderColor: colors.borderColors,
-                    borderWidth: 1
+                    data: pieChartData,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(255, 206, 86, 0.8)',
+                        // Add more colors for additional categories
+                    ]
                 }]
             },
             options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'left',
-                        align: 'start'
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                var label = context.label || '';
-
-                                if (label) {
-                                    label += ': ';
-                                }
-
-                                if (context.formattedValue !== null) {
-                                    var percentage = context.formattedValue + '%';
-                                    var amount = (totalAmountSpent * (context.parsed / 100)).toFixed(2);
-                                    label += amount + ' (' + percentage + ')';
-                                }
-
-                                return label;
-                            }
-                        }
-                    }
-                }
+                responsive: true
             }
-        });
-    });
-
-    /* Function to generate dynamic colors */
-    function generateColors(count) {
-        var backgroundColors = [];
-        var borderColors = [];
-
-        for (var i = 0; i < count; i++) {
-            var backgroundColor = getRandomColor();
-            backgroundColors.push(backgroundColor);
-            var borderColor = darkenColor(backgroundColor, 0.5);
-            borderColors.push(borderColor);
-        }
-
-        return {
-            backgroundColors: backgroundColors,
-            borderColors: borderColors
         };
-    }
 
-    /* Function to generate a random color */
-    function getRandomColor() {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    }
-
-    /* Function to darken a color */
-    function darkenColor(color, amount) {
-        var colorCode = color.slice(1);
-        var num = parseInt(colorCode, 16);
-        var r = (num >> 16) + amount;
-        var b = ((num >> 8) & 0x00FF) + amount;
-        var g = (num & 0x0000FF) + amount;
-        var newColorCode = (g | (b << 8) | (r << 16)).toString(16);
-        return "#" + newColorCode.padStart(6, '0');
-    }
-</script>
-
+        // Create the chart
+        const ctxChart = document.getElementById('pieChart').getContext('2d');
+        new Chart(ctxChart, config);
+        /*]]>*/
+    </script>
 </body>
 </html>

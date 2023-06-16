@@ -2,18 +2,68 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <header>
   <div th:replace="~{fragments/header :: header}"></div>
+  <style>
+    .container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px 10px;
+    grid-template-areas: ". expenses expenses expenses ."
+                         ". categories savings notes .";
+}
+
+.expenses {
+    grid-area: expenses;
+}
+
+.categories {
+    grid-area: categories;
+}
+
+.savings {
+    grid-area: savings;
+}
+
+.notes {
+    grid-area: notes;
+}
+
+.container > div {
+    border: 0;
+    padding: 20px;
+    background-color: #fff;
+}
+
+  </style>
 </header>
 
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
 
-<div th:replace="~{dashboard/notes :: body}"></div>
-<div th:replace="~{dashboard/monthly-expenses :: body}"></div>
-<div th:replace="~{dashboard/monthly-savings :: body}"></div>
-<div th:replace="~{dashboard/last-month-categories :: body}"></div>
 
 
+
+
+<section id="charts">
+  <div class="container">
+    <div class="expenses">
+      <div th:replace="~{dashboard/monthly-expenses :: body}"></div>
+    </div>
+    <div class="categories">
+      <div th:replace="~{dashboard/last-month-categories :: body}"></div>
+    </div>
+    <div class="savings">
+      <div th:replace="~{dashboard/monthly-savings :: body}"></div>
+    </div>
+    <div class="notes">
+<!--      <div th:replace="~{dashboard/notes :: body}"></div>-->
+    </div>
+  </div>
+</section>
+
+<section id="transactions"></section>
+<section id="savings"></section>
+<section id="settings"></section>
 
 </body>
 </html>

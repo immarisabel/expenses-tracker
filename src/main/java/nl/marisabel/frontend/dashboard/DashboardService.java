@@ -1,5 +1,6 @@
 package nl.marisabel.frontend.dashboard;
 
+import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.service.CategoryService;
 import nl.marisabel.backend.savings.entity.SavingsEntity;
@@ -16,9 +17,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Filter;
 import java.util.stream.Collectors;
 
 @Service
+@Log4j2
 public class DashboardService {
 
  private final ChartService chartService;
@@ -34,47 +37,58 @@ public class DashboardService {
  }
 
 
-
- public void showChartWithMonths(Integer year, Model model) {
+ public void showChartForCurrentYear(Model model) {
   int currentYear = Year.now().getValue();
-  if (year == null || year == 0) {
-   year = currentYear;
-  }
 
-  // Get data for the specified year
-  Map<String, Double> monthlyCredits = chartService.getMonthlyCreditsForYear(year);
-  Map<String, Double> monthlyDebits = chartService.getMonthlyDebitsForYear(year);
+// Get data for the current year
+  Map<String, Double> monthlyCredits = chartService.getMonthlyCreditsForYear(currentYear);
+  Map<String, Double> monthlyDebits = chartService.getMonthlyDebitsForYear(currentYear);
+  log.info("credits map populated with data: KEY " + monthlyCredits.keySet() + " VALUE " + monthlyCredits.values());
+  log.info("debits map populated with data: KEY " + monthlyDebits.keySet() + " VALUE " + monthlyDebits.values());
 
-  // Generate labels and data for the chart
+// Generate labels and data for the chart
   List<String> labels = new ArrayList<>();
   List<Double> credits = new ArrayList<>();
   List<Double> debits = new ArrayList<>();
 
-  // Populate the labels, credits, and debits lists
-  for (Map.Entry<String, Double> entry : monthlyCredits.entrySet()) {
-   String month = entry.getKey();
-   double creditTotal = monthlyCredits.getOrDefault(month, 0.0);
-   double debitTotal = monthlyDebits.getOrDefault(month, 0.0);
+// Populate the labels, credits, and debits lists
+  for (int month = 1; month <= 12; month++) {
+   String monthLabel = String.format("%02d%04d", month, currentYear);
 
-   labels.add(month);
+   double creditTotal = monthlyCredits.getOrDefault(monthLabel, 0.0);
+   double debitTotal = monthlyDebits.getOrDefault(monthLabel, 0.0);
+
+   labels.add(monthLabel);
    credits.add(creditTotal);
    debits.add(debitTotal);
   }
+
+
+  log.info("labels: " + labels);
+  log.info("credits for labels: " + credits);
+  log.info("debits for labels: " + debits);
+
+
+
+  /*
+2023-06-16T13:30:49.423+02:00  INFO 12944 --- [nio-9191-exec-1] n.m.frontend.dashboard.DashboardService  : labels: [01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12]
+2023-06-16T13:30:49.423+02:00  INFO 12944 --- [nio-9191-exec-1] n.m.frontend.dashboard.DashboardService  : credits for labels: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+2023-06-16T13:30:49.424+02:00  INFO 12944 --- [nio-9191-exec-1] n.m.frontend.dashboard.DashboardService  : debits for labels: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+2023-06-16T13:30:49.424+02:00  INFO 12944 --- [nio-9191-exec-1] n.m.frontend.dashboard.DashboardService  : credits map : [][]
+2023-06-16T13:30:49.424+02:00  INFO 12944 --- [nio-9191-exec-1] n.m.frontend.dashboard.DashboardService  : debits map : [052023, 062023][567.0, 2221.0]
+
+  */
 
   // Add attributes to the model for use in the view
   model.addAttribute("labels", labels);
   model.addAttribute("credits", credits);
   model.addAttribute("debits", debits);
-  model.addAttribute("currentYear", year);
+  model.addAttribute("currentYear", currentYear);
 
-  // Set previous and next year for pagination
-  int previousYear = year - 1;
-  int nextYear = year + 1;
-  model.addAttribute("prevYear", previousYear);
-  model.addAttribute("nextYear", nextYear);
-
-  loadTotalSavingsPerMonth(model); // Call the method to load total savings per month
+  loadTotalSavingsPerMonth(model);
  }
+
+
 
 
  public void loadTotalSavingsPerMonth(Model model) {
@@ -94,33 +108,20 @@ public class DashboardService {
   List<CategoryEntity> categories = categoryService.getCategories();
   List<TransactionEntity> transactions = transactionService.getAllTransactions();
 
-
-
-    LocalDate currentDate = LocalDate.now();
-  LocalDate previousMonth = LocalDate.of(2017,2,1);
-
-
-  // Filter transactions for the previous month
-//  LocalDate currentDate = LocalDate.now();
-//  LocalDate previousMonth = currentDate.minusMonths(1);
-//  List<TransactionEntity> previousMonthTransactions = transactions.stream()
-//          .filter(transaction -> transaction.getDate().getMonth().equals(previousMonth.getMonth()))
-//          .collect(Collectors.toList());
-
+  LocalDate currentDate = LocalDate.now();
+  LocalDate previousMonth = currentDate.minusMonths(1);
   List<TransactionEntity> previousMonthTransactions = transactions.stream()
           .filter(transaction -> transaction.getDate().getMonth().equals(previousMonth.getMonth()))
           .collect(Collectors.toList());
-  // Calculate the total amount spent in the previous month
+
   double totalAmountSpent = previousMonthTransactions.stream()
           .mapToDouble(TransactionEntity::getAmount)
           .sum();
 
-  // Calculate the percentage spent for each category
-
   Map<String, Double> categoryPercentageMap = new HashMap<>();
   for (CategoryEntity category : categories) {
    double categoryAmountSpent = previousMonthTransactions.stream()
-           .filter(transaction -> transaction.getCategories().equals(category))
+           .filter(transaction -> transaction.getCategories().contains(category))
            .mapToDouble(TransactionEntity::getAmount)
            .sum();
    double categoryPercentage = (categoryAmountSpent / totalAmountSpent) * 100;

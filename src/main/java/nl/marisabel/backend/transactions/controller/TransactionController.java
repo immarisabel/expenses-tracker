@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-//TODO modify transactions, not delete, yes edit
-// TODO if category is transfer, then...? what do we do with it?
 
 @Controller
 @Log4j2
