@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class NoteUtil {
- private static final String FILE_PATH = "C:\\Users\\munozm\\Desktop\\PERSONAL\\expenses-tracker\\expenses-tracker\\data\\note.txt";
+ private static final String FILE_PATH = "data/note.txt";
 
  public static void appendToFile(String text) throws IOException {
   BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, false));
