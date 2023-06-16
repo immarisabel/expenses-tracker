@@ -70,15 +70,6 @@ public class DashboardService {
 
 
 
-  /*
-2023-06-16T13:30:49.423+02:00  INFO 12944 --- [nio-9191-exec-1] n.m.frontend.dashboard.DashboardService  : labels: [01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12]
-2023-06-16T13:30:49.423+02:00  INFO 12944 --- [nio-9191-exec-1] n.m.frontend.dashboard.DashboardService  : credits for labels: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-2023-06-16T13:30:49.424+02:00  INFO 12944 --- [nio-9191-exec-1] n.m.frontend.dashboard.DashboardService  : debits for labels: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-2023-06-16T13:30:49.424+02:00  INFO 12944 --- [nio-9191-exec-1] n.m.frontend.dashboard.DashboardService  : credits map : [][]
-2023-06-16T13:30:49.424+02:00  INFO 12944 --- [nio-9191-exec-1] n.m.frontend.dashboard.DashboardService  : debits map : [052023, 062023][567.0, 2221.0]
-
-  */
-
   // Add attributes to the model for use in the view
   model.addAttribute("labels", labels);
   model.addAttribute("credits", credits);
