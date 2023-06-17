@@ -5,40 +5,79 @@
 
 
 <canvas id="pieChart"></canvas>
-
 <script th:inline="javascript">
-        /*<![CDATA[*/
-        // Retrieve the data from your controller
-        const categoryPercentageMap = /*[[${categoryPercentageMap}]]*/ {};
+    /*<![CDATA[*/
+    // Retrieve the data from your controller
+    const categoryPercentageMap = /*[[${categoryPercentageMap}]]*/ {};
+    const totalAmountMap = /*[[${totalAmountMap}]]*/ {};
 
-        // Prepare the data for the chart
-        const pieChartLabels = Object.keys(categoryPercentageMap);
-        const pieChartData = Object.values(categoryPercentageMap);
+    // Prepare the data for the chart
+    const pieChartLabels = Object.keys(categoryPercentageMap);
+    const pieChartData = Object.values(categoryPercentageMap);
 
-        // Set up the chart configuration
-        const config = {
-            type: 'pie',
-            data: {
-                labels: pieChartLabels,
-                datasets: [{
-                    data: pieChartData,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.8)',
-                        'rgba(54, 162, 235, 0.8)',
-                        'rgba(255, 206, 86, 0.8)',
-                        // Add more colors for additional categories
-                    ]
-                }]
-            },
-            options: {
-                responsive: true
+    // Generate an array of colors
+    const colors = [
+        'rgba(255, 99, 132, 0.8)',
+        'rgba(54, 162, 235, 0.8)',
+        'rgba(255, 206, 86, 0.8)',
+        // Add more colors for additional categories
+    ];
+
+    // Generate additional colors if needed
+    while (colors.length < 25) {
+        const randomColor = `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8)`;
+        colors.push(randomColor);
+    }
+
+    // Calculate the threshold percentage
+    const thresholdPercentage = .2;
+
+    // Filter out segments below the threshold percentage and exclude "Transfers" category
+    const filteredPieChartLabels = pieChartLabels.filter((label, index) => {
+        const percentage = (pieChartData[index] / pieChartData.reduce((a, b) => a + b, 0)) * 100;
+      return percentage >= thresholdPercentage && label !== "transfers" && label !== "income";
+    });
+    const filteredPieChartData = filteredPieChartLabels.map(label => categoryPercentageMap[label]);
+
+    // Set up the chart configuration
+    const config = {
+        type: 'pie',
+        data: {
+            labels: filteredPieChartLabels,
+            datasets: [{
+                data: filteredPieChartData,
+                backgroundColor: colors.slice(0, filteredPieChartLabels.length),
+                                borderColor: 'rgba(255, 255, 255, 0)', // Set the border color to transparent
+
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            if (label) {
+                                const value = context.raw || 0;
+                                const percentage = ((value / filteredPieChartData.reduce((a, b) => a + b, 0)) * 100).toFixed(2);
+                                const amount = totalAmountMap[label] || 0;
+                                return `${label}: ${percentage}%  Total: ${amount} euros`;
+                            }
+                            return '';
+                        }
+                    }
+                }
             }
-        };
+        }
+    };
 
-        // Create the chart
-        const ctxChart = document.getElementById('pieChart').getContext('2d');
-        new Chart(ctxChart, config);
-        /*]]>*/
-    </script>
+    // Create the chart
+    const ctxChart = document.getElementById('pieChart').getContext('2d');
+    new Chart(ctxChart, config);
+    /*]]>*/
+</script>
+
+
 </body>
 </html>

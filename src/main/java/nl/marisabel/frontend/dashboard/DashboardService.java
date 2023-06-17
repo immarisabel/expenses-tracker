@@ -69,7 +69,6 @@ public class DashboardService {
   log.info("debits for labels: " + debits);
 
 
-
   // Add attributes to the model for use in the view
   model.addAttribute("labels", labels);
   model.addAttribute("credits", credits);
@@ -78,8 +77,6 @@ public class DashboardService {
 
   loadTotalSavingsPerMonth(model);
  }
-
-
 
 
  public void loadTotalSavingsPerMonth(Model model) {
@@ -110,6 +107,8 @@ public class DashboardService {
           .sum();
 
   Map<String, Double> categoryPercentageMap = new HashMap<>();
+  Map<String, Double> totalAmountMap = new HashMap<>();
+
   for (CategoryEntity category : categories) {
    double categoryAmountSpent = previousMonthTransactions.stream()
            .filter(transaction -> transaction.getCategories().contains(category))
@@ -117,10 +116,12 @@ public class DashboardService {
            .sum();
    double categoryPercentage = (categoryAmountSpent / totalAmountSpent) * 100;
    categoryPercentageMap.put(category.getCategory(), categoryPercentage);
+   totalAmountMap.put(category.getCategory(), categoryAmountSpent);
   }
 
   model.addAttribute("categories", categories);
   model.addAttribute("totalAmountSpent", totalAmountSpent);
+  model.addAttribute("totalAmountMap", totalAmountMap);
   model.addAttribute("categoryPercentageMap", categoryPercentageMap);
  }
 
