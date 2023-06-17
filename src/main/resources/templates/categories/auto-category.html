@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Auto Category Form</title>
+</head>
+<body>
+<h1>Create Auto Category</h1>
+
+<form action="#" th:action="@{/auto-category}" th:object="${autoCategoryEntity}" method="post">
+    <label for="category">Category:</label><br>
+    <input type="text" id="category" name="category" th:value="${autoCategoryEntity.category}"><br>
+    <label for="queries">Queries (comma-separated):</label><br>
+    <input type="text" id="queries" name="queries" th:value="${#strings.listJoin(autoCategoryEntity.queries,',')}"><br>
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>

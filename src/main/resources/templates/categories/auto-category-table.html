@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Auto Category Table</title>
+</head>
+<body>
+<h1>Auto Category List</h1>
+
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Category</th>
+    <th>Queries</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="autoCategory : ${autoCategoryList}">
+    <td th:text="${autoCategory.id}"></td>
+    <td th:text="${autoCategory.category}"></td>
+    <td th:text="${#strings.listJoin(autoCategory.queries,',')}"></td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>
