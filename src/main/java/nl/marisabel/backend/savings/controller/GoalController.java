@@ -63,9 +63,10 @@ public class GoalController {
 
 
 
- @GetMapping("/goals/update/{id}")
- public String showUpdateForm(@PathVariable("id") long id, Model model) {
-  GoalEntity goal = goalService.getGoalById(id)
+ @GetMapping("/goals/update")
+ public String showUpdateForm(@RequestParam("id") long id, Model model, GoalEntity goal) {
+  showAllGoals(goal, model);
+  goal = goalService.getGoalById(id)
           .orElseThrow(() -> new IllegalArgumentException("Invalid goal Id:" + id));
   model.addAttribute("goal", goal);
   log.info("Editing goal : " + goal.getName());
