@@ -84,6 +84,7 @@
     <form th:action="@{/savings/goals}" th:object="${goal}" method="post"
           style="display: flex; justify-content: center; align-items: center; gap: 2rem;">
         <h2>Create New Goal</h2>
+        <input type="hidden" th:field="*{id}">
         <div class="form-row" style="width:20rem;">
             <input type="text" placeholder="name of goal" id="name" th:field="*{name}" class="form-control" required>
         </div>
@@ -134,6 +135,7 @@
                 <col style="width: 5%">
                 <col style="width: 10%">
                 <col style="width: 5%">
+                <col style="width: 5%">
             </colgroup>
             <thead>
             <tr class="header">
@@ -142,6 +144,7 @@
                 <th>Goal Amount</th>
                 <th>Saved till now</th>
                 <th>Reached</th>
+                <th>Edit</th>
             </tr>
             </thead>
             <tbody>
@@ -159,6 +162,12 @@
                 <td data-title="Status">
                     <span th:if="${goal.reached}">✔</span>
                     <span th:unless="${goal.reached}">❌</span>
+                </td>
+                <td>
+
+                    <a th:href="@{'/goals/update/' + ${goal.id}}"  class="myButton"  alt="update ${goal.name}">
+                        edit
+                    </a>
                 </td>
             </tr>
             </tbody>

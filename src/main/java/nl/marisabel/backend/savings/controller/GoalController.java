@@ -8,14 +8,11 @@ import nl.marisabel.backend.savings.service.SavingsService;
 import nl.marisabel.backend.transactions.service.TransactionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Controller
@@ -58,11 +55,30 @@ public class GoalController {
 
 
  @PostMapping("/goals")
- public String addGoal(@ModelAttribute("goal") GoalEntity goal) {
-  goalService.saveNewGoal(goal);
-  log.info("Goal saved... " + goal.getName());
+ public String addOrUpdateGoal(@ModelAttribute("goal") GoalEntity goal) {
+  goalService.saveOrUpdate(goal);
+  log.info((goal.getId() != null ? "Goal updated... " : "Goal saved... ") + goal.getName());
   return "redirect:/savings/goals";
  }
+
+
+
+ @GetMapping("/goals/update/{id}")
+ public String showUpdateForm(@PathVariable("id") long id, Model model) {
+  GoalEntity goal = goalService.getGoalById(id)
+          .orElseThrow(() -> new IllegalArgumentException("Invalid goal Id:" + id));
+  model.addAttribute("goal", goal);
+  log.info("Editing goal : " + goal.getName());
+  return "savings/manage-goals";
+ }
+
+
+ @PostMapping("/update")
+ public String updateCategory(@ModelAttribute("goal") GoalEntity goal) {
+  goalService.saveOrUpdate(goal);
+  return "savings/manage-goals";
+ }
+
 
 
 }

@@ -2,13 +2,9 @@ package nl.marisabel.backend.savings.service;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
-import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.savings.entity.GoalEntity;
 import nl.marisabel.backend.savings.repository.GoalRepository;
-import nl.marisabel.backend.savings.repository.SavingsRepository;
 import org.hibernate.Hibernate;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +21,7 @@ public class GoalService {
 
 
 
- public void saveNewGoal(GoalEntity goal){
+ public void saveOrUpdate(GoalEntity goal){
   goalRepository.save(goal);
  }
 
@@ -51,7 +47,7 @@ public class GoalService {
   log.info("New goal amount: " + goal.getName() + " : " + goal.getLastAmount());
   log.info("Goal reached? " + goal.isReached());
 
-  this.saveNewGoal(goal);
+  this.saveOrUpdate(goal);
  }
 
 }
