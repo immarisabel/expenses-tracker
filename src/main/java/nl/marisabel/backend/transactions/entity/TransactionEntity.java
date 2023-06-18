@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -39,10 +40,6 @@ public class TransactionEntity {
   this.amount = decimalFormat.parse(String.valueOf(amount)).doubleValue();
  }
 
- public void setDate(String date) {
-  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-  this.date = LocalDate.parse(date, formatter);
- }
 
  @ManyToMany(fetch = FetchType.EAGER,
          cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})

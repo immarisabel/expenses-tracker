@@ -97,6 +97,9 @@ public class TransactionService {
  }
 
 
+ public TransactionEntity getTransaction(Long id){
+  return transactionRepository.findById(id).get();
+ }
 
 
 }

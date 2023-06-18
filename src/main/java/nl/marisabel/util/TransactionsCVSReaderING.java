@@ -57,14 +57,18 @@ public class TransactionsCVSReaderING {
 
                     // Check for duplicates before adding to the database
                     boolean isDuplicate = transactionRepository.transactionExists(
-                            LocalDate.parse(record[0], DateTimeFormatter.ofPattern("yyyyMMdd")),
+                    LocalDate.parse(record[0], DateTimeFormatter.ofPattern("yyyyMMdd")),
                             entity,
                             creditOrDebit,
                             amount,
                             description);
                     if (!isDuplicate) {
                         TransactionEntity transaction = new TransactionEntity();
-                        transaction.setDate(record[0]);
+                        String strDate = record[0]; // Assuming record[0] contains the date in the format yyyyMMdd
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+                        LocalDate date = LocalDate.parse(strDate, formatter);
+
+                        transaction.setDate(date);
                         transaction.setEntity(entity);
                         transaction.setCreditOrDebit(creditOrDebit);
                         transaction.setAmount(amount);

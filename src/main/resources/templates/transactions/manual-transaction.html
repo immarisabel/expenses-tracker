@@ -1,35 +1,43 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<header>
+<head>
     <div th:replace="~{fragments/header :: header}"></div>
+    <style>
+        .form-row {
+            padding: 2rem;
+        }
 
-</header>
+        .space {
+            margin-left: .5rem;
+        }
+    </style>
+</head>
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 <div th:replace="~{fragments/filterbar :: filterbar}"></div>
 
 <div class="container">
-<h2>Add Transaction</h2>
-    <form action="#" th:action="@{/transactions}" th:object="${transaction}" method="post">
+    <h2>Edit Transaction</h2>
+    <form action="#" th:action="@{/transactions/edit}" th:object="${transaction}" method="post">
+        <input type="hidden" th:field="*{id}" />
         <div class="form-row">
-            <input type="text" th:field="*{date}" placeholder="yyyyMMdd" class="form-control" required/>
+            <input type="text" th:field="*{date}" class="form-control space" required/>
             <input type="text" th:field="*{entity}" placeholder="Organization or Name" class="form-control" required/>
         </div>
 
         <div class="form-row">
-            <select th:field="*{creditOrDebit}" class="form-control" required>
+            <select th:field="*{creditOrDebit}" class="form-control space" required>
                 <option value="credit">Credit</option>
                 <option value="debit">Debit</option>
             </select>
             <input type="text" th:field="*{amount}" class="form-control" required/>
         </div>
-        <div class="form-row">
 
-        <textarea th:field="*{description}" class="form-control" style="height: 150px; ; margin-bottom:2rem;" placeholder="Description" required></textarea>
+        <div class="form-row">
+            <textarea th:field="*{description}" class="form-control" style="height: 150px; margin-bottom: 2rem;" placeholder="Description" required></textarea>
         </div>
         <div class="form-row">
-
-        <input class="myButton" type="submit" value="Submit"/>
+            <input class="myButton" type="submit" value="Submit"/>
         </div>
     </form>
 </div>

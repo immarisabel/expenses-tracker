@@ -15,12 +15,10 @@ public class TransactionUpdateForm {
     private Long categoryId;
 
 
-    // Default constructor
     public TransactionUpdateForm() {
         this.transactions = new ArrayList<>();
     }
 
-    // Add a convenience method to add an transactions to the list
     public void addTransaction(TransactionEntity transactions) {
         this.transactions.add(transactions);
     }
