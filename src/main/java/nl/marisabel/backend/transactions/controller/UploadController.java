@@ -2,7 +2,7 @@ package nl.marisabel.backend.transactions.controller;
 
 import lombok.extern.log4j.Log4j2;
 import nl.marisabel.frontend.upload.TransactionUploadResult;
-import nl.marisabel.util.TransactionsCVSReaderING;
+import nl.marisabel.util.TransactionsCSVReaderING;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,9 +13,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Log4j2
 public class UploadController {
 
- private final TransactionsCVSReaderING transactionsCVSReader;
+ private final TransactionsCSVReaderING transactionsCVSReader;
 
- public UploadController(TransactionsCVSReaderING transactionsCVSReader) {
+ public UploadController(TransactionsCSVReaderING transactionsCVSReader) {
   this.transactionsCVSReader = transactionsCVSReader;
  }
 

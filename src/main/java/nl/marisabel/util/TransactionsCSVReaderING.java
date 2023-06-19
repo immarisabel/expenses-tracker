@@ -19,20 +19,29 @@ import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @Log4j2
-public class TransactionsCVSReaderING {
+public class TransactionsCSVReaderING {
  private final TransactionRepository transactionRepository;
  private final AutoCategoryRepository autoCategoryRepository;
  private final TransactionUploadResult result;
  private int duplicateCount = 0;
  private int nonDuplicateCount = 0;
 
- public TransactionsCVSReaderING(TransactionRepository transactionRepository, AutoCategoryRepository autoCategoryRepository, TransactionUploadResult result) {
+ public TransactionsCSVReaderING(TransactionRepository transactionRepository, AutoCategoryRepository autoCategoryRepository, TransactionUploadResult result) {
   this.transactionRepository = transactionRepository;
   this.autoCategoryRepository = autoCategoryRepository;
   this.result = result;
+ }
+
+ private boolean transactionMatchesQuery(TransactionEntity transaction, String query) {
+  String entity = transaction.getEntity();
+  String description = transaction.getDescription();
+  return entity != null && description != null &&
+          entity.toLowerCase().contains(query.toLowerCase()) ||
+          description.toLowerCase().contains(query.toLowerCase());
  }
 
  public TransactionUploadResult read(InputStream file) throws Exception {
@@ -54,12 +63,10 @@ public class TransactionsCVSReaderING {
    DecimalFormat decimalFormat = new DecimalFormat("0.00", symbols);
 
    int currentLine = 2; // Start from line 2 (after the header row)
-
    String[] record;
    while ((record = csvReader.readNext()) != null) {
     try {
-
-     // basic columns reading
+     // Basic columns reading
      String description = record[8];
      String entity = record[1];
      String creditOrDebit = record[5];
@@ -67,33 +74,6 @@ public class TransactionsCVSReaderING {
      String strDate = record[0];
      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
      LocalDate date = LocalDate.parse(strDate, formatter);
-
-
-//// check for categories matching the entity name and description
-//     String autoCategoryName = "";
-//
-//     List<String> queriesToCheck = new ArrayList<>();
-//
-//     List<String> entityWords = Arrays.asList(entity.split("\\s+"));
-//     queriesToCheck.addAll(entityWords);
-//     List<String> descriptionWords = Arrays.asList(description.split("\\s+"));
-//     queriesToCheck.addAll(descriptionWords);
-//
-//     for (String query : queriesToCheck) {
-//      List<AutoCategoryEntity> autoCategory = autoCategoryRepository.findByQuery(query);
-//      if (autoCategory != null) {
-//       log.info(autoCategory.size() + " | " + autoCategory.get(0).getCategory());
-//       autoCategoryName = autoCategory.get(0).getCategory();
-//       break;
-//      }
-//     }
-//
-//     CategoryEntity categoryEntity = null;
-//     if (!autoCategoryName.isEmpty()) {
-//      categoryEntity = new CategoryEntity();
-//      categoryEntity.setCategory(autoCategoryName);
-//     }
-
 
      // Check for duplicates before adding to the database
      boolean isDuplicate = transactionRepository.transactionExists(
@@ -103,26 +83,49 @@ public class TransactionsCVSReaderING {
              amount,
              description);
      if (!isDuplicate) {
+      log.info("Start transaction checks....");
+      String query = "oclc";
+      log.info("...... [1] : Query to match category: {}", query);
 
-// testing if autocategorizing is doable
-      String myCat = autoCategoryRepository.findByQuery("albert heijn").get(0).getCategory();
-      CategoryEntity categoryEntity = new CategoryEntity();
-      categoryEntity.setCategory(myCat);
+      // Filter categories based on the query
+      List<AutoCategoryEntity> matchedCategories = autoCategoryRepository.findByQuery(query);
+      log.info("...... [2] : Category found? {}", matchedCategories.get(0).getCategory());
 
-// save transactions
-      TransactionEntity transaction = new TransactionEntity();
-      Set<CategoryEntity> categories = new HashSet<>();
-      categories.add(categoryEntity);
-      transaction.setCategories(categories);
+      // Filter the transactions based on the query
+      List<TransactionEntity> filteredTransactions = transactionRepository.findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(query);
+      log.info("...... [3] : Matched transactions: {}", filteredTransactions.size());
 
-      transaction.setDate(date);
-      transaction.setEntity(entity);
-      transaction.setCreditOrDebit(creditOrDebit);
-      transaction.setAmount(amount);
-      transaction.setDescription(description);
-      transactionRepository.save(transaction);
-      nonDuplicateCount++; // Increase non-duplicate counter
-      log.info("transaction added: {}", transaction);
+      for (AutoCategoryEntity matchedCategory : matchedCategories) {
+       CategoryEntity categoryEntity = new CategoryEntity();
+       categoryEntity.setCategory(matchedCategory.getCategory());
+       log.info("...... [4] : Matched category {}: {}", categoryEntity.getCategory(), matchedCategory.getCategory());
+
+       // Create a new set for each category
+       Set<TransactionEntity> matchedTransactionEntities = filteredTransactions.stream()
+               .filter(t -> t.getEntity().toLowerCase().contains(query.toLowerCase()) ||
+                       t.getDescription().toLowerCase().contains(query.toLowerCase()))
+               .collect(Collectors.toSet());
+
+       categoryEntity.setTransactions(matchedTransactionEntities);
+
+
+       Set<CategoryEntity> categories = new HashSet<>();
+       categories.add(categoryEntity);
+       TransactionEntity transaction = new TransactionEntity();
+       log.info("...... [6] : Does it match the transactions found?: {}", matchedTransactionIds.equals(transaction.getId()));
+
+       transaction.setCategories(categories);
+       transaction.setDate(date);
+       transaction.setEntity(entity);
+       transaction.setCreditOrDebit(creditOrDebit);
+       transaction.setAmount(amount);
+       transaction.setDescription(description);
+       transactionRepository.save(transaction);
+       nonDuplicateCount++; // Increase non-duplicate counter
+       log.info("Transaction added: {}", transaction);
+
+       log.info("...............................................");
+      }
      } else {
       duplicateCount++; // Increase duplicate counter
       log.info("Duplicate transaction found at line {}: {}", currentLine, description);
@@ -144,11 +147,4 @@ public class TransactionsCVSReaderING {
   log.info("Total duplicate records: {}", duplicateCount);
   return result;
  }
-
-
 }
-
-// after uploading, display the items uploaded
-// check transaction data last object.
-// start new view form the next new object after uploading only!
-// this is to check the categories if they are ok, or if I need to update them

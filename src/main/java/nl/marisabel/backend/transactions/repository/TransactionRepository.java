@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 public interface TransactionRepository extends JpaRepository<TransactionEntity, Long> {
 
@@ -62,5 +63,4 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
 
  @Query("SELECT COALESCE(SUM(amount), 0.0) FROM TransactionEntity WHERE creditOrDebit = 'Debit' AND date BETWEEN :startDate AND :endDate")
  double calculateTotalDebitsByMonth(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
-
 }
