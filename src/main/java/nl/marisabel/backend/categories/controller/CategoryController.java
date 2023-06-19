@@ -27,7 +27,7 @@ public class CategoryController {
         model.addAttribute("categories", categories);
         model.addAttribute("newCategory", new CategoryEntity());
         model.addAttribute("category", new CategoryEntity());
-        return "category-page";
+        return "categories/category-page";
     }
 
 
@@ -43,7 +43,7 @@ public class CategoryController {
         model.addAttribute("category", category);
         List<CategoryEntity> categories = categoryService.getCategories();
         model.addAttribute("categories", categories);
-        return "category-page";
+        return "categories/category-page";
     }
 
     @PostMapping("/update")

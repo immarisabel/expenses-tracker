@@ -13,5 +13,9 @@
     <input type="text" id="queries" name="queries" th:value="${#strings.listJoin(autoCategoryEntity.queries,',')}"><br>
     <input type="submit" value="Submit">
 </form>
+
+<div th:replace="~{categories/auto-category-table :: table}"></div>
+
+
 </body>
 </html>
