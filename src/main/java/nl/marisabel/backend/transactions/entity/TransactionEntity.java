@@ -6,13 +6,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 

@@ -23,8 +23,7 @@ public class CategoryController {
 
     @GetMapping
     public String showCategoryPage(Model model) {
-        List<CategoryEntity> categories = categoryService.getCategories();
-        model.addAttribute("categories", categories);
+        model.addAttribute("categories", categoryService.getCategories());
         model.addAttribute("newCategory", new CategoryEntity());
         model.addAttribute("category", new CategoryEntity());
         return "categories/category-page";
