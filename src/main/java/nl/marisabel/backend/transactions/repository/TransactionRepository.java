@@ -18,6 +18,8 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
  // SEARCHING & FILTERING
 
  Page<TransactionEntity> findAll(Pageable pageable);
+ @Query("SELECT t FROM TransactionEntity t WHERE t.categories IS EMPTY")
+ List<TransactionEntity> findByCategoriesEmpty();
 
  @Query("SELECT t FROM TransactionEntity t WHERE t.categories IS EMPTY")
  Page<TransactionEntity> findByCategoriesIsEmpty(Pageable pageable);
