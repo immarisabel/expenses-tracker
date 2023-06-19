@@ -39,10 +39,8 @@ public class CategoryController {
 
     @GetMapping("/update")
     public String showFormForUpdatingCategory(@RequestParam("id") Long id, Model model) {
-        CategoryEntity category = categoryService.getCategory(id);
-        model.addAttribute("category", category);
-        List<CategoryEntity> categories = categoryService.getCategories();
-        model.addAttribute("categories", categories);
+        model.addAttribute("category", categoryService.getCategory(id));
+        model.addAttribute("categories", categoryService.getCategories());
         return "categories/category-page";
     }
 

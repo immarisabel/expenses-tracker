@@ -7,6 +7,7 @@
 <h1>Create Auto Category</h1>
 
 <form action="#" th:action="@{/auto-category}" th:object="${autoCategoryEntity}" method="post">
+    <input type="hidden" th:field="*{id}">
     <label for="category">Category:</label><br>
     <input type="text" id="category" name="category" th:value="${autoCategoryEntity.category}"><br>
     <label for="queries">Queries (comma-separated):</label><br>
