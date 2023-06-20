@@ -74,9 +74,11 @@ public class AutoCategoryController {
     }
 
 
+
     @PostMapping("/autoCategorize")
     public String autoCategorize(Model model) {
         List<TransactionEntity> unCategorizedTransactions = transactionRepository.findByCategoriesEmpty();
+        log.info("Number of uncategorized transactions: " + unCategorizedTransactions.size());
         List<AutoCategoryEntity> autoCategories = autoCategoryRepository.findAll();
 
         int numCategorized = 0;
@@ -99,7 +101,9 @@ public class AutoCategoryController {
                 }
             }
         }
+        log.info("Transactions categorized: " + numCategorized);
         model.addAttribute("message", "Auto-categorized " + numCategorized + " transactions");
         return "redirect:/auto-category";
     }
+    //2023-06-20T11:52:24.304+02:00  WARN 10372 --- [nio-9191-exec-2] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'GET' is not supported]
 }

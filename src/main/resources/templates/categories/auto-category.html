@@ -1,23 +1,95 @@
-<!DOCTYPE html>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Auto Category Form</title>
-</head>
-<body>
-<h1>Create Auto Category</h1>
 
-<form action="#" th:action="@{/auto-category}" th:object="${autoCategoryEntity}" method="post">
-    <input type="hidden" th:field="*{id}">
-    <label for="category">Category:</label><br>
-    <input type="text" id="category" name="category" th:value="${autoCategoryEntity.category}"><br>
-    <label for="queries">Queries (comma-separated):</label><br>
-    <input type="text" id="queries" name="queries" th:value="${#strings.listJoin(autoCategoryEntity.queries,',')}"><br>
-    <input type="submit" value="Submit">
-</form>
+
+<header>
+    <div th:replace="~{fragments/header :: header}"></div>
+</header>
+
+
+<style>
+        .table-categories {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+        }
+
+        .table-categories th,
+        .table-categories td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+            background-color: #fff;
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: #fff;
+        }
+
+        .table-categories th {
+            background-color: #f2f2f2;
+        }
+
+        .table-categories tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .table-categories tbody tr:hover {
+            background-color: #e6e6e6;
+        }
+
+        .table-categories a {
+            color: #000000;
+            text-decoration: none;
+        }
+
+        .table-categories a:hover {
+            text-decoration: underline;
+        }
+
+        .table-categories p {
+            margin: 0;
+        }
+
+        .table-categories li {
+            list-style-type: none;
+        }
+    </style>
+</head>
+
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="form-container">
+    <form action="#" th:action="@{/auto-category}" th:object="${autoCategoryEntity}" method="post">
+        <h2>Create Auto Category</h2>
+
+        <input type="hidden" th:field="*{id}">
+        <input type="text" id="category" class="form-control" placeholder="category" name="category" th:value="${autoCategoryEntity.category}"><br>
+        <input type="text" id="queries" class="form-control" placeholder="queries: coma separated (q1,q2,q3)" name="queries" th:value="${#strings.listJoin(autoCategoryEntity.queries,',')}"><br>
+        <input type="submit" class="myButton" value="Submit">
+    </form>
+</div>
+<div class="container">
+
 
 <div th:replace="~{categories/auto-category-table :: table}"></div>
 
-<td><a th:href="@{/autoCategorize}" class="myButton" >autoCategorize</a>
-<p th:text="${message}">
+<p></p>
+
+<td>
+
+    <form th:action="@{/auto-category/autoCategorize}" method="post">
+        <input type="hidden" name="_method" th:value="POST">
+        <button type="submit" class="myButton">Auto-categorize transactions without categories</button>
+    </form>
+
+
+    <p th:text="${message}">
+
+</p>
+</td>
+</div>
 </body>
+
 </html>

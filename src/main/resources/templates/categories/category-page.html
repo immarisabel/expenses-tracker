@@ -54,12 +54,18 @@
         .table-categories li {
             list-style-type: none;
         }
-    </style>
+
+</style>
 </head>
 
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
-
+<div class="form-container" >
+    <div style="display: flex; justify-content: space-between;">
+    <div th:replace="~{categories/add-category-form}">update shelf</div>
+    <a href="/auto-category" class="myButton" style="height:50%; margin-top:1rem;">Auto Categories</a>
+    </div>
+</div>
 
 <div class="container">
 
@@ -75,13 +81,14 @@
         <tbody th:each="c : ${categories}">
         <tr>
             <td>
-                    <li th:text="${c.category}"></li>
+                <li th:text="${c.category}"></li>
             </td>
             <td>
                 <p th:text="${c.transactions.size()}"></p>
             </td>
             <td>
-                <a th:href="@{/categories/update(id=${c.id})}" class="myButton" style="color:white;" alt="update ${c.category}">
+                <a th:href="@{/categories/update(id=${c.id})}" class="myButton" style="color:white;"
+                   alt="update ${c.category}">
                     update
                 </a>
             </td>
@@ -89,7 +96,7 @@
                 <form th:action="@{/categories/delete}" method="post">
                     <input type="hidden" name="id" th:value="${c.id}">
                     <button class="myButton" type="submit" onclick="return confirm('Delete category?')">
-                       ✖
+                        ✖
                     </button>
                 </form>
             </td>
@@ -97,9 +104,6 @@
         </tbody>
     </table>
 
-<div width="10rem">
-    <div th:replace="~{categories/add-category-form}">update shelf</div>
-</div>
 
 </div>
 </body>

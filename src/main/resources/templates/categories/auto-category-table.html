@@ -6,7 +6,7 @@
 <body>
 <h1>Auto Category List</h1>
 
-<table>
+<table class="table table-categories">
   <thead>
   <tr>
     <th>ID</th>
@@ -20,7 +20,7 @@
     <td th:text="${autoCategory.id}"></td>
     <td th:text="${autoCategory.category}"></td>
     <td th:text="${#strings.listJoin(autoCategory.queries,',')}"></td>
-    <td><a th:href="@{/auto-category/update(id=${autoCategory.id})}" class="myButton"  alt="update ${autoCategory.category}">
+    <td><a th:href="@{/auto-category/update(id=${autoCategory.id})}" class="myButton" style="color:white;"  alt="update ${autoCategory.category}">
       edit
     </a></td>
   </tr>

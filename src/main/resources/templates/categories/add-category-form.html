@@ -1,18 +1,9 @@
 <html lang="en" xmlns:th="www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-<div class="container">
-  <div class="col">
-<form th:if="${category}" th:action="@{/categories/add}" method="post" th:object="${category}">
+<form style="display: flex; align-items: center; gap: 1px;" th:if="${category}" th:action="@{/categories/add}" method="post" th:object="${category}">
   <input type="hidden" th:field="*{id}">
-  <div class="row">
-      <input class="form-control" type="text" th:field="*{category}" placeholder="Category Name"
+<input class="form-control" type="text" th:field="*{category}" placeholder="Category Name"
              id="name">
-      <label>
-        <button type="submit" class="myButton">
-      ✔
-        </button>
-      </label>
-    </div>
+        <button type="submit" class="myButton" style="margin-left:1rem;">✔</button>
 </form>
-</div>
-</div>
+
