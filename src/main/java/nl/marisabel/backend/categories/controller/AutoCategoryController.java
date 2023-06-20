@@ -4,9 +4,9 @@ import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.categories.entity.AutoCategoryEntity;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.repository.AutoCategoryRepository;
+import nl.marisabel.backend.categories.repository.CategoryRepository;
 import nl.marisabel.backend.transactions.entity.TransactionEntity;
 import nl.marisabel.backend.transactions.repository.TransactionRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,10 +22,12 @@ public class AutoCategoryController {
 
     private final AutoCategoryRepository autoCategoryRepository;
     private final TransactionRepository transactionRepository;
+    private final CategoryRepository categoryRepository;
 
-    public AutoCategoryController(AutoCategoryRepository autoCategoryRepository, TransactionRepository transactionRepository) {
+    public AutoCategoryController(AutoCategoryRepository autoCategoryRepository, TransactionRepository transactionRepository, CategoryRepository categoryRepository) {
         this.autoCategoryRepository = autoCategoryRepository;
         this.transactionRepository = transactionRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @GetMapping
@@ -83,20 +85,27 @@ public class AutoCategoryController {
 
         int numCategorized = 0;
 
-        for (TransactionEntity transaction : unCategorizedTransactions) {
-            for (AutoCategoryEntity autoCategory : autoCategories) {
+        for (AutoCategoryEntity autoCategory : autoCategories) {
+            // Try to find an existing CategoryEntity with this category
+            CategoryEntity existingCategory = categoryRepository.findByCategory(autoCategory.getCategory());
+
+            // If none exists, create a new one
+            if (existingCategory == null) {
+                existingCategory = new CategoryEntity();
+                existingCategory.setCategory(autoCategory.getCategory());
+                categoryRepository.save(existingCategory); // don't forget to save the new category
+            }
+
+            for (TransactionEntity transaction : unCategorizedTransactions) {
                 for (String query : autoCategory.getQueries()) {
                     if (transaction.getEntity().toLowerCase().contains(query.toLowerCase()) ||
                             transaction.getDescription().toLowerCase().contains(query.toLowerCase())) {
-                        CategoryEntity newCategory = new CategoryEntity();
-                        newCategory.setCategory(autoCategory.getCategory());
 
-                        transaction.addCategory(newCategory);
+                        transaction.addCategory(existingCategory);
                         transactionRepository.save(transaction);
 
                         numCategorized++;
                         break;
-
                     }
                 }
             }
@@ -105,5 +114,7 @@ public class AutoCategoryController {
         model.addAttribute("message", "Auto-categorized " + numCategorized + " transactions");
         return "redirect:/auto-category";
     }
-    //2023-06-20T11:52:24.304+02:00  WARN 10372 --- [nio-9191-exec-2] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'GET' is not supported]
+
+
+
 }
