@@ -39,7 +39,7 @@
         }
 
         th {
-            background-color: #9aa4ec;
+            background-color: #439CEF;
             color: white;
         }
 
@@ -70,7 +70,7 @@
         }
 
         .purple {
-            color: #6474e5;
+            color: #2F7AE5;
             font-weight: bold;
         }
 
@@ -80,7 +80,7 @@
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div class="form" style="display: flex; justify-content: center; align-items: center;">
+<div class="form-container" style="display: flex; justify-content: center; align-items: center;">
     <form th:action="@{/savings/goals}" th:object="${goal}" method="post"
           style="display: flex; justify-content: center; align-items: center; gap: 2rem;">
         <h2>Create New Goal</h2>
@@ -214,7 +214,7 @@
                 label: 'Total Savings',
                 data: Object.values(monthlySavings),
                 fill: false,
-                borderColor: 'rgba(100, 116, 229, 1)', // #6474e5
+                borderColor: 'rgba(100, 116, 229, 1)', // #2F7AE5
                 borderWidth: 1
             }]
         },

@@ -32,16 +32,16 @@
         data: {
           labels: labels,
           datasets: [{
-            label: 'Credits',
+            label: 'income',
             data: credits,
-            backgroundColor: 'rgba(100, 116, 229, 0.5)', // #6474e5 at 50% opacity
-            borderColor: 'rgb(100, 116, 229)', // #6474e5
+            backgroundColor: 'rgba(248, 79, 49, 0.7)',
+                borderColor: 'rgb(248, 79, 49)',
             borderWidth: 1
           }, {
-            label: 'Debits',
+            label: 'expenses',
             data: debits,
-            backgroundColor: 'rgba(244, 164, 164, 0.5)', // #f4a4a4 at 50% opacity
-            borderColor: 'rgb(244, 164, 164)', // #f4a4a4
+            backgroundColor: 'rgba(35, 197, 82, 0.7)',
+                borderColor: 'rgb(35, 197, 82)',
             borderWidth: 1
           }]
         },
@@ -54,10 +54,18 @@
               }
             },
             y: {
-              beginAtZero: true
+           beginAtZero: true,
+          ticks: {
+            callback: function(value) {
+              return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'EUR'
+              }).format(value);
             }
-          },
-          onClick: null
+          }
+        }
+      },
+      onClick: null
         }
       });
     </script>

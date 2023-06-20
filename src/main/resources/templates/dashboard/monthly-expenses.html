@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<h1>EXPENSES</h1>
+<h4>EXPENSES</h1>
 <canvas id="chart" class="chart-canvas" margin="1rem"></canvas>
 <script th:inline="javascript">
     /* Retrieve the data from the server-side */
@@ -45,17 +45,17 @@
             datasets: [{
                 label: 'expenses',
                 data: debits,
-                backgroundColor: 'rgba(244, 164, 164, 0.5)', // #f4a4a4 at 50% opacity
-                borderColor: 'rgb(244, 164, 164)', // #f4a4a4
-                borderWidth: 1,
-                fill: false // Remove the background fill for line chart
+                backgroundColor: 'rgba(248, 79, 49, 0.7)',
+                borderColor: 'rgb(248, 79, 49)',
+                borderWidth: 2,
+                fill: false
             }, {
                 label: 'income',
                 data: credits,
-                backgroundColor: 'rgba(100, 116, 229, 0.5)', // #6474e5 at 50% opacity
-                borderColor: 'rgb(100, 116, 229)', // #6474e5
-                borderWidth: 1,
-                fill: false // Remove the background fill for line chart
+                backgroundColor: 'rgba(35, 197, 82, 0.7)',
+                borderColor: 'rgb(35, 197, 82)',
+                borderWidth: 2,
+                fill: false
             }]
         },
         options: {
@@ -70,9 +70,9 @@
                     beginAtZero: true,
                     ticks: {
                         callback: function(value) {
-                            return new Intl.NumberFormat('en-US', {
+                            return new Intl.NumberFormat('en-EU', {
                                 style: 'currency',
-                                currency: 'USD'
+                                currency: 'EUR'
                             }).format(value);
                         },
                         max: totalIncome // Set the maximum value to the total income

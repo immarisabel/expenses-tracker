@@ -52,17 +52,21 @@
     <div class="right">
         <div th:replace="~{dashboard/monthly-expenses :: body}"></div>
     </div>
+
     <div class="left">
         <div class="categoriesChart">
             <div th:replace="~{dashboard/last-month-categories :: body}"></div>
         </div>
     </div>
+    <div class="bottom">
+        <div th:utext="${noteModel.note}"></div>
+        <div style="margin-top:2rem;">
+            <a href="/note"  class="myButton" >edit</a> </div>
+    </div>
+
+
 </div>
 
-<div class="bottom">
-    <div th:utext="${noteModel.note}"></div>
-<div style="margin-top:2rem;">
-    <a href="/note"  class="myButton" >edit</a> </div>
-</div>
+
 </body>
 </html>
