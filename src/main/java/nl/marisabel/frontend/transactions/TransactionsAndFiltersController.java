@@ -56,7 +56,6 @@ public class TransactionsAndFiltersController {
  }
 
 
-
  @GetMapping("/transactions/search")
  public String searchTransactions(
          @RequestParam(value = "searchTerm", required = false) String searchTerm,
@@ -71,7 +70,7 @@ public class TransactionsAndFiltersController {
   model.addAttribute("transactions", searchResults);
   model.addAttribute("categories", categories);
   model.addAttribute("searchTerm", searchTerm);
-  model.addAttribute("message", searchResults.getTotalElements()+" transactions found");
+  model.addAttribute("message", searchResults.getTotalElements() + " transactions found");
   model.addAttribute("searchResults", searchResults);
 
   return "transactions/filtered-page";
@@ -103,7 +102,6 @@ public class TransactionsAndFiltersController {
  }
 
 
-
  //.......... CATEGORY FILTER
  @GetMapping("/transactions/categories")
  public String showCategoryCharts(@RequestParam("categoryId") Long categoryId, @RequestParam(defaultValue = "0") int page, Model model) {
@@ -120,18 +118,19 @@ public class TransactionsAndFiltersController {
  }
 
 
-
  //.......... NO CATEGORY FILTER
-
  @GetMapping("/transactions/categories/none")
  public String showTransactionsWithoutCategory(@RequestParam(defaultValue = "0") int page, Model model) {
-  int size = 300;
+  int size = 50;  // Adjust this value to your desired page size
   Page<TransactionEntity> transactions = transactionRepository.findByCategoriesIsEmpty(PageRequest.of(page, size));
   List<CategoryEntity> categories = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category"));
+
   model.addAttribute("transactions", transactions);
   model.addAttribute("categories", categories);
-  model.addAttribute("transactionsForm", new TransactionForm());
-  return "transactions/transactions";
+  model.addAttribute("currentPage", page);
+  model.addAttribute("hideMe", "hide"); //for thymeleaf condition to hide if controller is not called
+  return "transactions/filtered-page";
  }
+
 
 }
