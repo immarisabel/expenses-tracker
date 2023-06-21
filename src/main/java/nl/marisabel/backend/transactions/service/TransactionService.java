@@ -39,7 +39,7 @@ public class TransactionService {
 
  // FILTERS
 
- public TransactionEntity getTransaction(Long id){
+ public TransactionEntity getTransaction(Long id) {
   return transactionRepository.findById(id).get();
  }
 
@@ -47,20 +47,19 @@ public class TransactionService {
  public Page<TransactionEntity> searchTransactions(String searchTerm, PageRequest pageRequest) {
   return transactionRepository.findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(searchTerm, pageRequest);
  }
+
  public Page<TransactionEntity> filterTransactionByDate(LocalDate startDate, LocalDate endDate, Pageable pageable) {
   return transactionRepository.findByDateBetween(startDate, endDate, pageable);
  }
 
- public List<TransactionEntity> filterTransactionByDate(LocalDate startDate, LocalDate endDate) {
-  return transactionRepository.findByDateBetween(startDate, endDate);
- }
-
- public List<TransactionEntity> getTransactionsByCategory(Long categoryId) {
-  return transactionRepository.findByCategoryId(categoryId);
- }
-
  public Page<TransactionEntity> getTransactionsByCategory(Long categoryId, PageRequest pageRequest) {
   return transactionRepository.findByCategoryIdPageable(categoryId, pageRequest);
+ }
+
+ // CHARTS
+
+ public List<TransactionEntity> getAllTransactions() {
+  return transactionRepository.findAll();
  }
 
  public double calculateRemainingFundsByMonth(LocalDate startDate, LocalDate endDate) {
@@ -69,10 +68,6 @@ public class TransactionService {
   return totalCredits - totalDebits;
  }
 
-
- public List<TransactionEntity> getAllTransactions() {
-  return transactionRepository.findAll();
- }
 
  public Map<String, String> getDistinctMonthsAndYears() {
   List<TransactionEntity> transactions = this.getAllTransactions();
@@ -109,8 +104,6 @@ public class TransactionService {
    transactionRepository.save(transaction);
   }
  }
-
-
 
 
 }
