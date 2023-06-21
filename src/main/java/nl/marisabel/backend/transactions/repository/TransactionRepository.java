@@ -32,6 +32,7 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
 
 
  List<TransactionEntity> findByDateBetween(LocalDate startDate, LocalDate endDate);
+ Page<TransactionEntity> findByDateBetween(LocalDate startDate, LocalDate endDate, Pageable pageable);
 
  @Query("SELECT amount FROM TransactionEntity")
  List<Integer> findAllAmounts();
@@ -72,4 +73,7 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
 
  @Query("SELECT COALESCE(SUM(amount), 0.0) FROM TransactionEntity WHERE creditOrDebit = 'Debit' AND date BETWEEN :startDate AND :endDate")
  double calculateTotalDebitsByMonth(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+
 }
+

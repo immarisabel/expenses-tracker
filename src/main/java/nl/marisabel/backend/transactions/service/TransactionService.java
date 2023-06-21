@@ -9,6 +9,7 @@ import nl.marisabel.backend.transactions.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -38,11 +39,21 @@ public class TransactionService {
 
  // FILTERS
 
+ public TransactionEntity getTransaction(Long id){
+  return transactionRepository.findById(id).get();
+ }
+
+
+ public Page<TransactionEntity> searchTransactions(String searchTerm, PageRequest pageRequest) {
+  return transactionRepository.findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(searchTerm, pageRequest);
+ }
+ public Page<TransactionEntity> filterTransactionByDate(LocalDate startDate, LocalDate endDate, Pageable pageable) {
+  return transactionRepository.findByDateBetween(startDate, endDate, pageable);
+ }
 
  public List<TransactionEntity> filterTransactionByDate(LocalDate startDate, LocalDate endDate) {
   return transactionRepository.findByDateBetween(startDate, endDate);
  }
-
 
  public List<TransactionEntity> getTransactionsByCategory(Long categoryId) {
   return transactionRepository.findByCategoryId(categoryId);
@@ -51,7 +62,6 @@ public class TransactionService {
  public Page<TransactionEntity> getTransactionsByCategory(Long categoryId, PageRequest pageRequest) {
   return transactionRepository.findByCategoryIdPageable(categoryId, pageRequest);
  }
-
 
  public double calculateRemainingFundsByMonth(LocalDate startDate, LocalDate endDate) {
   double totalCredits = transactionRepository.calculateTotalCreditsByMonth(startDate, endDate);
@@ -101,14 +111,6 @@ public class TransactionService {
  }
 
 
- public TransactionEntity getTransaction(Long id){
-  return transactionRepository.findById(id).get();
- }
-
-
- public Page<TransactionEntity> searchTransactions(String searchTerm, PageRequest pageRequest) {
-  return transactionRepository.findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(searchTerm, pageRequest);
- }
 
 
 }

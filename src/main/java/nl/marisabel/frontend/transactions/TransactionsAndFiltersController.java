@@ -79,21 +79,29 @@ public class TransactionsAndFiltersController {
 
 
  //.......... DATE FILTERING
-
  @GetMapping("/transactions/filter")
- public String filterTransactionsByDate(@RequestParam("startDate") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate startDate,
-                                        @RequestParam("endDate") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate endDate,
-                                        Model model) {
-  List<TransactionEntity> filteredResults = transactionService.filterTransactionByDate(startDate, endDate);
+ public String filterTransactionsByDate(
+         @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+         @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+         @RequestParam(defaultValue = "0") int page,
+         Model model) {
+
+  int size = 50;
+  PageRequest pageRequest = PageRequest.of(page, size);
+  Page<TransactionEntity> filteredResults = transactionService.filterTransactionByDate(startDate, endDate, pageRequest);
 
   List<CategoryEntity> categories = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category"));
   model.addAttribute("categories", categories);
 
   model.addAttribute("transactions", filteredResults);
-  model.addAttribute("filteredCount", filteredResults.size());
-  model.addAttribute("currentPage", 0);
+  model.addAttribute("filteredCount", filteredResults.getTotalElements());
+  model.addAttribute("currentPage", page);
+  model.addAttribute("startDate", startDate);
+  model.addAttribute("endDate", endDate);
+
   return "transactions/filtered-page";
  }
+
 
 
  //.......... CATEGORY FILTER
