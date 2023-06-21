@@ -5,13 +5,16 @@
 <div class="navbar" style=" background-color: #2F7AE5;
             padding: 10px 15px;
             color: #fff;">
-  <h1>Expense Tracker</h1>
+
+  <h1><div th:replace="~{fragments/coin :: svg}"></div>
+    imTrackingCoins</h1>
+  <h4>by marisabel.nl</h4>
   <ul>
-    <li><a href="/dashboard">Dashboard</a></li>
-    <li><a href="/transactions">Transactions</a></li>
-    <li><a href="/savings/goals">Savings</a></li>
-    <li><a href="/charts">Charts</a></li>
-    <li><a href="/categories">Categories</a></li>
+    <li><a href="/dashboard"  class="navbar-link">Dashboard</a></li>
+    <li><a href="/transactions"  class="navbar-link">Transactions</a></li>
+    <li><a href="/savings/goals"  class="navbar-link">Savings</a></li>
+    <li><a href="/charts"  class="navbar-link">Charts</a></li>
+    <li><a href="/categories"  class="navbar-link">Categories</a></li>
   </ul>
 </div>
 </navbar>
