@@ -38,3 +38,4 @@ build/
 .DS_Store
 /data/expenses.trace.db
 /data/expenses.mv.db
+/src/main/resources/github.properties
