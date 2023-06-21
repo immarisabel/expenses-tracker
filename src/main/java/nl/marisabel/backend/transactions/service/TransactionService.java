@@ -48,6 +48,10 @@ public class TransactionService {
   return transactionRepository.findByCategoryId(categoryId);
  }
 
+ public Page<TransactionEntity> getTransactionsByCategory(Long categoryId, PageRequest pageRequest) {
+  return transactionRepository.findByCategoryIdPageable(categoryId, pageRequest);
+ }
+
 
  public double calculateRemainingFundsByMonth(LocalDate startDate, LocalDate endDate) {
   double totalCredits = transactionRepository.calculateTotalCreditsByMonth(startDate, endDate);
@@ -99,6 +103,11 @@ public class TransactionService {
 
  public TransactionEntity getTransaction(Long id){
   return transactionRepository.findById(id).get();
+ }
+
+
+ public Page<TransactionEntity> searchTransactions(String searchTerm, PageRequest pageRequest) {
+  return transactionRepository.findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(searchTerm, pageRequest);
  }
 
 

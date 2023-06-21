@@ -9,7 +9,6 @@ import java.util.List;
 @Setter
 @Getter
 @EqualsAndHashCode
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class GoalEntity {

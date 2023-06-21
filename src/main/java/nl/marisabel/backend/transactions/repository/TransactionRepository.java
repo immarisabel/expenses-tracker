@@ -27,6 +27,10 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
  @Query("SELECT e FROM TransactionEntity e WHERE lower(e.entity) LIKE lower(concat('%', :searchTerm, '%')) OR lower(e.description) LIKE lower(concat('%', :searchTerm, '%'))")
  List<TransactionEntity> findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(@Param("searchTerm") String searchTerm);
 
+ @Query("SELECT e FROM TransactionEntity e WHERE lower(e.entity) LIKE lower(concat('%', :searchTerm, '%')) OR lower(e.description) LIKE lower(concat('%', :searchTerm, '%'))")
+ Page<TransactionEntity> findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(@Param("searchTerm") String searchTerm, Pageable pageable);
+
+
  List<TransactionEntity> findByDateBetween(LocalDate startDate, LocalDate endDate);
 
  @Query("SELECT amount FROM TransactionEntity")
@@ -34,6 +38,9 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
 
  @Query("SELECT e FROM TransactionEntity e JOIN e.categories c WHERE c.id = :categoryId")
  List<TransactionEntity> findByCategoryId(@Param("categoryId") Long categoryId);
+
+ @Query("SELECT DISTINCT e FROM TransactionEntity e JOIN e.categories c WHERE c.id = :categoryId")
+ Page<TransactionEntity> findByCategoryIdPageable(@Param("categoryId") Long categoryId, Pageable pageable);
 
 // UPLOADING
 

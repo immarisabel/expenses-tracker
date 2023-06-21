@@ -10,7 +10,6 @@ import java.time.Year;
 @Getter
 @Setter
 @EqualsAndHashCode
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class SavingsEntity {

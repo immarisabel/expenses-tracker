@@ -35,23 +35,23 @@
     /* Create the chart */
     var ctx = document.getElementById('chart').getContext('2d');
     new Chart(ctx, {
-        type: 'bar',
+        type: 'line', // Change chart type to 'line'
         data: {
             labels: labels,
             datasets: [{
                 label: 'expenses',
                 data: debits,
-                  backgroundColor: 'rgba(248, 79, 49, 0.7)',
+                backgroundColor: 'rgba(248, 79, 49, 0.5)', // Adjusted opacity for better line chart appearance
                 borderColor: 'rgb(248, 79, 49)',
-                borderWidth: 1,
-                stack: 'stack1' // Assign the same stack ID to both datasets
+                borderWidth: 2, // Increased line width for better visibility
+                fill: false // Disabled fill under the line
             }, {
                 label: 'income',
                 data: credits,
-                backgroundColor: 'rgba(35, 197, 82, 0.7)',
+                backgroundColor: 'rgba(35, 197, 82, 0.5)', // Adjusted opacity for better line chart appearance
                 borderColor: 'rgb(35, 197, 82)',
-                borderWidth: 1,
-                stack: 'stack1' // Assign the same stack ID to both datasets
+                borderWidth: 2, // Increased line width for better visibility
+                fill: false // Disabled fill under the line
             }]
         },
         options: {
@@ -64,7 +64,6 @@
                 },
                 y: {
                     beginAtZero: true,
-                    stacked: true,
                     ticks: {
                         callback: function (value) {
                             return new Intl.NumberFormat('en-EU', {

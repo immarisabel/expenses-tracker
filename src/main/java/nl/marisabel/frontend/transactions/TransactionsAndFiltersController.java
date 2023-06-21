@@ -39,7 +39,7 @@ public class TransactionsAndFiltersController {
  //.......... D E F A U L T
  @GetMapping("/transactions")
  public String showTransactions(@RequestParam(defaultValue = "0") int page, Model model) {
-  int size = 100;
+  int size = 50;
   Page<TransactionEntity> transactions = transactionRepository.findAll(PageRequest.of(page, size));
   List<CategoryEntity> categories = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category"));
 
@@ -57,23 +57,23 @@ public class TransactionsAndFiltersController {
 
 
 
- //.......... KEYWORD SEARCH
-
  @GetMapping("/transactions/search")
  public String searchTransactions(
          @RequestParam(value = "searchTerm", required = false) String searchTerm,
+         @RequestParam(defaultValue = "0") int page,
          Model model
  ) {
-  if (searchTerm != null) {
-   log.info(".... SEARCHING FOR: " + searchTerm);
-  }
-  List<TransactionEntity> searchResults = transactionRepository.findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(searchTerm);
+  int size = 50;
+  PageRequest pageRequest = PageRequest.of(page, size);
+  Page<TransactionEntity> searchResults = transactionService.searchTransactions(searchTerm, pageRequest);
   List<CategoryEntity> categories = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category"));
+
   model.addAttribute("transactions", searchResults);
-  model.addAttribute("searchCount", searchResults.size());
   model.addAttribute("categories", categories);
   model.addAttribute("searchTerm", searchTerm);
-model.addAttribute("message", searchResults.size()+" transactions found");
+  model.addAttribute("message", searchResults.getTotalElements()+" transactions found");
+  model.addAttribute("searchResults", searchResults);
+
   return "transactions/filtered-page";
  }
 
@@ -98,16 +98,19 @@ model.addAttribute("message", searchResults.size()+" transactions found");
 
  //.......... CATEGORY FILTER
  @GetMapping("/transactions/categories")
- public String showCategoryCharts(@RequestParam("categoryId") Long categoryId, Model model) {
-  List<TransactionEntity> filteredResults = transactionService.getTransactionsByCategory(categoryId);
+ public String showCategoryCharts(@RequestParam("categoryId") Long categoryId, @RequestParam(defaultValue = "0") int page, Model model) {
+  int size = 50;
+  PageRequest pageRequest = PageRequest.of(page, size);
+  Page<TransactionEntity> transactions = transactionService.getTransactionsByCategory(categoryId, pageRequest);
   List<CategoryEntity> categories = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category"));
-  model.addAttribute("categories", categories);
 
-  model.addAttribute("transactions", filteredResults);
-  model.addAttribute("filteredCount", filteredResults.size());
-  model.addAttribute("currentPage", 0);
+  model.addAttribute("categories", categories);
+  model.addAttribute("transactions", transactions);
+  model.addAttribute("categoryId", categoryId);
+
   return "transactions/filtered-page";
  }
+
 
 
  //.......... NO CATEGORY FILTER
