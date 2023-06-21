@@ -3,8 +3,8 @@
 
 <header>
     <div th:replace="~{fragments/header :: header}"></div>
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+<!--    <meta name="_csrf" th:content="${_csrf.token}"/>-->
+<!--    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>-->
 
     <script>
     function submitAllocations() {
@@ -46,9 +46,9 @@
     }
 
 
-        // Get CSRF token
-        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-        const csrfHeaderName = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+<!--        // Get CSRF token-->
+<!--        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');-->
+<!--        const csrfHeaderName = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');-->
 
         // Convert the array to JSON
         let jsonData = JSON.stringify(savingsEntities);
@@ -62,7 +62,7 @@
             body: jsonData,
             headers: {
                 'Content-Type': 'application/json',
-                [csrfHeaderName]: csrfToken
+<!--                [csrfHeaderName]: csrfToken-->
             }
         })
             .then((response) => {

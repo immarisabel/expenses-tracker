@@ -34,7 +34,8 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    background: #fff;
+    background: #2F7AE5;
+    color:#ffffff;
     width: 285px;
     margin: -140px 0 0 -182px;
     padding: 40px;
@@ -64,7 +65,7 @@
     transition: 0.2s linear;
   }
   .form input:focus {
-    color: #333;
+    color: #2F7AE5;
     border: 1px solid #44c4e7;
   }
   .myButton {
@@ -143,35 +144,13 @@
 <body>
 
 
-<section class="form">
-    <H1>AMO!</H1>
-    <div th:if="${param.error}">
-        Invalid username and password.
-    </div>
-    <div th:if="${param.logout}">
-        You have been logged out.
-    </div>
-    <p></p>
-    <form th:action="@{/login}" method="post">
-        <input class="form-control" type="text" name="username" placeholder="username"/>
-        <input class="form-control" type="password" name="password" placeholder="password"/>
-        <input class="myButton" type="submit" value="Sign In"/>
-    </form>
+<section class="form" style="text-align: center;">
+    <h1><div th:replace="~{fragments/coin :: svg}"></div>
+        imTrackingCoins</h1>
+       <a href="/dashboard" class="myButton">Enter</a>
 </section>
 
 
-<!--<div th:if="${param.error}">-->
-<!--    Invalid username and password.-->
-<!--</div>-->
-<!--<div th:if="${param.logout}">-->
-<!--    You have been logged out.-->
-<!--</div>-->
-
-<!--<form th:action="@{/login}" method="post">-->
-<!--    <div><label> User Name : <input type="text" name="username"/> </label></div>-->
-<!--    <div><label> Password: <input type="password" name="password"/> </label></div>-->
-<!--    <div><input type="submit" value="Sign In"/></div>-->
-<!--</form>-->
 
 </body>
 </html>

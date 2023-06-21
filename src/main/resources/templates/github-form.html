@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Submit GitHub Issue</title>
+</head>
+<body>
+<h1>Submit a GitHub Issue</h1>
+<form action="#" th:action="@{/submitIssue}" method="post">
+    <p>Issue Title: <input type="text" th:name="title" /></p>
+    <p>Issue Body:</p>
+    <p><textarea th:name="body"></textarea></p>
+    <p><input type="submit" value="Submit" /></p>
+</form>
+</body>
+</html>

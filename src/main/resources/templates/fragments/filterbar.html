@@ -11,7 +11,6 @@
             <form action="/upload" method="post" enctype="multipart/form-data"
                   style="display: flex; align-items: center; gap: 1px;">
                 <input id="file" type="file" name="file" class="form-control"/>
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <input class="myButton" type="submit" value="upload"/>
             </form>
 
