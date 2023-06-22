@@ -4,17 +4,12 @@ import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j2;
 import nl.marisabel.frontend.about.model.IssueModel;
 import nl.marisabel.frontend.about.service.GithubService;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.Arrays;
@@ -32,7 +27,7 @@ public class GithubController {
  @GetMapping("/createIssue")
  public String showForm(Model model) {
   model.addAttribute("issue", new IssueModel());
-  return "createIssue";
+  return "github-form";
  }
 
  @PostMapping("/createIssue")
@@ -41,8 +36,8 @@ public class GithubController {
    return "redirect:/about";
   }
 
-  String repo="expenses-tracker";
-  String owner ="immarisabel";
+  String repo = "expenses-tracker";
+  String owner = "immarisabel";
   List<String> assignees = Arrays.asList("immarisabel");
   List<String> labels = Arrays.asList("new request");
 
@@ -50,17 +45,22 @@ public class GithubController {
   issue.setLabels(labels);
 
   try {
-   String response = githubService.post("https://api.github.com/repos/"+owner+"/"+repo+"/issues", new Gson().toJson(issue));
+   String response = githubService.post("https://api.github.com/repos/" + owner + "/" + repo + "/issues", new Gson().toJson(issue));
    if (response != null) {
-    model.addAttribute("message", "Issue was successfully created!");
-    return "redirect:/about";
+    String message = "Issue was successfully created!";
+    model.addAttribute("message", message);
+    return "about";
+
    } else {
-    model.addAttribute("error", "There was an error creating the issue.");
-    return "redirect:/about";
+    String error = "There was an error creating the issue.";
+    model.addAttribute("error", error);
+    return "about";
+
    }
   } catch (WebClientResponseException.UnprocessableEntity e) {
-   model.addAttribute("error", "Nothing sent, message was blank");
-   return "redirect:/about";
+   String error = "Nothing sent, message was blank";
+   model.addAttribute("error", error);
+   return "about";
   }
  }
 
