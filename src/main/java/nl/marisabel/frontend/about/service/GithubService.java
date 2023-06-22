@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class GithubService {
  @Value("${github.token}")
@@ -32,9 +35,13 @@ public class GithubService {
   }
 
   // JSON string for a new GitHub issue
-  public String buildIssueJson(String title, String body) {
-   return "{\"title\":\"" + title + "\", \"body\":\"" + body + "\"}";
+// JSON string for a new GitHub issue
+  public String buildIssueJson(String title, String body, List<String> assignees, List<String> labels) {
+   String assigneeStr = assignees.stream().map(a -> "\"" + a + "\"").collect(Collectors.joining(", "));
+   String labelStr = labels.stream().map(l -> "\"" + l + "\"").collect(Collectors.joining(", "));
+   return "{\"title\":\"" + title + "\", \"body\":\"" + body + "\", \"assignees\": [" + assigneeStr + "], \"labels\": [" + labelStr + "]}";
   }
+
 
 
  public String getToken() {

@@ -1,5 +1,6 @@
 package nl.marisabel.frontend.about.controller;
 
+import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j2;
 import nl.marisabel.frontend.about.model.IssueModel;
 import nl.marisabel.frontend.about.service.GithubService;
@@ -14,6 +15,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+
+import java.util.Arrays;
+import java.util.List;
+
 @Controller
 @Log4j2
 public class GithubController {
@@ -31,33 +37,34 @@ public class GithubController {
 
  @PostMapping("/createIssue")
  public String submitIssue(@ModelAttribute IssueModel issue, BindingResult result, Model model) {
+  if (result.hasErrors()) {
+   return "redirect:/about";
+  }
+
   String repo="expenses-tracker";
   String owner ="immarisabel";
-  if (result.hasErrors()) {
-   return "createIssue";
-  }
+  List<String> assignees = Arrays.asList("immarisabel");
+  List<String> labels = Arrays.asList("new request");
 
-  RestTemplate restTemplate = new RestTemplate();
+  issue.setAssignees(assignees);
+  issue.setLabels(labels);
 
-  HttpHeaders headers = new HttpHeaders();
-  headers.set("Authorization", "token "+githubService.getToken());
-
-  HttpEntity<IssueModel> request = new HttpEntity<>(issue, headers);
-
-  ResponseEntity<String> response = restTemplate.exchange(
-          "https://api.github.com/repos/"+owner+"/"+repo+"/issues",
-          HttpMethod.POST,
-          request,
-          String.class);
-
-  if (response.getStatusCodeValue() == 201) {
-   return "issueResult";
-  } else {
-   // handle error...
-   model.addAttribute("error", "There was an error creating the issue.");
-   return "createIssue";
+  try {
+   String response = githubService.post("https://api.github.com/repos/"+owner+"/"+repo+"/issues", new Gson().toJson(issue));
+   if (response != null) {
+    model.addAttribute("message", "Issue was successfully created!");
+    return "redirect:/about";
+   } else {
+    model.addAttribute("error", "There was an error creating the issue.");
+    return "redirect:/about";
+   }
+  } catch (WebClientResponseException.UnprocessableEntity e) {
+   model.addAttribute("error", "Nothing sent, message was blank");
+   return "redirect:/about";
   }
  }
+
+
 }
 
 

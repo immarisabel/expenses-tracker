@@ -1,15 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Submit GitHub Issue</title>
-</head>
+
 <body>
-<h1>Submit a GitHub Issue</h1>
-<form action="#" th:action="@{/submitIssue}" method="post">
-    <p>Issue Title: <input type="text" th:name="title" /></p>
-    <p>Issue Body:</p>
-    <p><textarea th:name="body"></textarea></p>
-    <p><input type="submit" value="Submit" /></p>
+
+<div th:if="${message}" class="alert alert-success" role="alert">
+    <p th:text="${message}"></p>
+</div>
+
+<div th:if="${error}" class="alert alert-danger" role="alert">
+    <p th:text="${error}"></p>
+</div>
+
+
+<h1>Submit ideas, feedback or bugs</h1>
+Make sure if reporting a bug to be detailed.
+Include the URL so I can identify the issue faster.
+<form action="#" th:action="@{/createIssue}" method="post" class="form" style="width:50rem;">
+    <p><input type="text" th:name="title" class="form-control" placeholder="title"/></p>
+    <p><textarea th:name="body" class="form-control" cols="50" rows="20"></textarea></p>
+    <p><input class="myButton" type="submit" value="Submit" /></p>
 </form>
+
 </body>
 </html>
+
+

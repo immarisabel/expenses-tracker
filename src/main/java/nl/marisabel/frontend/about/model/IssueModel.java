@@ -8,10 +8,9 @@ import java.util.List;
 @Getter
 @Setter
 public class IssueModel {
- private String title;
- private String body;
- private List<String> assignees;
- private Integer milestone;
- private List<String> labels;
+  private String title;
+  private String body;
+  private List<String> assignees;
+  private List<String> labels;
 
 }

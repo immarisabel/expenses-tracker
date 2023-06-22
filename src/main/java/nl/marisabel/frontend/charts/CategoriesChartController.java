@@ -35,10 +35,8 @@ public class CategoriesChartController {
                                   @RequestParam(value = "year", required = false) Integer year,
                                   Model model) {
 
-  // Load the category
   CategoryEntity category = categoryService.getCategory(categoryId);
 
-  // Set up the current year
   int currentYear = Year.now().getValue();
 
   // If the category is not found, return an error view

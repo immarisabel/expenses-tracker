@@ -16,6 +16,7 @@
             Year</a>
         <span th:text="${currentYear}"></span>
         <a th:href="@{'/charts/categories/' + ${category.id} + '?year=' + ${nextYear}}" class="myButton">Next Year</a>
+        <h2 th:text="${category.category}"></h2>
 
     </div>
 
