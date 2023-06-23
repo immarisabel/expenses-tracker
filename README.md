@@ -19,14 +19,15 @@ _Styling done with help of ChatGPT 👍_ saved a lot of time with the css and ht
   - delete it
   - not able to update due to security, prevents any errors
     - if you wish to edit, better to manually create and delete original
+  - Able to Auto Categorize transactions according to personal library of strings
 - Savings
   - Able to allocate savings to goals
   - Able to create Goals
-    - [ ] TO DO: delete goals
-    - [ ] TO DO: edit goals
+  - Able to delete goals
+  - Able to edit goals
   - Able to display able with savings data and summary on the goal's table
   - Able to display Goal's charts for savings
-  - [ ] TO DO: yearly overview of savings in total (regardless of goals)
+  - Able to display yearly overview of savings in total (regardless of goals)
 - Filters
   - search by keywords
   - search between dates
@@ -34,13 +35,11 @@ _Styling done with help of ChatGPT 👍_ saved a lot of time with the css and ht
   - search by category
   - [ ] TO DO: filter categories between dates
   - search all those without categories
-    - [ ] TO DO: fix pagination issue here
+- Able to report issues and requests via GithubApi Form under /about page 
+          
 ## Future implementations
 
 - Profile creation and login 🔨 (WIP) 
 - Custom CVS profiles to customize depending on the bank.
   - It will display the entity fields and input field to map to the file's corresponding column
-- Auto-categorize items
-  - Via the category settings, you shoudl be able to add a list of Strings which will categorize each transaction upon uploading.
-  - Each upload should then show you the list of transactions uploaded in case you need to modify any category manually
-    - 💡 read last transaction ID, return from ID+ all elements in database
+
