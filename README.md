@@ -17,8 +17,7 @@ _Styling done with help of ChatGPT 👍_ saved a lot of time with the css and ht
 - Transactions 
   - add manually
   - delete it
-  - not able to update due to security, prevents any errors
-    - if you wish to edit, better to manually create and delete original
+  - able to edit but not delete for error prevention
   - Able to Auto Categorize transactions according to personal library of strings
 - Savings
   - Able to allocate savings to goals
