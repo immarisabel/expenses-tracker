@@ -86,15 +86,11 @@ public class TransactionService {
  // MANIPULATION
 
  @Transactional
- public void batchUpdateCategory(Long categoryId, List<Long> transactionIds, int pageNumber, int pageSize) {
+ public void batchUpdateCategory(Long categoryId, List<Long> transactionIds) {
   CategoryEntity category = categoryRepository.findById(categoryId)
           .orElseThrow(() -> new RuntimeException("Category not found with id " + categoryId));
 
-  int startIndex = pageNumber * pageSize;
-  int endIndex = Math.min(startIndex + pageSize, transactionIds.size());
-  List<Long> paginatedTransactionIds = transactionIds.subList(startIndex, endIndex);
-
-  List<TransactionEntity> transactions = transactionRepository.findAllById(paginatedTransactionIds);
+  List<TransactionEntity> transactions = transactionRepository.findAllById(transactionIds);
 
   log.info("....transactions updated: " + transactions.size());
 
@@ -104,6 +100,7 @@ public class TransactionService {
    transactionRepository.save(transaction);
   }
  }
+
 
 
 }

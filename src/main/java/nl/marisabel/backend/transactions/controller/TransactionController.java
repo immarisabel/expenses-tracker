@@ -56,7 +56,7 @@ public class TransactionController {
         log.info("....transactions to update: " + transactionsId.size());
 
         try {
-            transactionService.batchUpdateCategory(categoryId, transactionsId, pageNumber, pageSize);
+            transactionService.batchUpdateCategory(categoryId, transactionsId);
             redirectAttributes.addFlashAttribute("successMessage", "Transaction updated successfully");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Error updating transaction: " + e.getMessage());
