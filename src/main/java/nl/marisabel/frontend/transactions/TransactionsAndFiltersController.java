@@ -39,19 +39,19 @@ public class TransactionsAndFiltersController {
  //.......... D E F A U L T
  @GetMapping("/transactions")
  public String showTransactions(@RequestParam(defaultValue = "0") int page, Model model) {
-  int size = 50;
+  int size = 20;
   Page<TransactionEntity> transactions = transactionRepository.findAll(PageRequest.of(page, size));
   List<CategoryEntity> categories = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category"));
 
   if (!transactions.isEmpty()) {
-   log.info("ID of the first transaction object: " + transactions.get().findFirst().get().getId());
+   log.info("Number of transactions: " + transactions.getSize());
   } else {
    log.info("Transactions list is empty");
   }
-
   model.addAttribute("transactions", transactions);
   model.addAttribute("categories", categories);
   model.addAttribute("transactionsForm", new TransactionForm());
+
   return "transactions/transactions";
  }
 
