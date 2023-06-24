@@ -6,7 +6,7 @@
     <div th:if="${message}">
         <p th:text="${message}" class="success-message"></p>
     </div>
-
+<div class="conatiner">
     <form id="updateCategoryForm" th:action="@{/transactions/updateCategory(searchTerm=${searchTerm})}" method="post" th:withQueryString="true">
         <select name="categoryId">
             <option value="">add category to transaction</option>
@@ -71,6 +71,7 @@
         </tr>
         </tbody>
     </table>
+</div>
     <script>
      // Function to toggle the selection of all checkboxes
     function toggleSelectAll() {

@@ -8,6 +8,7 @@
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 <div th:replace="~{fragments/filterbar :: filterbar}"></div>
+<div class="container">
 
 <!-- PAGINATION CONTROL FOR CATEGORY FILTERED TRANSACTIONS -->
 <div th:if="${categoryId != null}">
@@ -47,7 +48,7 @@
 </div>
 
 <div th:replace="~{transactions/table :: transactions-table}"></div>
-
+</div>
 
 </body>
 

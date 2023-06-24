@@ -3,8 +3,7 @@
 <body>
 <h4>Last Month's Expenses</h4>
 
-
-<canvas id="pieChart"></canvas>
+<canvas id="donutChart"></canvas>
 <script th:inline="javascript">
     /*<![CDATA[*/
     // Retrieve the data from your controller
@@ -12,8 +11,8 @@
     const totalAmountMap = /*[[${totalAmountMap}]]*/ {};
 
     // Prepare the data for the chart
-    const pieChartLabels = Object.keys(categoryPercentageMap);
-    const pieChartData = Object.values(categoryPercentageMap);
+    const donutChartLabels = Object.keys(categoryPercentageMap);
+    const donutChartData = Object.values(categoryPercentageMap);
 
     // Generate an array of colors
     const colors = [
@@ -33,22 +32,26 @@
     const thresholdPercentage = .2;
 
     // Filter out segments below the threshold percentage and exclude "Transfers" category
-    const filteredPieChartLabels = pieChartLabels.filter((label, index) => {
-        const percentage = (pieChartData[index] / pieChartData.reduce((a, b) => a + b, 0)) * 100;
-      return percentage >= thresholdPercentage && label !== "transfers" && label !== "income";
+    const filteredDonutChartLabels = donutChartLabels.filter((label, index) => {
+        const percentage = (donutChartData[index] / donutChartData.reduce((a, b) => a + b, 0)) * 100;
+        return percentage >= thresholdPercentage && label !== "transfers" && label !== "income";
     });
-    const filteredPieChartData = filteredPieChartLabels.map(label => categoryPercentageMap[label]);
+    const filteredDonutChartData = filteredDonutChartLabels.map(label => categoryPercentageMap[label]);
 
     // Set up the chart configuration
     const config = {
-        type: 'pie',
+        type: 'doughnut',
         data: {
-            labels: filteredPieChartLabels,
+            labels: filteredDonutChartLabels,
             datasets: [{
-                data: filteredPieChartData,
-                backgroundColor: colors.slice(0, filteredPieChartLabels.length),
-                                borderColor: 'rgba(255, 255, 255, 0)', // Set the border color to transparent
-
+                data: filteredDonutChartData,
+                backgroundColor: colors.slice(0, filteredDonutChartLabels.length),
+                borderColor: 'rgba(255, 255, 255, 0)', // Set the border color to transparent
+            },
+            {
+                data: filteredDonutChartData.map(() => 1), // Dummy data for the inner ring
+                backgroundColor: ['rgba(0, 0, 0, 0)'], // Transparent color for the inner ring
+                borderColor: 'rgba(255, 255, 255, 0)', // Set the border color to transparent for the inner ring
             }]
         },
         options: {
@@ -60,7 +63,7 @@
                             const label = context.label || '';
                             if (label) {
                                 const value = context.raw || 0;
-                                const percentage = ((value / filteredPieChartData.reduce((a, b) => a + b, 0)) * 100).toFixed(2);
+                                const percentage = ((value / filteredDonutChartData.reduce((a, b) => a + b, 0)) * 100).toFixed(2);
                                 const amount = totalAmountMap[label] || 0;
                                 return `${label}: ${percentage}%  Total: ${amount} euros`;
                             }
@@ -68,15 +71,17 @@
                         }
                     }
                 }
-            }
+            },
+            cutout: '50%' // Adjust the cutout option to control the size of the central hole
         }
     };
 
     // Create the chart
-    const ctxChart = document.getElementById('pieChart').getContext('2d');
+    const ctxChart = document.getElementById('donutChart').getContext('2d');
     new Chart(ctxChart, config);
     /*]]>*/
 </script>
+
 
 
 </body>

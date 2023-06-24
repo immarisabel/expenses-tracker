@@ -10,15 +10,15 @@
     }
 
     .right {
-        flex: 2;
+        flex: 3;
         max-height: 80vh;
         overflow: auto;
 
     }
 
     .left {
-        flex: 1;
-        max-height: 100vh;
+        flex: 2;
+        max-height: auto;
         overflow: auto;
     }
 
@@ -27,6 +27,12 @@
         width: 90%;
         background-color: #FFF4BD;
         padding:1rem;
+    }
+
+    .bottom-cards {
+        flex: 1;
+        max-height: auto;
+        overflow: auto;
     }
 
  .savingsChart
@@ -40,6 +46,35 @@
     }
 
 
+
+.card {
+  width: auto;
+  background: linear-gradient(45deg, #f3f3f3, #fdfdfd);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  color: #333; /* Darker text color */
+  margin: 0 1rem 0 1rem ;
+}
+
+.card-content {
+  text-align: center;
+}
+
+.card h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #333; /* Darker text color */
+}
+
+.card p {
+  font-size: 16px;
+  color: #555; /* Slightly darker text color */
+}
+
+
+
+
     </style>
 </header>
 
@@ -50,23 +85,77 @@
 <div class="container">
 
     <div class="right">
-        <div th:replace="~{dashboard/monthly-expenses :: body}"></div>
+        <div class="card">
+            <div class="card-content">
+                <div th:replace="~{dashboard/monthly-expenses :: body}"></div>
+            </div>
+        </div>
     </div>
 
     <div class="left">
         <div class="categoriesChart">
-            <div th:replace="~{dashboard/last-month-categories :: body}"></div>
+            <div class="card">
+                <div class="card-content">
+                    <div th:replace="~{dashboard/last-month-categories :: body}"></div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="bottom">
         <div th:utext="${noteModel.note}"></div>
         <div style="margin-top:2rem;">
-            <a href="/note"  class="myButton" >edit</a> </div>
+            <a href="/note" class="myButton">edit</a></div>
     </div>
 
 
 </div>
 
+<div class="container" style="margin-top:0;">
+
+    <div class="bottom-cards">
+
+        <div class="card">
+            <div class="card-content">
+                <h2> Income Last Year </h2>
+                <h1>000.00 €</h1>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="bottom-cards">
+
+        <div class="card">
+            <div class="card-content">
+                <h2> Expenses Last Year </h2>
+                <h1>000.00 €</h1>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="bottom-cards">
+
+        <div class="card">
+            <div class="card-content">
+                <h2> Last Uploaded Data </h2>
+                <h1>31 / MAR / 2023</h1>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="bottom-cards">
+
+        <div class="card">
+            <div class="card-content">
+                <h2> TITLE </h2>
+                <h1>data</h1>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 </body>
 </html>
