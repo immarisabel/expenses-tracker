@@ -9,7 +9,9 @@ import nl.marisabel.backend.transactions.repository.TransactionRepository;
 import nl.marisabel.backend.transactions.service.TransactionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +31,9 @@ public class TransactionsAndFiltersController {
  private final TransactionRepository transactionRepository;
  private final CategoryRepository categoryRepository;
 
- public TransactionsAndFiltersController(TransactionService transactionService, TransactionRepository transactionRepository, CategoryRepository categoryRepository) {
+ public TransactionsAndFiltersController(TransactionService transactionService,
+                                         TransactionRepository transactionRepository,
+                                         CategoryRepository categoryRepository) {
   this.transactionService = transactionService;
   this.transactionRepository = transactionRepository;
   this.categoryRepository = categoryRepository;
@@ -38,23 +42,22 @@ public class TransactionsAndFiltersController {
 
  //.......... D E F A U L T
  @GetMapping("/transactions")
- public String showTransactions(@RequestParam(defaultValue = "0") int page, Model model) {
+ public String showTransactions(@RequestParam(value = "sort", defaultValue = "date") String sort,  Pageable pageable, @RequestParam(defaultValue = "0") int page, Model model) {
   int size = 20;
-  Page<TransactionEntity> transactions = transactionRepository.findAll(PageRequest.of(page, size));
-  List<CategoryEntity> categories = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category"));
-
-  if (!transactions.isEmpty()) {
-   log.info("Number of transactions: " + transactions.getSize());
+  if(sort.equals("date,desc")) {
+   pageable = PageRequest.of(page, size, Sort.by("date").descending());
   } else {
-   log.info("Transactions list is empty");
+   pageable = PageRequest.of(page, size, Sort.by("date").ascending());
   }
-  model.addAttribute("transactions", transactions);
-  model.addAttribute("categories", categories);
+  model.addAttribute("transactions", transactionRepository.findAll(pageable));
+  model.addAttribute("categories", categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category")));
   model.addAttribute("transactionsForm", new TransactionForm());
-
+model.addAttribute("sort", sort);
   return "transactions/transactions";
  }
 
+
+ //.......... KEYWORD FILTERING
 
  @GetMapping("/transactions/search")
  public String searchTransactions(
@@ -64,14 +67,15 @@ public class TransactionsAndFiltersController {
  ) {
   int size = 50;
   PageRequest pageRequest = PageRequest.of(page, size);
-  Page<TransactionEntity> searchResults = transactionService.searchTransactions(searchTerm, pageRequest);
-  List<CategoryEntity> categories = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category"));
 
-  model.addAttribute("transactions", searchResults);
-  model.addAttribute("categories", categories);
   model.addAttribute("searchTerm", searchTerm);
+
+  Page<TransactionEntity> searchResults = transactionService.searchTransactions(searchTerm, pageRequest);
+  model.addAttribute("transactions", searchResults);
   model.addAttribute("message", searchResults.getTotalElements() + " transactions found");
   model.addAttribute("searchResults", searchResults);
+
+  model.addAttribute("categories", categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category")));
 
   return "transactions/filtered-page";
  }
@@ -87,16 +91,17 @@ public class TransactionsAndFiltersController {
 
   int size = 50;
   PageRequest pageRequest = PageRequest.of(page, size);
-  Page<TransactionEntity> filteredResults = transactionService.filterTransactionByDate(startDate, endDate, pageRequest);
-
-  List<CategoryEntity> categories = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category"));
-  model.addAttribute("categories", categories);
-
-  model.addAttribute("transactions", filteredResults);
-  model.addAttribute("filteredCount", filteredResults.getTotalElements());
   model.addAttribute("currentPage", page);
   model.addAttribute("startDate", startDate);
   model.addAttribute("endDate", endDate);
+
+  model.addAttribute("categories", categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category")));
+
+  Page<TransactionEntity> filteredResults = transactionService.filterTransactionByDate(startDate, endDate, pageRequest);
+  model.addAttribute("transactions", filteredResults);
+  model.addAttribute("filteredCount", filteredResults.getTotalElements());
+
+
 
   return "transactions/filtered-page";
  }
@@ -107,11 +112,8 @@ public class TransactionsAndFiltersController {
  public String showCategoryCharts(@RequestParam("categoryId") Long categoryId, @RequestParam(defaultValue = "0") int page, Model model) {
   int size = 50;
   PageRequest pageRequest = PageRequest.of(page, size);
-  Page<TransactionEntity> transactions = transactionService.getTransactionsByCategory(categoryId, pageRequest);
-  List<CategoryEntity> categories = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category"));
-
-  model.addAttribute("categories", categories);
-  model.addAttribute("transactions", transactions);
+  model.addAttribute("categories", categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category")));
+  model.addAttribute("transactions", transactionService.getTransactionsByCategory(categoryId, pageRequest));
   model.addAttribute("categoryId", categoryId);
 
   return "transactions/filtered-page";
@@ -121,14 +123,13 @@ public class TransactionsAndFiltersController {
  //.......... NO CATEGORY FILTER
  @GetMapping("/transactions/categories/none")
  public String showTransactionsWithoutCategory(@RequestParam(defaultValue = "0") int page, Model model) {
-  int size = 50;  // Adjust this value to your desired page size
-  Page<TransactionEntity> transactions = transactionRepository.findByCategoriesIsEmpty(PageRequest.of(page, size));
-  List<CategoryEntity> categories = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category"));
+  int size = 50;
 
-  model.addAttribute("transactions", transactions);
-  model.addAttribute("categories", categories);
+  model.addAttribute("transactions", transactionRepository.findByCategoriesIsEmpty(PageRequest.of(page, size)));
+  model.addAttribute("categories", categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category")));
   model.addAttribute("currentPage", page);
-  model.addAttribute("hideMe", "hide"); //for thymeleaf condition to hide if controller is not called
+  model.addAttribute("hideMe", "hide");
+
   return "transactions/filtered-page";
  }
 
