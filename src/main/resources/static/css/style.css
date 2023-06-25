@@ -1,15 +1,15 @@
 /* Variables */
 :root {
-  --color-primary: #2F7AE5;
-  --color-primary-hover: #5563c1;
-  --color-secondary: #439CEF;
-  --color-secondary-hover: #8995c8;
-  --color-navbar: #2F7AE5;
-  --color-navbar-hover: #f4a4a4;
+  --color-primary: #107CFE;
+  --color-primary-hover: #6FB0FE;
+  --color-secondary: #e84d90;
+  --color-secondary-hover: #F194BC;
+  --color-navbar: #107CFE;
+  --color-navbar-hover: #e84d90;
   --color-table-odd: #efefef;
   --color-table-even: #ffffff;
+  --color-highlighter: rgb(255, 255, 209);
 }
-
 /* message */
       .alert {
     padding: 15px;
@@ -30,7 +30,6 @@
     background-color: #f2dede;
     border-color: #ebccd1;
 }
-
 /* Chart Page */
 .hidden {
   display: none;
@@ -192,7 +191,7 @@ h2 {
   padding: 0.375rem 0.75rem;
   font-size: 1rem;
   line-height: 1.5;
-  color: #495057;
+  color: var(--color-primary);
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid #ced4da;
@@ -271,12 +270,11 @@ form {
   justify-content: center;
 }
 
-.form-container {
+.update-categories {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: flex-start;
+  justify-content: right;
 }
+
 
 .form-container form {
   margin-bottom: 5px;
@@ -344,6 +342,7 @@ form {
 .transactions-table #selectAll {
   transform: scale(1.2);
 }
+
 
 
 
@@ -439,4 +438,119 @@ tbody tr:nth-child(even) {
 .amount {
   margin-left: 1em;
   font-size: 1.5em;
+}
+
+/* CATEGORIES TABLE */
+      .table-categories {
+          width: 100%;
+          border-collapse: collapse;
+          background-color: #fff;
+      }
+
+      .table-categories th,
+      .table-categories td {
+          padding: 8px;
+          text-align: left;
+          border: 1px solid #ddd;
+          background-color: #fff;
+      }
+
+      tbody tr:nth-child(odd) {
+          background-color: #fff;
+      }
+
+      .table-categories th {
+          background-color: #f2f2f2;
+      }
+
+      .table-categories tbody tr:nth-child(even) {
+          background-color: #f9f9f9;
+      }
+
+      .table-categories tbody tr:hover {
+          background-color: #e6e6e6;
+      }
+
+      .table-categories a {
+          color: #000000;
+          text-decoration: none;
+      }
+
+      .table-categories a:hover {
+          text-decoration: underline;
+      }
+
+      .table-categories p {
+          margin: 0;
+      }
+
+      .table-categories li {
+          list-style-type: none;
+      }
+
+/* DASHBOARD */
+
+
+    .right {
+        flex: 3;
+        max-height: 80vh;
+        overflow: auto;
+
+    }
+
+    .left {
+        flex: 2;
+        max-height: auto;
+        overflow: auto;
+    }
+
+    .bottom {
+        flex: 1;
+        width: 90%;
+        background-color: #FFF4BD;
+        padding:1rem;
+    }
+
+    .bottom-cards {
+        flex: 1;
+        max-height: auto;
+        overflow: auto;
+    }
+
+ .savingsChart
+ {
+    width:80%;
+    }
+
+    .categoriesChart
+    {
+    width:75%;
+    }
+
+
+
+.card {
+  width: auto;
+  background: linear-gradient(45deg, #ffffff, #f8f8f8);
+  border-radius: 10px;
+  padding: 20px;
+  color: #333;
+  margin: 0 1rem 0 1rem ;
+
+
+}
+
+.card-content {
+  text-align: center;
+}
+
+.card h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.card p {
+  font-size: 16px;
+  color: #555;
 }

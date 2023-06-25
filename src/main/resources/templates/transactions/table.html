@@ -3,18 +3,20 @@
 <div th:fragment="transactions-table" class="transactions-table">
 
     <div th:if="${message}">
-        <p th:text="${message}" class="alert alert-success"></p>
+        <p th:text="${message}" class="success-message"></p>
+    </div>
+    <div class="update-categories" >
+        <form style="display: flex; width:25rem;" id="updateCategoryForm" th:action="@{/transactions/updateCategory(searchTerm=${searchTerm})}" method="post" th:withQueryString="true">
+            <select name="categoryId" class="form-control">
+                <option value="">add category to transaction</option>
+                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.category}"></option>
+            </select>
+
+            <button type="submit" class="myButton" style="margin-left:1rem;">Update</button>
+
+        </form>
     </div>
 
-
-
-    <form id="updateCategoryForm" th:action="@{/transactions/updateCategory(searchTerm=${searchTerm})}" method="post" th:withQueryString="true">
-        <select name="categoryId">
-            <option value="">add category to transaction</option>
-            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.category}"></option>
-        </select>
-        <button type="submit">Update</button>
-    </form>
     <p></p>
     <table>
         <colgroup>
