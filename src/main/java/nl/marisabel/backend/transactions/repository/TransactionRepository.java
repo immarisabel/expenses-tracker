@@ -38,6 +38,8 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
  @Query("SELECT DISTINCT e FROM TransactionEntity e JOIN e.categories c WHERE c.id = :categoryId")
  Page<TransactionEntity> findByCategoryIdPageable(@Param("categoryId") Long categoryId, Pageable pageable);
 
+ Page<TransactionEntity> findByAmountBetween(double minAmount, double maxAmount, Pageable pageable);
+
 // UPLOADING
 
  @Query("SELECT COUNT(e) > 0 FROM TransactionEntity e WHERE e.date = :date AND e.entity = :entity AND e.creditOrDebit = :creditOrDebit AND e.amount = :amount AND e.description = :description")

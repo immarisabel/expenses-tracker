@@ -10,44 +10,73 @@
 <div th:replace="~{fragments/filterbar :: filterbar}"></div>
 <div class="container">
 
-<!-- PAGINATION CONTROL FOR CATEGORY FILTERED TRANSACTIONS -->
-<div th:if="${categoryId != null}">
-<div>
-    <a th:if="${transactions.hasPrevious()}" th:href="@{/transactions/categories(categoryId=${categoryId}, page=${transactions.number - 1})}" class="myButton">Previous</a>
-    <span th:text="${transactions.number + 1}"></span> / <span th:text="${transactions.totalPages}"></span>
-    <a th:if="${transactions.hasNext()}" th:href="@{/transactions/categories(categoryId=${categoryId}, page=${transactions.number + 1})}"  class="myButton">Next</a>
-</div>
-</div>
+    <!-- PAGINATION CONTROL FOR AMOUNT FILTERED TRANSACTIONS -->
 
-<!-- PAGINATION CONTROL FOR SEARCHED TRANSACTIONS -->
-<div th:if="${searchTerm != null}">
-<div>
-    <a th:if="${searchResults.hasPrevious()}" th:href="@{/transactions/search(searchTerm=${searchTerm}, page=${searchResults.number - 1})}"  class="myButton">Previous</a>
-    <span th:text="${searchResults.number + 1}"></span> / <span th:text="${searchResults.totalPages}"></span>
-    <a th:if="${searchResults.hasNext()}" th:href="@{/transactions/search(searchTerm=${searchTerm}, page=${searchResults.number + 1})}"  class="myButton">Next</a>
-</div>
-</div>
-
-<!-- PAGINATION CONTROL FOR DATE FILTERED TRANSACTIONS -->
-<div th:if="${startDate != null and endDate != null}">
-<div>
-    <a th:if="${transactions.hasPrevious()}" th:href="@{/transactions/filter(startDate=${startDate}, endDate=${endDate}, page=${transactions.number - 1})}"  class="myButton">Previous</a>
-    <span th:text="${transactions.number + 1}"></span> / <span th:text="${transactions.totalPages}"></span>
-    <a th:if="${transactions.hasNext()}" th:href="@{/transactions/filter(startDate=${startDate}, endDate=${endDate}, page=${transactions.number + 1})}"  class="myButton">Next</a>
-</div>
-</div>
+    <div th:if="${categoryId != null}">
+        <div>
+            <a th:if="${transactions.hasPrevious()}"
+               th:href="@{/transactions/filter-amount(minAmount=${minAmount}, maxAmount=${maxAmount}, page=${transactions.number - 1})}"
+               class="myButton">Previous</a>
+            <span th:text="${transactions.number + 1}"></span> / <span th:text="${transactions.totalPages}"></span>
+            <a th:if="${transactions.hasNext()}"
+               th:href="@{/transactions/filter-amount(minAmount=${minAmount}, maxAmount=${maxAmount}, page=${transactions.number + 1})}"
+               class="myButton">Next</a>
+        </div>
+    </div>
 
 
-<!-- PAGINATION CONTROL FOR TRANSACTIONS WITHOUT CATEGORY -->
-<div th:if="${hideMe != null}">
-<div>
-    <a th:if="${transactions.hasPrevious()}" th:href="@{/transactions/categories/none(page=${transactions.number - 1})}"  class="myButton">Previous</a>
-    <span th:text="${transactions.number + 1}"></span> / <span th:text="${transactions.totalPages}"></span>
-    <a th:if="${transactions.hasNext()}" th:href="@{/transactions/categories/none(page=${transactions.number + 1})}"  class="myButton">Next</a>
-</div>
-</div>
+    <!-- PAGINATION CONTROL FOR CATEGORY FILTERED TRANSACTIONS -->
+    <div th:if="${categoryId != null}">
+        <div>
+            <a th:if="${transactions.hasPrevious()}"
+               th:href="@{/transactions/categories(categoryId=${categoryId}, page=${transactions.number - 1})}"
+               class="myButton">Previous</a>
+            <span th:text="${transactions.number + 1}"></span> / <span th:text="${transactions.totalPages}"></span>
+            <a th:if="${transactions.hasNext()}"
+               th:href="@{/transactions/categories(categoryId=${categoryId}, page=${transactions.number + 1})}"
+               class="myButton">Next</a>
+        </div>
+    </div>
 
-<div th:replace="~{transactions/table :: transactions-table}"></div>
+    <!-- PAGINATION CONTROL FOR SEARCHED TRANSACTIONS -->
+    <div th:if="${searchTerm != null}">
+        <div>
+            <a th:if="${searchResults.hasPrevious()}"
+               th:href="@{/transactions/search(searchTerm=${searchTerm}, page=${searchResults.number - 1})}"
+               class="myButton">Previous</a>
+            <span th:text="${searchResults.number + 1}"></span> / <span th:text="${searchResults.totalPages}"></span>
+            <a th:if="${searchResults.hasNext()}"
+               th:href="@{/transactions/search(searchTerm=${searchTerm}, page=${searchResults.number + 1})}"
+               class="myButton">Next</a>
+        </div>
+    </div>
+
+    <!-- PAGINATION CONTROL FOR DATE FILTERED TRANSACTIONS -->
+    <div th:if="${startDate != null and endDate != null}">
+        <div>
+            <a th:if="${transactions.hasPrevious()}"
+               th:href="@{/transactions/filter(startDate=${startDate}, endDate=${endDate}, page=${transactions.number - 1})}"
+               class="myButton">Previous</a>
+            <span th:text="${transactions.number + 1}"></span> / <span th:text="${transactions.totalPages}"></span>
+            <a th:if="${transactions.hasNext()}"
+               th:href="@{/transactions/filter(startDate=${startDate}, endDate=${endDate}, page=${transactions.number + 1})}"
+               class="myButton">Next</a>
+        </div>
+    </div>
+
+
+    <!-- PAGINATION CONTROL FOR TRANSACTIONS WITHOUT CATEGORY -->
+    <div th:if="${hideMe != null}">
+        <div>
+            <a th:if="${transactions.hasPrevious()}"
+               th:href="@{/transactions/categories/none(page=${transactions.number - 1})}" class="myButton">Previous</a>
+            <span th:text="${transactions.number + 1}"></span> / <span th:text="${transactions.totalPages}"></span>
+            <a th:if="${transactions.hasNext()}"
+               th:href="@{/transactions/categories/none(page=${transactions.number + 1})}" class="myButton">Next</a>
+        </div>
+    </div>
+
+    <div th:replace="~{transactions/table :: transactions-table}"></div>
 </div>
 
 </body>

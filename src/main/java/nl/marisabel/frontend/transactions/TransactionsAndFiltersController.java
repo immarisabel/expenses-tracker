@@ -102,6 +102,30 @@ public class TransactionsAndFiltersController {
   return "transactions/filtered-page";
  }
 
+ //.......... AMOUNT FILTERING
+
+ @GetMapping("/transactions/filter-amount")
+ public String filterTransactionsByAmount(
+         @RequestParam("minAmount") double minAmount,
+         @RequestParam("maxAmount") double maxAmount,
+         @RequestParam(defaultValue = "0") int page,
+         Model model) {
+
+  int size = 50;
+  PageRequest pageRequest = PageRequest.of(page, size);
+  model.addAttribute("currentPage", page);
+  model.addAttribute("minAmount", minAmount);
+  model.addAttribute("maxAmount", maxAmount);
+
+  model.addAttribute("categories", categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category")));
+
+  Page<TransactionEntity> filteredResults = transactionService.filterTransactionByAmount(minAmount, maxAmount, pageRequest);
+  model.addAttribute("transactions", filteredResults);
+  model.addAttribute("filteredCount", filteredResults.getTotalElements());
+
+  return "transactions/filtered-page";
+ }
+
 
  //.......... CATEGORY FILTER
  @GetMapping("/transactions/categories")

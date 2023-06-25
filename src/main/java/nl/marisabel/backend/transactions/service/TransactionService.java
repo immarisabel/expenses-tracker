@@ -127,4 +127,10 @@ public class TransactionService {
   // Default case
   return PageRequest.of(page, size, Sort.by("date").ascending());
  }
+
+ public Page<TransactionEntity> filterTransactionByAmount(double minAmount, double maxAmount, PageRequest pageRequest) {
+  return transactionRepository.findByAmountBetween(minAmount, maxAmount, pageRequest);
+ }
+
+
 }

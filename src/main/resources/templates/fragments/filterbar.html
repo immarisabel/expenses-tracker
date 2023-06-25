@@ -45,6 +45,14 @@
                 <button class="myButton" type="submit">Filter</button>
             </form>
 
+
+            <form th:action="@{/transactions/filter-amount}" method="get">
+                <input type="number" name="minAmount" th:value="${minAmount}" step="0.01" required>
+                <input type="number" name="maxAmount" th:value="${maxAmount}" step="0.01" required>
+                <button type="submit">Filter</button>
+            </form>
+
+
             <a href="/transactions/categories/none" class="myButton" style="height:50%; margin-top:1rem;">no category</a>
 
             <!-- Clear Filters -->
