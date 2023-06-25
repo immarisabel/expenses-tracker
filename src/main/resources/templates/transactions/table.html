@@ -1,9 +1,13 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sd="http://www.w3.org/1999/xhtml">
 <div th:fragment="transactions-table" class="transactions-table">
+
     <div th:if="${message}">
-        <p th:text="${message}" class="success-message"></p>
+        <p th:text="${message}" class="alert alert-success"></p>
     </div>
+
+
+
     <form id="updateCategoryForm" th:action="@{/transactions/updateCategory(searchTerm=${searchTerm})}" method="post" th:withQueryString="true">
         <select name="categoryId">
             <option value="">add category to transaction</option>
