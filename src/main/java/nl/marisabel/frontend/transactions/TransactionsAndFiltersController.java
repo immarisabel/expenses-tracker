@@ -42,17 +42,14 @@ public class TransactionsAndFiltersController {
 
  //.......... D E F A U L T
  @GetMapping("/transactions")
- public String showTransactions(@RequestParam(value = "sort", defaultValue = "date") String sort,  Pageable pageable, @RequestParam(defaultValue = "0") int page, Model model) {
+ public String showTransactions(@RequestParam(value = "sort", defaultValue = "date") String sort, Pageable pageable, @RequestParam(defaultValue = "0") int page, Model model) {
   int size = 20;
-  if(sort.equals("date,desc")) {
-   pageable = PageRequest.of(page, size, Sort.by("date").descending());
-  } else {
-   pageable = PageRequest.of(page, size, Sort.by("date").ascending());
-  }
+   pageable = transactionService.createPageable(sort, page, size);
+
   model.addAttribute("transactions", transactionRepository.findAll(pageable));
   model.addAttribute("categories", categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category")));
   model.addAttribute("transactionsForm", new TransactionForm());
-model.addAttribute("sort", sort);
+  model.addAttribute("sort", sort);
   return "transactions/transactions";
  }
 
@@ -100,7 +97,6 @@ model.addAttribute("sort", sort);
   Page<TransactionEntity> filteredResults = transactionService.filterTransactionByDate(startDate, endDate, pageRequest);
   model.addAttribute("transactions", filteredResults);
   model.addAttribute("filteredCount", filteredResults.getTotalElements());
-
 
 
   return "transactions/filtered-page";

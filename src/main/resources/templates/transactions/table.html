@@ -1,71 +1,60 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sd="http://www.w3.org/1999/xhtml">
-
-<div th:fragment="transactions-table">
-
+<div th:fragment="transactions-table" class="transactions-table">
     <div th:if="${message}">
         <p th:text="${message}" class="success-message"></p>
     </div>
-    <div class="conatiner">
-        <form id="updateCategoryForm" th:action="@{/transactions/updateCategory(searchTerm=${searchTerm})}"
-              method="post" th:withQueryString="true">
-            <select name="categoryId">
-                <option value="">add category to transaction</option>
-                <option th:each="category : ${categories}" th:value="${category.id}"
-                        th:text="${category.category}"></option>
-            </select>
-            <button type="submit">Update</button>
-        </form>
+    <form id="updateCategoryForm" th:action="@{/transactions/updateCategory(searchTerm=${searchTerm})}" method="post" th:withQueryString="true">
+        <select name="categoryId">
+            <option value="">add category to transaction</option>
+            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.category}"></option>
+        </select>
+        <button type="submit">Update</button>
+    </form>
+    <p></p>
+    <table>
+        <colgroup>
+            <col style="width: auto;">
+            <col style="width: auto;">
+            <col style="width: 5%">
+            <col style="width: 5%">
+            <col style="width: 5%;">
+            <col style="width: 5%;">
+        </colgroup>
+        <thead>
+        <tr class="header">
+            <th><a sd:pagination-sort="date">Date ▲</a></th>
+            <th><a sd:pagination-sort="entity">Entity ▲</a></th>
+            <th>In or Out</th>
+            <th><a sd:pagination-sort="amount">Amount ▲</a></th>
+            <th>Category</th>
+            <th>
+                <input type="checkbox" id="selectAll" onchange="toggleSelectAll()"/>
+            </th>
+            <th>Edit</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="transaction : ${transactions}">
+            <td data-title="Date" th:text="${#temporals.format(transaction.date, 'dd MMM yyyy')}"></td>
+            <td data-title="Entity" th:text="${transaction.entity}"></td>
+            <td data-title="Credit/Debit" th:text="${transaction.creditOrDebit}"></td>
+            <td data-title="Amount" th:utext="'€' + ${#numbers.formatDecimal(transaction.amount, 2, 'COMMA', 2, 'POINT')}"></td>
+            <td data-title="Category"
+                th:text="${transaction.categories.size() > 0 ? transaction.categories[0].category : ''}"></td>
+            <td style="text-align: center;">
+                <input type="checkbox" name="selectedTransactionsIds" th:value="${transaction.id}"/>
+            </td>
+            <td>
+                <form th:action="@{/transactions/edit/{id}(id=${transaction.id})}" method="get">
+                    <button class="myButton" type="submit">Edit</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
-        <p></p>
-        <table>
-            <colgroup>
-                <col style="width: auto;">
-                <col style="width: auto;">
-                <col style="width: 5%">
-                <col style="width: 5%">
-                <col style="width: 5%">
-                <col style="width: 5%;">
-
-            </colgroup>
-            <thead>
-            <tr class="header">
-                <th><a sd:pagination-sort="date">Date</a></th>
-                <th>Entity</th>
-                <th>in or out</th>
-                <th><a sd:pagination-sort="amount">Amount</a></th>
-                <th>Category</th>
-                <th>
-                    <input type="checkbox" id="selectAll"/>
-                </th>
-                <th>
-                    Edit
-                </th>
-            </tr>
-            </thead>
-
-            <tbody>
-            <tr th:each="transaction : ${transactions}">
-                <td data-title="Date" th:text="${#temporals.format(transaction.date, 'dd MMM yyyy')}"></td>
-                <td data-title="Entity" th:text="${transaction.entity}"></td>
-                <td data-title="Credit/Debit" th:text="${transaction.creditOrDebit}"></td>
-                <td data-title="Amount" th:text="${transaction.amount}"></td>
-                <td data-title="Category"
-                    th:text="${transaction.categories.size() > 0 ? transaction.categories[0].category : ''}"></td>
-                <td style="text-align: center;">
-                    <input type="checkbox" name="selectedTransactionsIds" th:value="${transaction.id}"/>
-                </td>
-                <td>
-                    <form th:action="@{/transactions/edit/{id}(id=${transaction.id})}" method="get">
-                        <button class="myButton" type="submit">Edit</button>
-                    </form>
-                </td>
-
-
-            </tr>
-            </tbody>
-        </table>
-    </div>
     <script>
      // Function to toggle the selection of all checkboxes
     function toggleSelectAll() {
@@ -107,4 +96,4 @@ document.getElementById('updateCategoryForm').addEventListener('submit', functio
 
     </script>
 
-</div>
+

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -102,5 +103,28 @@ public class TransactionService {
  }
 
 
+ public Pageable createPageable(String sort, int page, int size) {
+  if(sort.contains("entity")) {
+   if(sort.contains(",desc")) {
+    return PageRequest.of(page, size, Sort.by("entity").descending());
+   } else {
+    return PageRequest.of(page, size, Sort.by("entity").ascending());
+   }
+  } else if(sort.contains("amount")) {
+   if(sort.contains(",desc")) {
+    return PageRequest.of(page, size, Sort.by("amount").descending());
+   } else {
+    return PageRequest.of(page, size, Sort.by("amount").ascending());
+   }
+  } else if(sort.contains("date")) {
+   if(sort.contains(",desc")) {
+    return PageRequest.of(page, size, Sort.by("date").descending());
+   } else {
+    return PageRequest.of(page, size, Sort.by("date").ascending());
+   }
+  }
 
+  // Default case
+  return PageRequest.of(page, size, Sort.by("date").ascending());
+ }
 }
