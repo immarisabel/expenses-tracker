@@ -9,8 +9,6 @@ import nl.marisabel.backend.savings.service.SavingsService;
 import nl.marisabel.backend.transactions.service.TransactionService;
 import nl.marisabel.frontend.savings.SavingsModel;
 import nl.marisabel.util.DateUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

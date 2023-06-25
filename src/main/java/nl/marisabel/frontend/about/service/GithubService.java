@@ -31,11 +31,11 @@ public class GithubService {
            .body(BodyInserters.fromValue(json))
            .retrieve()
            .bodyToMono(String.class)
-           .block(); // block() makes the call synchronous, use subscribe() for non-blocking
+           .block();
   }
 
   // JSON string for a new GitHub issue
-// JSON string for a new GitHub issue
+
   public String buildIssueJson(String title, String body, List<String> assignees, List<String> labels) {
    String assigneeStr = assignees.stream().map(a -> "\"" + a + "\"").collect(Collectors.joining(", "));
    String labelStr = labels.stream().map(l -> "\"" + l + "\"").collect(Collectors.joining(", "));

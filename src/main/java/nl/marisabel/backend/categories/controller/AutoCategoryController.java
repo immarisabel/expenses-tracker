@@ -5,6 +5,7 @@ import nl.marisabel.backend.categories.entity.AutoCategoryEntity;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.repository.AutoCategoryRepository;
 import nl.marisabel.backend.categories.repository.CategoryRepository;
+import nl.marisabel.backend.categories.service.CategoryService;
 import nl.marisabel.backend.transactions.entity.TransactionEntity;
 import nl.marisabel.backend.transactions.repository.TransactionRepository;
 import org.springframework.stereotype.Controller;
@@ -23,11 +24,13 @@ public class AutoCategoryController {
     private final AutoCategoryRepository autoCategoryRepository;
     private final TransactionRepository transactionRepository;
     private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
-    public AutoCategoryController(AutoCategoryRepository autoCategoryRepository, TransactionRepository transactionRepository, CategoryRepository categoryRepository) {
+    public AutoCategoryController(AutoCategoryRepository autoCategoryRepository, TransactionRepository transactionRepository, CategoryRepository categoryRepository, CategoryService categoryService) {
         this.autoCategoryRepository = autoCategoryRepository;
         this.transactionRepository = transactionRepository;
         this.categoryRepository = categoryRepository;
+        this.categoryService = categoryService;
     }
 
     @GetMapping
@@ -86,30 +89,20 @@ public class AutoCategoryController {
         int numCategorized = 0;
 
         for (AutoCategoryEntity autoCategory : autoCategories) {
-            // Try to find an existing CategoryEntity with this category
-            CategoryEntity existingCategory = categoryRepository.findByCategory(autoCategory.getCategory());
-
-            // If none exists, create a new one
-            if (existingCategory == null) {
-                existingCategory = new CategoryEntity();
-                existingCategory.setCategory(autoCategory.getCategory());
-                categoryRepository.save(existingCategory); // don't forget to save the new category
-            }
+            CategoryEntity existingCategory = categoryService.getOrCreateCategory(autoCategory);
 
             for (TransactionEntity transaction : unCategorizedTransactions) {
                 for (String query : autoCategory.getQueries()) {
-                    if (transaction.getEntity().toLowerCase().contains(query.toLowerCase()) ||
-                            transaction.getDescription().toLowerCase().contains(query.toLowerCase())) {
-
+                    if (categoryService.isTransactionMatch(transaction, query)) {
                         transaction.addCategory(existingCategory);
                         transactionRepository.save(transaction);
-
                         numCategorized++;
                         break;
                     }
                 }
             }
         }
+
         log.info("Transactions categorized: " + numCategorized);
         model.addAttribute("message", "Auto-categorized " + numCategorized + " transactions");
         return "redirect:/auto-category";

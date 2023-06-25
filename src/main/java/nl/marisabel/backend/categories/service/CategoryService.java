@@ -1,7 +1,9 @@
 package nl.marisabel.backend.categories.service;
 
+import nl.marisabel.backend.categories.entity.AutoCategoryEntity;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.repository.CategoryRepository;
+import nl.marisabel.backend.transactions.entity.TransactionEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,4 +36,27 @@ import java.util.List;
         }
 
 
+    public CategoryEntity getOrCreateCategory(AutoCategoryEntity autoCategory) {
+        CategoryEntity existingCategory = categoryRepository.findByCategory(autoCategory.getCategory());
+
+        if (existingCategory == null) {
+            existingCategory = createCategory(autoCategory.getCategory());
+        }
+
+        return existingCategory;
     }
+
+    private CategoryEntity createCategory(String category) {
+        CategoryEntity newCategory = new CategoryEntity();
+        newCategory.setCategory(category);
+        return categoryRepository.save(newCategory);
+    }
+
+    public boolean isTransactionMatch(TransactionEntity transaction, String query) {
+        String transactionEntity = transaction.getEntity().toLowerCase();
+        String transactionDescription = transaction.getDescription().toLowerCase();
+        String queryLower = query.toLowerCase();
+
+        return transactionEntity.contains(queryLower) || transactionDescription.contains(queryLower);
+    }
+}
