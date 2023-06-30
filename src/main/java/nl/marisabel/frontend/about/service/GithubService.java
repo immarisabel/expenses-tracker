@@ -1,28 +1,66 @@
 package nl.marisabel.frontend.about.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import nl.marisabel.frontend.about.model.IssueInfoModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class GithubService {
+
  @Value("${github.token}")
  private String TOKEN;
 
+ private  final String REPO = "expenses-tracker";
+ private  final String OWNER = "immarisabel";
 
  @Autowired
  private final WebClient webClient;
+ private final ObjectMapper objectMapper;
 
- public GithubService(WebClient webClient) {
+ public GithubService(WebClient webClient, ObjectMapper objectMapper) {
   this.webClient = webClient;
+  this.objectMapper = objectMapper;
  }
 
+ public List<IssueInfoModel> get() {
+  String url = "https://api.github.com/repos/" + OWNER + "/" + REPO + "/issues";
+  String authToken = TOKEN;
+  String response = webClient.get()
+          .uri(url)
+          .header(HttpHeaders.AUTHORIZATION, "Bearer " + authToken)
+          .retrieve()
+          .bodyToMono(String.class)
+          .block();
 
+  List<IssueInfoModel> issuesList = new ArrayList<>();
+  try {
+   JsonNode jsonNode = objectMapper.readTree(response);
+
+   if (jsonNode.isArray()) {
+    for (JsonNode issueNode : jsonNode) {
+     String title = issueNode.get("title").asText();
+     String htmlUrl = issueNode.get("html_url").asText();
+     IssueInfoModel issueInfo = new IssueInfoModel(title, htmlUrl);
+     issuesList.add(issueInfo);
+    }
+   } else {
+    System.out.println("No issues found in the JSON response.");
+   }
+  } catch (Exception e) {
+   e.printStackTrace();
+  }
+  return issuesList;
+ }
  public String post(String url, String json) {
    return webClient.post()
            .uri(url)
@@ -33,8 +71,6 @@ public class GithubService {
            .bodyToMono(String.class)
            .block();
   }
-
-  // JSON string for a new GitHub issue
 
   public String buildIssueJson(String title, String body, List<String> assignees, List<String> labels) {
    String assigneeStr = assignees.stream().map(a -> "\"" + a + "\"").collect(Collectors.joining(", "));

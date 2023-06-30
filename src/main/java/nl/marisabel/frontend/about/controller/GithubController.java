@@ -2,6 +2,7 @@ package nl.marisabel.frontend.about.controller;
 
 import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j2;
+import nl.marisabel.frontend.about.model.IssueInfoModel;
 import nl.marisabel.frontend.about.model.IssueModel;
 import nl.marisabel.frontend.about.service.GithubService;
 import org.springframework.stereotype.Controller;
@@ -24,10 +25,16 @@ public class GithubController {
   this.githubService = githubService;
  }
 
+ @GetMapping("/issues")
+ public String getIssues(@ModelAttribute IssueInfoModel issueInfoModel, Model model) {
+  model.addAttribute("issues", githubService.get());
+  return "about/issues";
+ }
+
  @GetMapping("/createIssue")
  public String showForm(Model model) {
   model.addAttribute("issue", new IssueModel());
-  return "github-form";
+  return "about/github-form";
  }
 
  @PostMapping("/createIssue")
@@ -49,18 +56,18 @@ public class GithubController {
    if (response != null) {
     String message = "Issue was successfully created!";
     model.addAttribute("message", message);
-    return "about";
+    return "about/about";
 
    } else {
     String error = "There was an error creating the issue.";
     model.addAttribute("error", error);
-    return "about";
+    return "about/about";
 
    }
   } catch (WebClientResponseException.UnprocessableEntity e) {
    String error = "Nothing sent, message was blank";
    model.addAttribute("error", error);
-   return "about";
+   return "about/about";
   }
  }
 

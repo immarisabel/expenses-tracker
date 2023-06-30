@@ -1,0 +1,23 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<header>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+</header>
+</head>
+
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container" style="display:flex;">
+    <div class="container">
+    <div th:replace="~{about/github-form :: body}"></div>
+</div>
+    <div class="container">
+        <h2>Current Issues</h2>
+    <li th:each="issue : ${issuesList}" >
+        <a th:href="${issue.htmlUrl}" style="text-decoration:none; line-height:2;" th:text="${issue.title}">list</a>
+    </li></div>
+</div>
