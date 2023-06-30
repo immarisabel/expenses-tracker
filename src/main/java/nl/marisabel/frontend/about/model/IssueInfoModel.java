@@ -14,3 +14,5 @@ public class IssueInfoModel {
   this.htmlUrl = htmlUrl;
  }
 }
+
+
