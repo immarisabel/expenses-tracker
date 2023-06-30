@@ -5,6 +5,7 @@ import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.repository.CategoryRepository;
 import nl.marisabel.backend.transactions.entity.TransactionEntity;
 import nl.marisabel.backend.transactions.entity.TransactionForm;
+import nl.marisabel.backend.transactions.model.TransactionFilter;
 import nl.marisabel.backend.transactions.repository.TransactionRepository;
 import nl.marisabel.backend.transactions.service.TransactionService;
 import org.springframework.data.domain.Page;
@@ -15,9 +16,7 @@ import org.springframework.data.web.SortDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -40,6 +39,22 @@ public class TransactionsAndFiltersController {
  }
 
 
+ // .......... ADV ILTER
+ @GetMapping("/transactions/filters")
+ public String showFilterForm(Model model) {
+  model.addAttribute("filter", new TransactionFilter());
+  return "transactions/filter-form";
+ }
+
+ @PostMapping("/transactions/filters")
+ public String filterTransactions(@ModelAttribute TransactionFilter filter, @RequestParam(defaultValue = "0") int page, Model model) {
+  int size = 20;
+  Pageable pageable = transactionService.createPageable("date", page, size);
+  model.addAttribute("transactions", transactionService.filterTransactions(filter, pageable));
+  return "transactions/filtered-page";
+ }
+
+
  //.......... D E F A U L T
  @GetMapping("/transactions")
  public String showTransactions(@RequestParam(value = "sort", defaultValue = "date") String sort, Pageable pageable, @RequestParam(defaultValue = "0") int page, Model model) {
@@ -53,78 +68,6 @@ public class TransactionsAndFiltersController {
   return "transactions/transactions";
  }
 
-
- //.......... KEYWORD FILTERING
-
- @GetMapping("/transactions/search")
- public String searchTransactions(
-         @RequestParam(value = "searchTerm", required = false) String searchTerm,
-         @RequestParam(defaultValue = "0") int page,
-         Model model
- ) {
-  int size = 50;
-  PageRequest pageRequest = PageRequest.of(page, size);
-
-  model.addAttribute("searchTerm", searchTerm);
-
-  Page<TransactionEntity> searchResults = transactionService.searchTransactions(searchTerm, pageRequest);
-  model.addAttribute("transactions", searchResults);
-  model.addAttribute("message", searchResults.getTotalElements() + " transactions found");
-  model.addAttribute("searchResults", searchResults);
-
-  model.addAttribute("categories", categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category")));
-
-  return "transactions/filtered-page";
- }
-
-
- //.......... DATE FILTERING
- @GetMapping("/transactions/filter")
- public String filterTransactionsByDate(
-         @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-         @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
-         @RequestParam(defaultValue = "0") int page,
-         Model model) {
-
-  int size = 50;
-  PageRequest pageRequest = PageRequest.of(page, size);
-  model.addAttribute("currentPage", page);
-  model.addAttribute("startDate", startDate);
-  model.addAttribute("endDate", endDate);
-
-  model.addAttribute("categories", categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category")));
-
-  Page<TransactionEntity> filteredResults = transactionService.filterTransactionByDate(startDate, endDate, pageRequest);
-  model.addAttribute("transactions", filteredResults);
-  model.addAttribute("filteredCount", filteredResults.getTotalElements());
-
-
-  return "transactions/filtered-page";
- }
-
- //.......... AMOUNT FILTERING
-
- @GetMapping("/transactions/filter-amount")
- public String filterTransactionsByAmount(
-         @RequestParam("minAmount") double minAmount,
-         @RequestParam("maxAmount") double maxAmount,
-         @RequestParam(defaultValue = "0") int page,
-         Model model) {
-
-  int size = 50;
-  PageRequest pageRequest = PageRequest.of(page, size);
-  model.addAttribute("currentPage", page);
-  model.addAttribute("minAmount", minAmount);
-  model.addAttribute("maxAmount", maxAmount);
-
-  model.addAttribute("categories", categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category")));
-
-  Page<TransactionEntity> filteredResults = transactionService.filterTransactionByAmount(minAmount, maxAmount, pageRequest);
-  model.addAttribute("transactions", filteredResults);
-  model.addAttribute("filteredCount", filteredResults.getTotalElements());
-
-  return "transactions/filtered-page";
- }
 
 
  //.......... CATEGORY FILTER

@@ -5,7 +5,9 @@ import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.repository.CategoryRepository;
 import nl.marisabel.backend.transactions.entity.TransactionEntity;
+import nl.marisabel.backend.transactions.model.TransactionFilter;
 import nl.marisabel.backend.transactions.repository.TransactionRepository;
+import nl.marisabel.backend.transactions.repository.TransactionSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -132,5 +134,8 @@ public class TransactionService {
   return transactionRepository.findByAmountBetween(minAmount, maxAmount, pageRequest);
  }
 
+ public Page<TransactionEntity> filterTransactions(TransactionFilter filter, Pageable pageable) {
+  return transactionRepository.findAll(new TransactionSpecification(filter), pageable);
+ }
 
 }

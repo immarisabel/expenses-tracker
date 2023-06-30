@@ -15,26 +15,7 @@
 
             </form>
 
-            <!-- search by keyword -->
-            <form th:action="@{/transactions/search}" method="get"
-                  style="display: flex; align-items: center; gap: 1px;">
-                <input class="form-control" id="searchTerm" type="text" name="searchTerm"
-                       placeholder="Search transactions..."
-                       required
-                       th:value="${searchTerm}"/>
-                <button class="myButton" type="submit">Search</button>
-            </form>
 
-
-            <!-- Filter by date -->
-            <form th:action="@{/transactions/filter}" method="get"
-                  style="display: flex; align-items: center; gap: 1px;">
-                <label for="startDate">from:</label>
-                <input class="form-control" id="startDate" type="date" name="startDate" required>
-                <label for="endDate">to:</label>
-                <input class="form-control" id="endDate" type="date" name="endDate" required>
-                <button class="myButton" type="submit">filter</button>
-            </form>
 
             <!-- Filter by category -->
             <form th:action="@{/transactions/categories}" method="get" style="display: flex; align-items: center; gap: 1px;">
@@ -46,15 +27,11 @@
             </form>
 
 
-            <form th:action="@{/transactions/filter-amount}" method="get">
-                <input type="number" name="minAmount" th:value="${minAmount}" step="0.01" required>
-                <input type="number" name="maxAmount" th:value="${maxAmount}" step="0.01" required>
-                <button type="submit">Filter</button>
-            </form>
 
 
             <a href="/transactions/categories/none" class="myButton" style="height:50%; margin-top:1rem;">no category</a>
 
+            <a href="/transactions/filters" class="myButton" style="height:50%; margin-top:1rem;">advanced filters</a>
             <!-- Clear Filters -->
             <a href="/transactions" class="myButton" style="height:50%; margin-top:1rem;">
              ↻

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Filter Transactions</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+  <h2>Filter Transactions</h2>
+  <form action="#" th:action="@{/transactions/filters}" th:object="${filter}" method="post">
+    <div class="form-group">
+      <label>Search Term</label>
+      <input type="text" th:field="*{searchTerm}" class="form-control" placeholder="Search term">
+    </div>
+    <div class="form-group">
+      <label>Min Amount</label>
+      <input type="number" step="0.01" th:field="*{minAmount}" class="form-control" placeholder="Min amount">
+    </div>
+    <div class="form-group">
+      <label>Max Amount</label>
+      <input type="number" step="0.01" th:field="*{maxAmount}" class="form-control" placeholder="Max amount">
+    </div>
+    <div class="form-group">
+      <label>Start Date</label>
+      <input type="date" th:field="*{startDate}" class="form-control">
+    </div>
+    <div class="form-group">
+      <label>End Date</label>
+      <input type="date" th:field="*{endDate}" class="form-control">
+    </div>
+    <div class="form-group">
+      <label>Category Id</label>
+      <input type="number" th:field="*{categoryId}" class="form-control" placeholder="Category Id">
+    </div>
+    <button type="submit" class="btn btn-primary">Filter</button>
+  </form>
+</div>
+</body>
+</html>
