@@ -28,13 +28,9 @@ _Styling done with help of ChatGPT 👍_ saved a lot of time with the css and ht
   - Able to display Goal's charts for savings
   - Able to display yearly overview of savings in total (regardless of goals)
 - Filters
-  - search by keywords
-  - search between dates
-  - [ ] TO DO: filter keywords between dates
-  - search by category
-  - [ ] TO DO: filter categories between dates
-  - search all those without categories
-- Able to report issues and requests via GithubApi Form under /about page 
+  -filter advanced 
+- Able to report issues and requests via GithubApi Form under /about page
+- Able to see and track current issues
           
 ## Future implementations
 
