@@ -48,6 +48,11 @@ public class TransactionController {
             RedirectAttributes redirectAttributes,
             HttpServletRequest request
     ) {
+        if (selectedTransactionsIds == null) {
+            redirectAttributes.addFlashAttribute("error", "No transactions selected");
+            log.info("No transactions selected");
+            return "redirect:/transactions";
+        }
         List<Long> transactionsId = Arrays.stream(selectedTransactionsIds)
                 .map(Long::valueOf)
                 .collect(Collectors.toList());
@@ -55,9 +60,11 @@ public class TransactionController {
 
         try {
             transactionService.batchUpdateCategory(categoryId, transactionsId);
-            redirectAttributes.addFlashAttribute("successMessage", "Transaction updated successfully");
+            log.info("Transaction updated successfully");
+            redirectAttributes.addFlashAttribute("message", "Transaction updated successfully");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Error updating transaction: " + e.getMessage());
+            log.info("Error updating transaction: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Error updating transaction: " + e.getMessage());
         }
 
         String previousUrl = request.getHeader("Referer");
