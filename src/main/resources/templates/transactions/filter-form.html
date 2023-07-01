@@ -1,11 +1,14 @@
-<!DOCTYPE html>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <title>Filter Transactions</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
+
+
+<header>
+  <div th:replace="~{fragments/header :: header}"></div>
+</header>
 <body>
-<div class="container">
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<body>
+<div class="container" style="line-height:2;width:20rem;">
   <h2>Filter Transactions</h2>
   <form action="#" th:action="@{/transactions/filters}" th:object="${filter}" method="post">
     <div class="form-group">
@@ -32,7 +35,7 @@
       <label>Category Id</label>
       <input type="number" th:field="*{categoryId}" class="form-control" placeholder="Category Id">
     </div>
-    <button type="submit" class="btn btn-primary">Filter</button>
+    <button type="submit" class="myButton">Filter</button>
   </form>
 </div>
 </body>

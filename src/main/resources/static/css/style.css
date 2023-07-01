@@ -10,6 +10,42 @@
   --color-table-even: #ffffff;
   --color-highlighter: rgb(255, 255, 209);
 }
+
+/* HEADERS */
+
+h1 {
+  font-weight: 700;
+  font-size: 2.5rem;
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-weight: 400;
+  font-size: 2rem;
+  color: var(--secondary);
+  margin-bottom: 1rem;
+}
+
+h3 {
+  font-size: 1.8rem;
+  font-weight: 400;
+  color: #777;
+  margin-bottom: 0.8rem;
+}
+
+h4 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #999;
+  margin-bottom: 0.6rem;
+}
+
+h5 {
+  font-size: 1.2rem;
+  color: #aaa;
+  margin-bottom: 0.4rem;
+}
 /* message */
       .alert {
     padding: 15px;
@@ -405,21 +441,49 @@ tbody tr:nth-child(even) {
   color: white;
 }
 
-.slider {
-  -webkit-appearance: none;
+/* Sliders */
+
+/* Range Slider CSS */
+input[type="range"] {
   width: 100%;
-  height: 25px;
-  background: #d3d3d3;
+  background: var(--light);
+  height: 10px;
+  border-radius: 5px;
   outline: none;
-  opacity: 0.7;
-  -webkit-transition: 0.2s;
-  transition: opacity 0.2s;
-  border-radius: 12px;
+  -webkit-appearance: none;
 }
 
-.slider:hover {
-  opacity: 1;
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: var(--secondary);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
 }
+
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: var(--primary);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+  -webkit-appearance: none;
+}
+
+input[type="range"]:hover::-webkit-slider-thumb {
+  background: var(--bold);
+  -webkit-appearance: none;
+}
+
+input[type="range"]:hover::-moz-range-thumb {
+  background: var(--bold);
+  -webkit-appearance: none;
+}
+
 
 .goal {
   display: flex;
