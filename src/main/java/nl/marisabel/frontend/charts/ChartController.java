@@ -123,8 +123,9 @@ public class ChartController {
   log.info(".... the year is " + year);
 
   // Get data for the specified year
-  Map<String, Double> monthlyCredits = chartService.getMonthlyCreditsForYear(year);
-  Map<String, Double> monthlyDebits = chartService.getMonthlyDebitsForYear(year);
+  Map<String, Double> monthlyCredits = chartService.getMonthlyTotalsForYearMainChart(year, "CREDIT");
+  Map<String, Double> monthlyDebits = chartService.getMonthlyTotalsForYearMainChart(year, "DEBIT");
+
 
   // Generate labels and data for the chart
   List<String> labels = new ArrayList<>();
@@ -154,8 +155,9 @@ public class ChartController {
   model.addAttribute("prevYear", previousYear);
   model.addAttribute("nextYear", nextYear);
 
+
   // Return the name of the view template
-  return "charts/chart-months";
+  return "charts/chart-years";
  }
 
 

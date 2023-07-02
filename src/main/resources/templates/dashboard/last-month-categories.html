@@ -34,7 +34,7 @@
     // Filter out segments below the threshold percentage and exclude "Transfers" category
     const filteredDonutChartLabels = donutChartLabels.filter((label, index) => {
         const percentage = (donutChartData[index] / donutChartData.reduce((a, b) => a + b, 0)) * 100;
-        return percentage >= thresholdPercentage && label !== "transfers" && label !== "income";
+        return percentage >= thresholdPercentage && label !== "exclude" && label !== "income";
     });
     const filteredDonutChartData = filteredDonutChartLabels.map(label => categoryPercentageMap[label]);
 

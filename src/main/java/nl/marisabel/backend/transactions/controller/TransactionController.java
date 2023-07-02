@@ -9,9 +9,7 @@ import nl.marisabel.backend.transactions.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
@@ -86,6 +84,20 @@ public class TransactionController {
         return "redirect:/transactions";
     }
 
+    @GetMapping("/edit/{id}")
+    public String showEditTransactionForm(@PathVariable("id") Long id, Model model) {
+        TransactionEntity transaction = transactionService.getTransaction(id);
+        log.info(transaction.getEntity());
+        model.addAttribute("transaction", transaction);
+        return "transactions/manual-transaction";
+    }
 
+    @PostMapping("/edit")
+    public String editTransaction(@ModelAttribute("transaction") TransactionEntity transaction, RedirectAttributes redirectAttributes) {
+        TransactionEntity savedTransaction = transactionRepository.save(transaction);
+        log.info(transaction.getDate());
+        redirectAttributes.addFlashAttribute("message", "Transaction edited successfully. ID: " + savedTransaction.getId());
+        return "redirect:/transactions";
+    }
 
 }

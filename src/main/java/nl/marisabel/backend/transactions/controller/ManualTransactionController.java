@@ -20,19 +20,5 @@ public class ManualTransactionController {
         this.transactionService = transactionService;
     }
 
-    @GetMapping("/transactions/edit/{id}")
-    public String showEditTransactionForm(@PathVariable("id") Long id, Model model) {
-        TransactionEntity transaction = transactionService.getTransaction(id);
-        log.info(transaction.getEntity());
-        model.addAttribute("transaction", transaction);
-        return "transactions/manual-transaction";
-    }
 
-    @PostMapping("/transactions/edit")
-    public String editTransaction(@ModelAttribute("transaction") TransactionEntity transaction, RedirectAttributes redirectAttributes) {
-        TransactionEntity savedTransaction = transactionRepository.save(transaction);
-        log.info(transaction.getDate());
-        redirectAttributes.addFlashAttribute("message", "Transaction edited successfully. ID: " + savedTransaction.getId());
-        return "redirect:/transactions";
-    }
 }

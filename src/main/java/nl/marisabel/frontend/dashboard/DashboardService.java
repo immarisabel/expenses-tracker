@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,43 +41,51 @@ public class DashboardService {
  public void showChartForCurrentYear(Model model) {
   int currentYear = Year.now().getValue();
 
-// Get data for the current year
+  // Get data for the current year
   Map<String, Double> monthlyCredits = chartService.getMonthlyCreditsForYear(currentYear);
   Map<String, Double> monthlyDebits = chartService.getMonthlyDebitsForYear(currentYear);
   log.info("credits map populated with data: KEY " + monthlyCredits.keySet() + " VALUE " + monthlyCredits.values());
   log.info("debits map populated with data: KEY " + monthlyDebits.keySet() + " VALUE " + monthlyDebits.values());
 
-// Generate labels and data for the chart
+  // Generate labels and data for the chart
   List<String> labels = new ArrayList<>();
   List<Double> credits = new ArrayList<>();
   List<Double> debits = new ArrayList<>();
 
-// Populate the labels, credits, and debits lists
+  // Populate the labels, credits, and debits lists
   for (int month = 1; month <= 12; month++) {
-   String monthLabel = String.format("%02d%04d", month, currentYear);
+   String monthLabel = Month.of(month).name();
+   String yearLabel = String.valueOf(currentYear);
+   LocalDate date = LocalDate.of(currentYear, month, 1);
+   String monthName = date.getMonth().name();
 
-   double creditTotal = monthlyCredits.getOrDefault(monthLabel, 0.0);
-   double debitTotal = monthlyDebits.getOrDefault(monthLabel, 0.0);
-
-   labels.add(monthLabel);
-   credits.add(creditTotal);
-   debits.add(debitTotal);
+   labels.add(monthName);
+   credits.add(monthlyCredits.getOrDefault(monthLabel, 0.0));
+   debits.add(monthlyDebits.getOrDefault(monthLabel, 0.0));
   }
-
 
   log.info("labels: " + labels);
   log.info("credits for labels: " + credits);
   log.info("debits for labels: " + debits);
 
+// Extract month and year from labels
+  List<String> monthYearLabels = new ArrayList<>();
+  for (String label : labels) {
+   String monthYear = label;
+   monthYearLabels.add(monthYear);
+  }
+
+  log.info("monthYearLabels: " + monthYearLabels);
 
   // Add attributes to the model for use in the view
-  model.addAttribute("labels", labels);
+  model.addAttribute("labels", monthYearLabels);
   model.addAttribute("credits", credits);
   model.addAttribute("debits", debits);
   model.addAttribute("currentYear", currentYear);
 
   loadTotalSavingsPerMonth(model);
  }
+
 
 
  public void loadTotalSavingsPerMonth(Model model) {
