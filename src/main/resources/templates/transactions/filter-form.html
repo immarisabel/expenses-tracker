@@ -34,9 +34,12 @@
     </div>
     <div class="form-group">
       <label>Category Id</label>
-      <input type="number" th:field="*{categoryId}" class="form-control" placeholder="Category Id">
+      <select th:field="*{categoryId}" class="form-control">
+        <option value="">No category</option>
+        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.category}"></option>
+      </select>
     </div>
-    <button type="submit" class="myButton">Filter</button>
+    <button type="submit" class="myButton" style="margin-top:1rem;">Filter</button>
   </form>
 </div>
 </body>
