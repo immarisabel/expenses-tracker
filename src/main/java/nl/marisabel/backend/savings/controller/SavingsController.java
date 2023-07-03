@@ -85,10 +85,16 @@ public class SavingsController {
   double totalAllocated = savingsService.calculateTotalAllocated(yearMonth);
   Map<Long, Double> goalAllocatedAmountMap = savingsService.calculateGoalAllocatedAmountMap(yearMonth);
 
+  double difference = transactionService.calculateRemainingFundsByMonth(startOfMonth, endOfMonth);
+  log.info("REMAINING FUNDS FOR : " + formattedDate + " [ " + difference + " ] ");
+  double totalToAllocate = Math.round(difference * 100.00) / 100.00;
+  DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+  String roundedTotal = decimalFormat.format(totalToAllocate);
 
   log.info(DateUtils.formatForMonth(previousMonth) + " | " + month + " | " + DateUtils.formatForMonth(nextMonth));
 
   model.addAttribute("goals", goalService.getAllGoals());
+  model.addAttribute("totalToAllocate", roundedTotal);
   model.addAttribute("totalAllocated", totalAllocated);
   model.addAttribute("monthToAllocate", formattedDate);
   model.addAttribute("goalAllocatedAmountMap", goalAllocatedAmountMap);
