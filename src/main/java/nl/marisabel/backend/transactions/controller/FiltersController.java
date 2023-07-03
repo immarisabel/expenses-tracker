@@ -31,15 +31,16 @@ public class FiltersController {
  }
 
 
- // .......... ADV ILTER
+ // .......... ADVANCED FILTER
  @GetMapping("/transactions/filters")
- public String showFilterForm(Model model) {
+ public String showAdvancedFilterForm(Model model) {
   model.addAttribute("filter", new TransactionFilter());
+  model.addAttribute("categories", categoryRepository.findAll());
   return "transactions/filter-form";
  }
 
  @PostMapping("/transactions/filters")
- public String filterTransactions(@ModelAttribute TransactionFilter filter, @RequestParam(defaultValue = "0") int page, Model model) {
+ public String filterAdvancedTransactions(@ModelAttribute TransactionFilter filter, @RequestParam(defaultValue = "0") int page, Model model) {
   int size = 20;
   Pageable pageable = transactionService.createPageable("date", page, size);
   model.addAttribute("transactions", transactionService.filterTransactions(filter, pageable));
