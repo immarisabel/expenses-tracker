@@ -26,6 +26,7 @@ public class CategoryController {
         model.addAttribute("categories", categoryService.getCategories());
         model.addAttribute("newCategory", new CategoryEntity());
         model.addAttribute("category", new CategoryEntity());
+
         return "categories/category-page";
     }
 

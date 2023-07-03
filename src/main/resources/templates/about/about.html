@@ -4,7 +4,13 @@
 
 <header>
     <div th:replace="~{fragments/header :: header}"></div>
-
+    <style>
+        .custom-style {
+padding:2px 1rem 2px 1rem;
+border-radius:10px;
+font-weight:bold;
+   }
+    </style>
 </header>
 </head>
 
@@ -13,11 +19,14 @@
 
 <div class="container" style="display:flex;">
     <div class="container">
-    <div th:replace="~{about/github-form :: body}"></div>
-</div>
-    <div class="container">
+        <div th:replace="~{about/github-form :: body}"></div>
+    </div>
+    <div class="container" style="line-height:3;">
         <h2>Current Issues</h2>
-    <li th:each="issue : ${issuesList}" >
-        <a th:href="${issue.htmlUrl}" style="text-decoration:none; line-height:2;" th:text="${issue.title}">list</a>
-    </li></div>
+        <li th:each="issue : ${issuesList}" >
+            <a th:href="${issue.htmlUrl}" style="text-decoration:none; line-height:2;" th:text="${issue.title}">list</a>
+            : <span th:class="${'custom-style'}" th:style="'background-color: #' + ${label.color}"
+                    th:each="label : ${issue.labels}" th:text="${label.name}"></span>
+        </li>
+    </div>
 </div>
