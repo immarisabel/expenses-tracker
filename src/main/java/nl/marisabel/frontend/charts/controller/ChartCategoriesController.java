@@ -1,9 +1,9 @@
-package nl.marisabel.frontend.charts;
+package nl.marisabel.frontend.charts.controller;
 
 import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.service.CategoryService;
-import nl.marisabel.backend.transactions.entity.TransactionEntity;
+import nl.marisabel.frontend.charts.service.ChartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,20 +11,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.time.LocalDate;
 import java.time.Year;
 import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Log4j2
 @Controller
-public class CategoriesChartController {
+public class ChartCategoriesController {
  private final CategoryService categoryService;
  private final ChartService chartService;
 
  @Autowired
- public CategoriesChartController(CategoryService categoryService, ChartService chartService) {
+ public ChartCategoriesController(CategoryService categoryService, ChartService chartService) {
   this.categoryService = categoryService;
   this.chartService = chartService;
  }

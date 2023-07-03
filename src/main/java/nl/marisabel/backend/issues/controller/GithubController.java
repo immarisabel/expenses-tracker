@@ -1,10 +1,10 @@
-package nl.marisabel.frontend.about.controller;
+package nl.marisabel.backend.issues.controller;
 
 import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j2;
-import nl.marisabel.frontend.about.model.IssueInfoModel;
-import nl.marisabel.frontend.about.model.IssueModel;
-import nl.marisabel.frontend.about.service.GithubService;
+import nl.marisabel.backend.issues.model.IssueInfoModel;
+import nl.marisabel.backend.issues.model.IssueModel;
+import nl.marisabel.backend.issues.service.GithubService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;

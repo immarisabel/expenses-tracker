@@ -1,4 +1,4 @@
-package nl.marisabel.frontend.savings;
+package nl.marisabel.backend.savings.model;
 
 import lombok.Getter;
 import lombok.Setter;

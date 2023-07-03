@@ -1,14 +1,12 @@
-package nl.marisabel.frontend.dashboard;
+package nl.marisabel.frontend.charts.controller;
 
 import lombok.extern.log4j.Log4j2;
+import nl.marisabel.frontend.charts.service.DashboardService;
 import nl.marisabel.frontend.notes.NoteModel;
 import nl.marisabel.util.NoteUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.io.IOException;
 
 
 @Controller
@@ -25,7 +23,7 @@ public class DashboardController {
  @GetMapping
  public String dashboard(@RequestParam(value = "year", required = false) Integer year, Model model) {
   dashboardService.showChartForCurrentYear(model);
-  dashboardService.loadCategorizedTransactions(model);
+  dashboardService.loadCategorizedTransactionsPrevMonth(model);
 
   String noteContent = NoteUtil.readNote();
   NoteModel noteModel = new NoteModel();

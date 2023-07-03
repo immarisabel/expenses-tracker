@@ -1,38 +1,30 @@
-package nl.marisabel.frontend.transactions;
+package nl.marisabel.backend.transactions.controller;
 
 import lombok.extern.log4j.Log4j2;
-import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.repository.CategoryRepository;
-import nl.marisabel.backend.transactions.entity.TransactionEntity;
 import nl.marisabel.backend.transactions.entity.TransactionForm;
 import nl.marisabel.backend.transactions.model.TransactionFilter;
 import nl.marisabel.backend.transactions.repository.TransactionRepository;
 import nl.marisabel.backend.transactions.service.TransactionService;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.SortDefault;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.util.List;
-
 @Controller
 @Log4j2
-public class TransactionsAndFiltersController {
+public class FiltersController {
 
 
  private final TransactionService transactionService;
  private final TransactionRepository transactionRepository;
  private final CategoryRepository categoryRepository;
 
- public TransactionsAndFiltersController(TransactionService transactionService,
-                                         TransactionRepository transactionRepository,
-                                         CategoryRepository categoryRepository) {
+ public FiltersController(TransactionService transactionService,
+                          TransactionRepository transactionRepository,
+                          CategoryRepository categoryRepository) {
   this.transactionService = transactionService;
   this.transactionRepository = transactionRepository;
   this.categoryRepository = categoryRepository;
