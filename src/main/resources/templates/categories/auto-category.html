@@ -61,6 +61,7 @@
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
 <div class="form-container">
+
     <form action="#" th:action="@{/auto-category}" th:object="${autoCategoryEntity}" method="post">
         <h2>Create Auto Category</h2>
 
@@ -82,8 +83,6 @@
     <form th:action="@{/auto-category/autoCategorize}" method="post">
         <input type="hidden" name="_method" th:value="POST">
         <button type="submit" class="myButton">Auto-categorize transactions without categories</button>
-
-    <p th:text="${message}">
 
 </p>
 </td>

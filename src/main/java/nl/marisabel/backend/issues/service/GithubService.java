@@ -3,6 +3,7 @@ package nl.marisabel.backend.issues.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.marisabel.backend.issues.model.IssueInfoModel;
+import nl.marisabel.backend.issues.model.LabelInfoModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -50,7 +51,20 @@ public class GithubService {
     for (JsonNode issueNode : jsonNode) {
      String title = issueNode.get("title").asText();
      String htmlUrl = issueNode.get("html_url").asText();
+
+     List<LabelInfoModel> labels = new ArrayList<>();
+     JsonNode labelsNode = issueNode.get("labels");
+     if (labelsNode != null && labelsNode.isArray()) {
+      for (JsonNode labelNode : labelsNode) {
+       String labelName = labelNode.get("name").asText();
+       String labelColor = labelNode.get("color").asText();
+       LabelInfoModel labelInfo = new LabelInfoModel(labelName, labelColor);
+       labels.add(labelInfo);
+      }
+     }
+
      IssueInfoModel issueInfo = new IssueInfoModel(title, htmlUrl);
+     issueInfo.setLabels(labels); // Set the labels in the IssueInfoModel
      issuesList.add(issueInfo);
     }
    } else {
@@ -59,6 +73,8 @@ public class GithubService {
   } catch (Exception e) {
    e.printStackTrace();
   }
+
+
   return issuesList;
  }
  public String post(String url, String json) {

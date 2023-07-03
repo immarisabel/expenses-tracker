@@ -25,6 +25,7 @@ public class AutoCategoryController {
  private final TransactionRepository transactionRepository;
  private final CategoryRepository categoryRepository;
  private final CategoryService categoryService;
+ private String message;
 
  public AutoCategoryController(AutoCategoryRepository autoCategoryRepository, TransactionRepository transactionRepository, CategoryRepository categoryRepository, CategoryService categoryService) {
   this.autoCategoryRepository = autoCategoryRepository;
@@ -33,13 +34,23 @@ public class AutoCategoryController {
   this.categoryService = categoryService;
  }
 
+ /**
+  * Load the form on /auto-category
+  * @param model auto-category.html
+  * */
  @GetMapping
  public String getAutoCategoryForm(Model model) {
   model.addAttribute("autoCategoryList", autoCategoryRepository.findAll());
   model.addAttribute("autoCategoryEntity", new AutoCategoryEntity());
+  model.addAttribute("message", message);
   return "categories/auto-category";
  }
 
+ /**
+  * saves queries as list in the database along with the category matching
+  * @param queries
+  * @return redirect:/auto-category
+  */
  @PostMapping
  public String saveAutoCategory(AutoCategoryEntity autoCategoryEntity, @RequestParam String queries) {
   List<String> queriesList = Arrays.stream(queries.split(","))
@@ -50,39 +61,39 @@ public class AutoCategoryController {
   return "redirect:/auto-category";
  }
 
- @GetMapping("/auto-category-list")
- public String getAutoCategoryList(Model model) {
-  model.addAttribute("autoCategoryList", autoCategoryRepository.findAll());
-  return "categories/auto-category-table";
- }
-
- @GetMapping("/auto-category-search")
- public String searchAutoCategory(@RequestParam String query, Model model) {
-  model.addAttribute("autoCategoryList", autoCategoryRepository.findByQuery(query));
-  return "categories/auto-category-table";
- }
-
-
+ /**
+  * Load the data of the given category query (id) on the form in order to edit
+  * @param id id of the autoCategory to be updated
+  * @return redirect:/auto-category
+  */
  @GetMapping("/update")
  public String showFormForUpdatingAutoCategory(@RequestParam("id") Long id, Model model) {
-  log.info("Getting category " + id + " to update");
   model.addAttribute("autoCategoryEntity", autoCategoryRepository.getReferenceById(id));
   model.addAttribute("autoCategoryList", autoCategoryRepository.findAll());
   return "categories/auto-category";
  }
 
  @PostMapping("/update")
- public String updateAutoCategory(@ModelAttribute("autoCategoryEntity") AutoCategoryEntity autoCategoryEntity) {
+ public String updateAutoCategory(@ModelAttribute("autoCategoryEntity") AutoCategoryEntity autoCategoryEntity, Model model) {
   autoCategoryRepository.save(autoCategoryEntity);
-  log.info("Category updated.");
+  model.addAttribute("message", "Category updated.");
   return "redirect:/auto-category";
  }
 
-
+ /**
+  * Automatically categorizes transactions based on predefined queries.
+  * Loads uncategorized transactions and autocategory queries, then matches the queries to the
+  * transaction descriptions or entities and assigns the corresponding category.
+  * If a category does not exist, it creates a new one.
+  *
+  * @param model
+  * @return redirect:/auto-category
+  */
  @PostMapping("/autoCategorize")
  public String autoCategorize(Model model) {
   List<TransactionEntity> unCategorizedTransactions = transactionRepository.findByCategoriesEmpty();
   log.info("Number of uncategorized transactions: " + unCategorizedTransactions.size());
+
   List<AutoCategoryEntity> autoCategories = autoCategoryRepository.findAll();
 
   int numCategorized = 0;
@@ -111,8 +122,9 @@ public class AutoCategoryController {
     }
    }
   }
-  log.info("Transactions categorized: " + numCategorized);
-  model.addAttribute("message", "Auto-categorized " + numCategorized + " transactions");
+  message = "Transactions categorized: "+ numCategorized;
+  model.addAttribute("message", message);
+  log.info(message);
   return "redirect:/auto-category";
  }
 
