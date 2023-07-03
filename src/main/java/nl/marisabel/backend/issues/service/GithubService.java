@@ -1,8 +1,8 @@
-package nl.marisabel.frontend.about.service;
+package nl.marisabel.backend.issues.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nl.marisabel.frontend.about.model.IssueInfoModel;
+import nl.marisabel.backend.issues.model.IssueInfoModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;

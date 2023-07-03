@@ -1,4 +1,4 @@
-package nl.marisabel.frontend.charts;
+package nl.marisabel.frontend.charts.controller;
 
 import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.savings.entity.GoalEntity;
@@ -16,11 +16,11 @@ import java.util.stream.Collectors;
 @Controller
 @Log4j2
 @RequestMapping("/charts")
-public class SavingsChartController {
+public class ChartSavingsController {
  private final GoalService goalService;
 
 
- public SavingsChartController(GoalService goalService) {
+ public ChartSavingsController(GoalService goalService) {
   this.goalService = goalService;
  }
 

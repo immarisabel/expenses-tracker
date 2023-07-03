@@ -1,4 +1,4 @@
-package nl.marisabel.frontend.about.model;
+package nl.marisabel.backend.issues.model;
 
 import lombok.Getter;
 import lombok.Setter;

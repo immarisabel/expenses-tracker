@@ -1,7 +1,7 @@
-package nl.marisabel.frontend.about.controller;
+package nl.marisabel.backend.issues.controller;
 
-import nl.marisabel.frontend.about.model.IssueInfoModel;
-import nl.marisabel.frontend.about.service.GithubService;
+import nl.marisabel.backend.issues.model.IssueInfoModel;
+import nl.marisabel.backend.issues.service.GithubService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -18,112 +18,102 @@
     <canvas id="chart" class="chart-canvas" margin="1rem"></canvas>
 
     <script th:inline="javascript">
-         /* Retrieve the data from the server-side */
-var labels = /*[[${labels}]]*/ [];
-var credits = /*[[${credits}]]*/ [];
-var debits = /*[[${debits}]]*/ [];
+        /* Retrieve the data from the server-side */
+        var labels = /*[[${labels}]]*/ [];
+        var credits = /*[[${credits}]]*/ [];
+        var debits = /*[[${debits}]]*/ [];
 
+        /* Calculate the total income */
+        var totalIncome = credits.reduce((a, b) => a + b, 0);
 
-/* Calculate the total income */
-var totalIncome = credits.reduce((a, b) => a + b, 0);
-
-/* Get the current year */
-var currentYear = /*[[${currentYear}]]*/;
-
-/* Reverse the arrays to flip the chart */
-labels.reverse();
-credits.reverse();
-debits.reverse();
-
-
-
-/* Create the chart */
-var ctx = document.getElementById('chart').getContext('2d');
-new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: labels,
-        datasets: [
-            {
-                label: 'expenses',
-                data: debits,
-                backgroundColor: 'rgba(248, 79, 49, 0.7)',
-                borderColor: 'rgb(248, 79, 49)',
-                borderWidth: 2,
-                fill: false
+        /* Create the chart */
+        var ctx = document.getElementById('chart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'expenses',
+                    data: debits,
+                    backgroundColor: 'rgba(248, 79, 49, 0.7)',
+                    borderColor: 'rgb(248, 79, 49)',
+                    borderWidth: 2,
+                    fill: false
+                }, {
+                    label: 'income',
+                    data: credits,
+                    backgroundColor: 'rgba(35, 197, 82, 0.7)',
+                    borderColor: 'rgb(35, 197, 82)',
+                    borderWidth: 2,
+                    fill: false
+                }]
             },
-            {
-                label: 'income',
-                data: credits,
-                backgroundColor: 'rgba(35, 197, 82, 0.7)',
-                borderColor: 'rgb(35, 197, 82)',
-                borderWidth: 2,
-                fill: false
-            }
-        ]
-    },
-    options: {
-        responsive: true,
-        scales: {
-            x: {
-                grid: {
-                    display: false
-                }
-            },
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    callback: function (value) {
-                        return new Intl.NumberFormat('en-EU', {
-                            style: 'currency',
-                            currency: 'EUR'
-                        }).format(value);
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
                     },
-                    max: totalIncome // Set the maximum value to the total income
-                }
-            }
-        },
-        plugins: {
-            tooltip: {
-                callbacks: {
-                    label: function (context) {
-                        var label = context.dataset.label || '';
-
-                        if (label) {
-                            label += ': ';
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return new Intl.NumberFormat('en-EU', {
+                                    style: 'currency',
+                                    currency: 'EUR'
+                                }).format(value);
+                            },
+                            max: totalIncome // Set the maximum value to the total income
                         }
-
-                        if (context.parsed !== null) {
-                            var total = context.chart.data.datasets.reduce(function (acc, dataset) {
-                                return acc + dataset.data[context.dataIndex];
-                            }, 0);
-                            var value = context.dataset.data[context.dataIndex];
-                            var percentage = ((value / total) * 100).toFixed(2) + '%';
-                            label += new Intl.NumberFormat('en-US', {
-                                style: 'currency',
-                                currency: 'USD'
-                            }).format(value) + ' (' + percentage + ')';
-                        }
-
-                        return label;
                     }
-                }
-            }
-        },
-        onClick: function (event, array) {
-            if (array.length > 0) {
-                var selectedMonthIndex = array[0].index;
-                var selectedMonth = labels[selectedMonthIndex];
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                var label = context.dataset.label || '';
 
-                // Generate the link based on the selected month and current year
-                var monthYear = ('0' + (selectedMonthIndex + 1)).slice(-2) + currentYear; // Month index starts from 0
-                window.location.href = '/charts/month/' + monthYear;
-            }
-        }
-    }
-});
+                                if (label) {
+                                    label += ': ';
+                                }
 
-        </script>
+                                if (context.parsed !== null) {
+                                    var total = context.chart.data.datasets.reduce(function(acc, dataset) {
+                                        return acc + dataset.data[context.dataIndex];
+                                    }, 0);
+                                    var value = context.dataset.data[context.dataIndex];
+                                    var percentage = ((value / total) * 100).toFixed(2) + '%';
+                                    label += new Intl.NumberFormat('en-US', {
+                                        style: 'currency',
+                                        currency: 'USD'
+                                    }).format(value) + ' (' + percentage + ')';
+                                }
+
+                                return label;
+                            }
+                        }
+                    }
+                },
+      onClick: function(event, array) {
+  if (array.length > 0) {
+    var selectedMonthIndex = array[0].index;
+    var selectedMonth = labels[selectedMonthIndex];
+
+    var d = new Date();
+    var year = d.getFullYear(); // Get current year
+
+    // Generate the link based on the selected month and current year
+    var monthYear = ('0' + (selectedMonthIndex + 1)).slice(-2) + year; // Month index starts from 0
+    window.location.href = '/charts/month/' + monthYear;
+  }
+}
+
+
+            }
+        });
+    </script>
 </div>
 </body>
 

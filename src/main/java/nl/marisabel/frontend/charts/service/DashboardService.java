@@ -1,4 +1,4 @@
-package nl.marisabel.frontend.dashboard;
+package nl.marisabel.frontend.charts.service;
 
 import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
@@ -7,7 +7,6 @@ import nl.marisabel.backend.savings.entity.SavingsEntity;
 import nl.marisabel.backend.savings.service.SavingsService;
 import nl.marisabel.backend.transactions.entity.TransactionEntity;
 import nl.marisabel.backend.transactions.service.TransactionService;
-import nl.marisabel.frontend.charts.ChartService;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Filter;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,36 +36,26 @@ public class DashboardService {
  }
 
 
+
  public void showChartForCurrentYear(Model model) {
   int currentYear = Year.now().getValue();
 
   // Get data for the current year
   Map<String, Double> monthlyCredits = chartService.getMonthlyCreditsForYear(currentYear);
   Map<String, Double> monthlyDebits = chartService.getMonthlyDebitsForYear(currentYear);
-  log.info("credits map populated with data: KEY " + monthlyCredits.keySet() + " VALUE " + monthlyCredits.values());
-  log.info("debits map populated with data: KEY " + monthlyDebits.keySet() + " VALUE " + monthlyDebits.values());
-
-  // Generate labels and data for the chart
+   // Generate labels and data for the chart
   List<String> labels = new ArrayList<>();
   List<Double> credits = new ArrayList<>();
   List<Double> debits = new ArrayList<>();
-
   // Populate the labels, credits, and debits lists
   for (int month = 1; month <= 12; month++) {
    String monthLabel = Month.of(month).name();
-   String yearLabel = String.valueOf(currentYear);
    LocalDate date = LocalDate.of(currentYear, month, 1);
    String monthName = date.getMonth().name();
-
    labels.add(monthName);
    credits.add(monthlyCredits.getOrDefault(monthLabel, 0.0));
    debits.add(monthlyDebits.getOrDefault(monthLabel, 0.0));
   }
-
-  log.info("labels: " + labels);
-  log.info("credits for labels: " + credits);
-  log.info("debits for labels: " + debits);
-
 // Extract month and year from labels
   List<String> monthYearLabels = new ArrayList<>();
   for (String label : labels) {
@@ -83,25 +71,9 @@ public class DashboardService {
   model.addAttribute("debits", debits);
   model.addAttribute("currentYear", currentYear);
 
-  loadTotalSavingsPerMonth(model);
  }
 
-
-
- public void loadTotalSavingsPerMonth(Model model) {
-
-  List<SavingsEntity> savings = savingsService.getAllSavings();
-  Map<String, String> monthsYears = transactionService.getDistinctMonthsAndYears();
-  Map<String, Double> monthlySavings = savingsService.calculateMonthlySavings(savings); // Calculate monthly savings data
-
-  model.addAttribute("savings", savings);
-  model.addAttribute("monthsYears", monthsYears);
-  model.addAttribute("monthlySavings", monthlySavings); // Pass monthly savings data to the template
-
- }
-
-
- public void loadCategorizedTransactions(Model model) {
+ public void loadCategorizedTransactionsPrevMonth(Model model) {
   List<CategoryEntity> categories = categoryService.getCategories();
   List<TransactionEntity> transactions = transactionService.getAllTransactions();
 
