@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +19,7 @@ public class ChartService {
  private final TransactionRepository transactionRepository;
  private final CategoryRepository categoryRepository;
  private final String EXCLUDE_CATEGORY = "exclude";
+ private Set<CategoryEntity> excludeCategories = new HashSet<>();
 
  public ChartService(TransactionRepository transactionRepository, CategoryRepository categoryRepository) {
   this.transactionRepository = transactionRepository;
@@ -32,6 +31,7 @@ public class ChartService {
   * It filters the transactions based on the specified year and credit or debit type,
   * excludes transactions with a specific category, and then groups the remaining transactions by month,
   * summing the transaction amounts for each month.
+  *
   * @param transactions
   * @param creditOrDebit
   * @return monthlyTotals
@@ -70,6 +70,7 @@ public class ChartService {
  /**
   * with the filtered transactions and the specified year and debit type ("DEBIT").
   * It returns the monthly debit totals for the given year.
+  *
   * @param transactions
   * @param year
   * @param creditOrDebit
@@ -94,12 +95,14 @@ public class ChartService {
   * helper method that filters a list of transactions by excluding those with a specific category.
   * It takes a list of transactions as input and returns a new list that contains only the transactions
   * that do not have the excluded category.
+  *
   * @param transactions
   * @return list of transactions without the excluded category
   */
  private List<TransactionEntity> filterTransactionsByCategories(List<TransactionEntity> transactions) {
   return transactions.stream()
-          .filter(transaction -> !transaction.getCategories().equals(EXCLUDE_CATEGORY))
+          .filter(transaction -> transaction.getCategories().stream()
+                  .noneMatch(category -> category.getCategory().equals(EXCLUDE_CATEGORY)))
           .collect(Collectors.toList());
  }
  public Map<String, Double> getMonthlyCreditsForYear(int year) {
@@ -144,7 +147,6 @@ public class ChartService {
  // CHARTS MONTHLY WITH CATEGORIES
 
  /**
-  *
   * @param categories
   * @param yearMonth
   * @param creditOrDebit
@@ -172,10 +174,12 @@ public class ChartService {
 
   return monthlyTotals;
  }
+
  public Map<String, Double> getMonthlyCreditsByCategoryForMonth(YearMonth yearMonth) {
   List<CategoryEntity> categories = categoryRepository.findAll();
   return calculateMonthlyTotalsByCategory(categories, yearMonth, "CREDIT");
  }
+
  public Map<String, Double> getMonthlyDebitsByCategoryForMonth(YearMonth yearMonth) {
   List<CategoryEntity> categories = categoryRepository.findAll();
   return calculateMonthlyTotalsByCategory(categories, yearMonth, "DEBIT");
