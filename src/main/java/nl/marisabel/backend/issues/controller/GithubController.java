@@ -32,7 +32,8 @@ public class GithubController {
  }
 
  @GetMapping("/createIssue")
- public String showForm(Model model) {
+ public String showForm(@ModelAttribute IssueInfoModel issueInfoModel, Model model) {
+  model.addAttribute("issuesList", githubService.get());
   model.addAttribute("issue", new IssueModel());
   return "about/github-form";
  }
