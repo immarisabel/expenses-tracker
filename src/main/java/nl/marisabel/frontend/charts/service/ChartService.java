@@ -19,7 +19,6 @@ public class ChartService {
  private final TransactionRepository transactionRepository;
  private final CategoryRepository categoryRepository;
  private final String EXCLUDE_CATEGORY = "exclude";
- private Set<CategoryEntity> excludeCategories = new HashSet<>();
 
  public ChartService(TransactionRepository transactionRepository, CategoryRepository categoryRepository) {
   this.transactionRepository = transactionRepository;
@@ -40,16 +39,14 @@ public class ChartService {
   Map<String, Double> monthlyTotals = new LinkedHashMap<>();
 
   for (TransactionEntity transaction : transactions) {
-   if (!transaction.getCategories().equals(EXCLUDE_CATEGORY)) {
     String month = transaction.getDate().getMonth().toString();
     double amount = transaction.getAmount();
     String transactionCreditOrDebit = transaction.getCreditOrDebit();
     if (transactionCreditOrDebit.equalsIgnoreCase(creditOrDebit)) {
      monthlyTotals.merge(month, amount, Double::sum);
     }
-   }
+
   }
-  log.info("calculateMonthlyTotals : " + monthlyTotals.get("JANUARY"));
   return monthlyTotals;
  }
  public Map<String, Double> getMonthlyCreditsByCategoryForCategory(int year, CategoryEntity categoryEntity) {
@@ -159,9 +156,7 @@ public class ChartService {
   Map<String, Double> monthlyTotals = new LinkedHashMap<>();
 
   for (CategoryEntity category : categories) {
-   if (category.getCategory().equalsIgnoreCase(EXCLUDE_CATEGORY)) {
-    continue;
-   }
+
    List<TransactionEntity> transactions = transactionRepository.findAllByDateBetweenAndCategory(startDate, endDate, category);
    double total = transactions.stream()
            .filter(transaction -> transaction.getCreditOrDebit().equalsIgnoreCase(creditOrDebit))
@@ -170,16 +165,12 @@ public class ChartService {
 
    monthlyTotals.put(category.getCategory(), total);
   }
-  log.info("calculateMonthlyTotalsByCategory : " + monthlyTotals + "cat excluded: " + EXCLUDE_CATEGORY);
-
   return monthlyTotals;
  }
-
  public Map<String, Double> getMonthlyCreditsByCategoryForMonth(YearMonth yearMonth) {
   List<CategoryEntity> categories = categoryRepository.findAll();
   return calculateMonthlyTotalsByCategory(categories, yearMonth, "CREDIT");
  }
-
  public Map<String, Double> getMonthlyDebitsByCategoryForMonth(YearMonth yearMonth) {
   List<CategoryEntity> categories = categoryRepository.findAll();
   return calculateMonthlyTotalsByCategory(categories, yearMonth, "DEBIT");
