@@ -17,44 +17,43 @@
 
   <h1 th:text="${fulldate}"></h1>
 
-  <canvas id="chart" style="padding: 2rem;"></canvas>
-
+  <canvas id="chart" style="padding: 2rem;width:auto;height:100%;" ></canvas>
   <script th:inline="javascript">
-      /* Retrieve the data from the server-side */
-      var labels = /*[[${labels}]]*/ [];
-      var credits = /*[[${credits}]]*/ [];
-      var debits = /*[[${debits}]]*/ [];
+  /* Retrieve the data from the server-side */
+  var labels = /*[[${labels}]]*/ [];
+  var credits = /*[[${credits}]]*/ [];
+  var debits = /*[[${debits}]]*/ [];
 
-      /* Create the chart */
-      var ctx = document.getElementById('chart').getContext('2d');
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'income',
-            data: credits,
-            backgroundColor: 'rgba(35, 197, 82, 0.7)',
-                borderColor: 'rgb(35, 197, 82)',
-            borderWidth: 1
-          }, {
-            label: 'expenses',
-            data: debits,
-            backgroundColor: 'rgba(248, 79, 49, 0.7)',
-                borderColor: 'rgb(248, 79, 49)',
-            borderWidth: 1
-          }]
+  /* Create the chart */
+  var ctx = document.getElementById('chart').getContext('2d');
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'income',
+        data: credits,
+        backgroundColor: 'rgba(35, 197, 82, 0.7)',
+        borderColor: 'rgb(35, 197, 82)',
+        borderWidth: 1
+      }, {
+        label: 'expenses',
+        data: debits,
+        backgroundColor: 'rgba(248, 79, 49, 0.7)',
+        borderColor: 'rgb(248, 79, 49)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: {
+          grid: {
+            display: true
+          }
         },
-        options: {
-          responsive: true,
-          scales: {
-            x: {
-              grid: {
-                display: false
-              }
-            },
-            y: {
-           beginAtZero: true,
+        y: {
+          beginAtZero: true,
           ticks: {
             callback: function(value) {
               return new Intl.NumberFormat('en-US', {
@@ -64,11 +63,12 @@
             }
           }
         }
-      },
-      onClick: null
-        }
-      });
-    </script>
+      }
+    }
+  });
+</script>
+
+
 </div>
 </body>
 </html>

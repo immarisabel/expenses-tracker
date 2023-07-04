@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.Month;
 import java.time.Year;
 import java.time.YearMonth;
 import java.util.*;
@@ -26,7 +27,6 @@ public class ChartCategoriesController {
   this.categoryService = categoryService;
   this.chartService = chartService;
  }
-
 
  @GetMapping("/charts/categories/{categoryId}")
  public String showCategoryCharts(@PathVariable Long categoryId,
@@ -55,29 +55,30 @@ public class ChartCategoriesController {
   YearMonth startYearMonth = YearMonth.of(year, 1);
   YearMonth endYearMonth = YearMonth.of(year, 12);
 
-
   // Get data for the specified year
   Map<String, Double> monthlyCredits = chartService.getMonthlyCreditsByCategoryForCategory(year, category);
   Map<String, Double> monthlyDebits = chartService.getMonthlyDebitsByCategoryForCategory(year, category);
-
-
+  log.info("DEBITS " + monthlyDebits.size() + " | " + monthlyDebits.values()+ " | " +monthlyDebits.keySet());
+  log.info("CREDITS " + monthlyCredits.size() + " | " + monthlyCredits.values()+ " | " +monthlyCredits.keySet());
   // Initialize lists to store chart data
   List<String> labels = new ArrayList<>();
   List<Double> credits = new ArrayList<>();
   List<Double> debits = new ArrayList<>();
 
-  // Populate the labels, credits, and debits lists
+// Populate the labels, credits, and debits lists
   for (int month = 1; month <= 12; month++) {
-   String monthLabel = month < 10 ? "0" + month : String.valueOf(month);
-   String monthKey = monthLabel + year; // Concatenate month and year to create the key
-   double creditTotal = monthlyCredits.getOrDefault(monthKey, 0.0);
-   double debitTotal = monthlyDebits.getOrDefault(monthKey, 0.0);
+   Month monthEnum = Month.of(month);
+   String monthLabel = monthEnum.name();
+   String monthKey = monthLabel.toUpperCase() + year; // Concatenate month and year to create the key
+
+   double creditTotal = monthlyCredits.getOrDefault(monthEnum.toString(), 0.0);
+   double debitTotal = monthlyDebits.getOrDefault(monthEnum.toString(), 0.0);
+   log.info("mapped: " +month+ monthKey + monthLabel + " | " + creditTotal + " | " + debitTotal);
 
    labels.add(monthLabel);
    credits.add(creditTotal);
    debits.add(debitTotal);
   }
-
 
   // Add attributes to the model for use in the view
   model.addAttribute("labels", labels);
@@ -85,7 +86,6 @@ public class ChartCategoriesController {
   model.addAttribute("debits", debits);
   model.addAttribute("category", category);
   model.addAttribute("currentYear", year);
-
 
   // Set previous and next year for pagination
   int previousYear = year - 1;
