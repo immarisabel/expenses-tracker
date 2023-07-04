@@ -19,6 +19,7 @@ public class ChartService {
  private final TransactionRepository transactionRepository;
  private final CategoryRepository categoryRepository;
  private final String EXCLUDE_CATEGORY = "exclude";
+ private Set<CategoryEntity> excludeCategories = new HashSet<>();
 
  public ChartService(TransactionRepository transactionRepository, CategoryRepository categoryRepository) {
   this.transactionRepository = transactionRepository;
@@ -167,10 +168,12 @@ public class ChartService {
   }
   return monthlyTotals;
  }
+
  public Map<String, Double> getMonthlyCreditsByCategoryForMonth(YearMonth yearMonth) {
   List<CategoryEntity> categories = categoryRepository.findAll();
   return calculateMonthlyTotalsByCategory(categories, yearMonth, "CREDIT");
  }
+
  public Map<String, Double> getMonthlyDebitsByCategoryForMonth(YearMonth yearMonth) {
   List<CategoryEntity> categories = categoryRepository.findAll();
   return calculateMonthlyTotalsByCategory(categories, yearMonth, "DEBIT");
