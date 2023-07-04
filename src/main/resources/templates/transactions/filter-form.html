@@ -11,7 +11,7 @@
 <body>
 <div class="container">
   <h2>Filter Transactions</h2>
-  <form action="#" th:action="@{/transactions/filters}" th:object="${filter}" method="post">
+  <form action="#" th:action="@{/transactions/filtered}" th:object="${filter}" method="post">
     <div class="form-group">
       <label>Search Term</label>
       <input type="text" th:field="*{searchTerm}" class="form-control" placeholder="Search term">

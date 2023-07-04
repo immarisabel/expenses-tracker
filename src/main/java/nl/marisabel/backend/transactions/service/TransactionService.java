@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -137,5 +138,11 @@ public class TransactionService {
  public Page<TransactionEntity> filterTransactions(TransactionFilter filter, Pageable pageable) {
   return transactionRepository.findAll(new TransactionSpecification(filter), pageable);
  }
+
+ public Object getFilteredTransactions(TransactionFilter filter) {
+  Specification<TransactionEntity> specification = new TransactionSpecification(filter);
+  return transactionRepository.findAll(specification);
+ }
+
 
 }
