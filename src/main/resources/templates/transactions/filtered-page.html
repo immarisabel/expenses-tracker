@@ -26,6 +26,19 @@
     </div>
 
 
+<!--    &lt;!&ndash; PAGINATION CONTROL FOR ADVANCED FILTERED TRANSACTIONS &ndash;&gt;-->
+<!--    <div th:if="${filter != null}">-->
+<!--    <div>-->
+<!--        <a th:if="${transactions.hasPrevious()}"-->
+<!--           th:href="@{/transactions/filtered(filter=${filter}, page=${transactions.number - 1})}"-->
+<!--           class="myButton">Previous</a>-->
+<!--        <span th:text="${transactions.number + 1}"></span> / <span th:text="${transactions.totalPages}"></span>-->
+<!--        <a th:if="${transactions.hasNext()}"-->
+<!--           th:href="@{/transactions/filtered(filter=${filter}, page=${transactions.number + 1})}"-->
+<!--           class="myButton">Next</a>-->
+<!--    </div>-->
+<!--    </div>-->
+
 
 
     <!-- PAGINATION CONTROL FOR TRANSACTIONS WITHOUT CATEGORY -->
