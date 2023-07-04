@@ -81,7 +81,7 @@
         <tbody th:each="c : ${categories}">
         <tr>
             <td>
-                <li th:text="${c.category}"></li>
+                <a th:href="@{/charts/categories/{categoryId}(categoryId=${c.id})}"> <li th:text="${c.category}"></li></a>
             </td>
             <td>
                 <p th:text="${c.transactions.size()}"></p>
