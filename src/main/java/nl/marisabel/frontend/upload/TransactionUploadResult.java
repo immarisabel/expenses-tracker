@@ -3,11 +3,22 @@ package nl.marisabel.frontend.upload;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+
 @Log4j2
 @Component
 public class TransactionUploadResult {
     private int nonDuplicates = 0;
     private int duplicates = 0;
+    private LocalDate signatureDate;
+
+    public LocalDate getSignatureDate() {
+        return signatureDate;
+    }
+
+    public void setSignatureDate(LocalDate signatureDate) {
+        this.signatureDate = signatureDate;
+    }
 
     public int getNonDuplicates() {
         log.info("GET " + nonDuplicates);
