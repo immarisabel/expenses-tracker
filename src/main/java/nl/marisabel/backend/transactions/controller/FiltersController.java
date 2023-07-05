@@ -32,6 +32,9 @@ public class FiltersController {
   this.categoryRepository = categoryRepository;
  }
 
+//TODO make page: org.thymeleaf.exceptions.TemplateInputException:
+// Error resolving template [transactions/no-results],
+// template might not exist or might not be accessible by any of the configured Template Resolvers
 
  // .......... ADVANCED FILTER
  @GetMapping("/transactions/filters")
