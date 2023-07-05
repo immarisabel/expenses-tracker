@@ -48,6 +48,13 @@ public class SavingsController {
    GoalEntity goal = goalService.getGoalById(dto.getGoalId())
            .orElseThrow(() -> new ResourceNotFoundException("Goal not found with id: " + dto.getGoalId()));
 
+   goal.setLastAmount(goal.getLastAmount() + dto.getAmount());
+   if (goal.getLastAmount() >= goal.getMaxAmount()) {
+    goal.setReached(true);
+   }
+
+   goalService.saveOrUpdate(goal);
+
    SavingsEntity savingsEntity = new SavingsEntity();
    savingsEntity.setAmount(dto.getAmount());
    log.info("Amount: " + savingsEntity.getAmount());
@@ -62,7 +69,6 @@ public class SavingsController {
   log.info("Savings allocated successfully!");
   return "savings/allocate-savings";
  }
-
 
 
  @GetMapping("/allocate-savings/{month}")
@@ -85,7 +91,6 @@ public class SavingsController {
   double totalAllocated = savingsService.calculateTotalAllocated(yearMonth);
   Map<Long, Double> goalAllocatedAmountMap = savingsService.calculateGoalAllocatedAmountMap(yearMonth);
 
-
   log.info(DateUtils.formatForMonth(previousMonth) + " | " + month + " | " + DateUtils.formatForMonth(nextMonth));
 
   model.addAttribute("goals", goalService.getAllGoals());
@@ -97,7 +102,6 @@ public class SavingsController {
 
   return "savings/allocate-savings";
  }
-
 
 
 }

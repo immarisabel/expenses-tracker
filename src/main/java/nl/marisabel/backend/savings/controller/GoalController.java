@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -37,12 +38,12 @@ public class GoalController {
   List<GoalEntity> goals = goalService.getAllGoals();
   List<SavingsEntity> savings = savingsService.getAllSavings();
   Map<String, String> monthsYears = transactionService.getDistinctMonthsAndYears();
-  Map<String, Double> monthlySavings = savingsService.calculateMonthlySavings(savings); // Calculate monthly savings data
+  Map<String, Double> monthlySavings = savingsService.calculateMonthlySavings(savings);
 
   model.addAttribute("goals", goals);
   model.addAttribute("savings", savings);
   model.addAttribute("monthsYears", monthsYears);
-  model.addAttribute("monthlySavings", monthlySavings); // Pass monthly savings data to the template
+  model.addAttribute("monthlySavings", monthlySavings);
 
   // save new goal
   model.addAttribute("goal", new GoalEntity());
