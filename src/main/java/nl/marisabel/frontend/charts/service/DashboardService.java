@@ -3,13 +3,13 @@ package nl.marisabel.frontend.charts.service;
 import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.service.CategoryService;
-import nl.marisabel.backend.savings.entity.SavingsEntity;
 import nl.marisabel.backend.savings.service.SavingsService;
 import nl.marisabel.backend.transactions.entity.TransactionEntity;
 import nl.marisabel.backend.transactions.service.TransactionService;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
@@ -36,14 +36,13 @@ public class DashboardService {
  }
 
 
-
  public void showChartForCurrentYear(Model model) {
   int currentYear = Year.now().getValue();
 
   // Get data for the current year
   Map<String, Double> monthlyCredits = chartService.getMonthlyCreditsForYear(currentYear);
   Map<String, Double> monthlyDebits = chartService.getMonthlyDebitsForYear(currentYear);
-   // Generate labels and data for the chart
+  // Generate labels and data for the chart
   List<String> labels = new ArrayList<>();
   List<Double> credits = new ArrayList<>();
   List<Double> debits = new ArrayList<>();
@@ -106,6 +105,55 @@ public class DashboardService {
   model.addAttribute("categoryPercentageMap", categoryPercentageMap);
  }
 
+ /**
+  * CALCULATE EXPENSES AMOUNT OF PREVIOUS YEAR
+  * @return total amount calculated of transactions of the year -1 from current year as DEBIT
+  * Example: today is 2023, last year was 2022
+  */
+ public String calculateExpensesAmountOfPrevYear() {
+  Year year = Year.now();
+  Year lastYear = year.minusYears(1);
+  List<TransactionEntity> transactions = transactionService.getAllTransactions();
+  List<TransactionEntity> previousYearTransactions = transactions.stream()
+          .filter(transaction -> transaction.getDate().getYear() == lastYear.getValue())
+          .filter(transaction -> transaction.getCreditOrDebit().equalsIgnoreCase("debit"))
+          .collect(Collectors.toList());
 
+  double totalAmountSpentLastYear = previousYearTransactions.stream()
+          .mapToDouble(TransactionEntity::getAmount)
+          .sum();
+
+  DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+  String formattedAmount = decimalFormat.format(totalAmountSpentLastYear);
+
+  log.info(formattedAmount);
+
+  return formattedAmount;
+ }
+ /**
+  * CALCULATE INCOME AMOUNT OF PREVIOUS YEAR
+  * @return total amount calculated of transactions of the year -1 from current year as CREDIT
+  * Example: today is 2023, last year was 2022
+  */
+ public String calculateIncomeAmountOfPrevYear() {
+  Year year = Year.now();
+  Year lastYear = year.minusYears(1);
+  List<TransactionEntity> transactions = transactionService.getAllTransactions();
+  List<TransactionEntity> previousYearTransactions = transactions.stream()
+          .filter(transaction -> transaction.getDate().getYear() == lastYear.getValue())
+          .filter(transaction -> transaction.getCreditOrDebit().equalsIgnoreCase("credit"))
+          .collect(Collectors.toList());
+
+  double totalAmountSpentLastYear = previousYearTransactions.stream()
+          .mapToDouble(TransactionEntity::getAmount)
+          .sum();
+
+  DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+  String formattedAmount = decimalFormat.format(totalAmountSpentLastYear);
+
+  log.info(formattedAmount);
+
+  return formattedAmount;
+ }
 }
 

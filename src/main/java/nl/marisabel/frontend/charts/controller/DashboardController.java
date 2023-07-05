@@ -29,12 +29,11 @@ public class DashboardController {
   NoteModel noteModel = new NoteModel();
   noteModel.setNote(noteContent);
   model.addAttribute("noteModel", noteModel);
-
-  log.info(noteContent);
+  model.addAttribute("prevYearExpenses", dashboardService.calculateExpensesAmountOfPrevYear());
+  model.addAttribute("prevYearIncome", dashboardService.calculateIncomeAmountOfPrevYear());
 
   return "dashboard/dashboard";
  }
-
 
 
 }

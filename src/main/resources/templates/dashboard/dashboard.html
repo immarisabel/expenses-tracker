@@ -118,7 +118,7 @@
         <div class="card">
             <div class="card-content">
                 <h2> Income Last Year </h2>
-                <h1>000.00 €</h1>
+                <h1 th:text="'€ ' + ${prevYearIncome}"></h1>
             </div>
         </div>
 
@@ -129,7 +129,7 @@
         <div class="card">
             <div class="card-content">
                 <h2> Expenses Last Year </h2>
-                <h1>000.00 €</h1>
+                <h1 th:text="'€ ' + ${prevYearExpenses}"></h1>
             </div>
         </div>
 
