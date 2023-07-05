@@ -32,6 +32,7 @@ public class DashboardController {
   model.addAttribute("prevYearExpenses", dashboardService.calculateExpensesAmountOfPrevYear());
   model.addAttribute("prevYearIncome", dashboardService.calculateIncomeAmountOfPrevYear());
   model.addAttribute("lastFileDate", dashboardService.getLastUploadedFileDateSignature());
+  model.addAttribute("totalSavings", dashboardService.getTotalSavings());
   return "dashboard/dashboard";
  }
 
