@@ -8,17 +8,6 @@
 <!--    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>-->
     <style>
 
-        .container {
-          display: flex;
-          flex-wrap: wrap;
-        }
-
-        .goals-wrapper {
-          flex: 1 0 50%;
-          box-sizing: border-box;
-          padding: 1em;
-        }
-
         .chart-wrapper {
           flex: 1 0 50%;
           box-sizing: border-box;
@@ -100,9 +89,10 @@
 </div>
 
 <!-- ALLOCATE SAVINGS -->
-<div class="form" style="width:20rem;">
-    <form id="savings-form" th:action="@{/savings/allocate-savings}" method="get">
-        <h2>allocate savings</h2>
+
+<div style="width:20rem;margin-left:auto;margin-right:auto;text-align:center;background-color:var(--color-table-odd);padding:0 1rem 2rem 1rem;border-radius:1rem;">
+    <form id="savings-form"  th:action="@{/savings/allocate-savings}" method="get">
+        <h3>allocate savings</h3>
         <select id="month-select" name="month" class="form-control">
             <option value="" disabled selected hidden>Select month</option>
             <option th:each="entry : ${monthsYears.entrySet()}" th:value="${entry.value}"
@@ -164,7 +154,6 @@
                     <span th:unless="${goal.reached}">❌</span>
                 </td>
                 <td>
-
                     <a th:href="@{/savings/goals/update(id=${goal.id})}"  class="myButton"  alt="update ${goal.name}">
                         edit
                     </a>
@@ -173,10 +162,7 @@
             </tbody>
         </table>
     </div>
-    <div class="chart-wrapper">
-        <canvas id="line-chart" style="padding: 2rem;"></canvas>
-    </div>
-</div>
+
 
 
 <h1>Savings</h1>
@@ -200,41 +186,42 @@
 </div>
 
 
-<script th:inline="javascript">
-    /* Retrieve the data from the server-side */
-    var monthlySavings = /*[[${monthlySavings}]]*/ {};
+<!--<script th:inline="javascript">-->
+<!--    /* Retrieve the data from the server-side */-->
+<!--    var monthlySavings = /*[[${monthlySavings}]]*/ {};-->
 
-    /* Create the chart */
-    var ctx = document.getElementById('line-chart').getContext('2d');
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: Object.keys(monthlySavings),
-            datasets: [{
-                label: 'Total Savings',
-                data: Object.values(monthlySavings),
-                fill: false,
-                borderColor: 'rgba(100, 116, 229, 1)', // #2F7AE5
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    grid: {
-                        display: false
-                    }
-                },
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
+<!--    /* Create the chart */-->
+<!--    var ctx = document.getElementById('line-chart').getContext('2d');-->
+<!--    new Chart(ctx, {-->
+<!--        type: 'line',-->
+<!--        data: {-->
+<!--            labels: Object.keys(monthlySavings),-->
+<!--            datasets: [{-->
+<!--                label: 'Total Savings',-->
+<!--                data: Object.values(monthlySavings),-->
+<!--                fill: false,-->
+<!--                borderColor: 'rgba(100, 116, 229, 1)', // #2F7AE5-->
+<!--                borderWidth: 1-->
+<!--            }]-->
+<!--        },-->
+<!--        options: {-->
+<!--            responsive: true,-->
+<!--            scales: {-->
+<!--                x: {-->
+<!--                    grid: {-->
+<!--                        display: false-->
+<!--                    }-->
+<!--                },-->
+<!--                y: {-->
+<!--                    beginAtZero: true-->
+<!--                }-->
+<!--            }-->
+<!--        }-->
+<!--    });-->
 
-</script>
+<!--</script>-->
 
+</div>
 
 </body>
 </html>
