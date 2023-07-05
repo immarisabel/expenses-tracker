@@ -5,6 +5,7 @@ import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.service.CategoryService;
 import nl.marisabel.backend.savings.service.SavingsService;
 import nl.marisabel.backend.transactions.entity.TransactionEntity;
+import nl.marisabel.backend.transactions.repository.UploadFileRepository;
 import nl.marisabel.backend.transactions.service.TransactionService;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -13,6 +14,7 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,12 +29,14 @@ public class DashboardService {
  private final CategoryService categoryService;
  private final TransactionService transactionService;
  private final SavingsService savingsService;
+ private final UploadFileRepository uploadFileRepository;
 
- public DashboardService(ChartService chartService, CategoryService categoryService, TransactionService transactionService, SavingsService savingsService) {
+ public DashboardService(ChartService chartService, CategoryService categoryService, TransactionService transactionService, SavingsService savingsService, UploadFileRepository uploadFileRepository) {
   this.chartService = chartService;
   this.categoryService = categoryService;
   this.transactionService = transactionService;
   this.savingsService = savingsService;
+  this.uploadFileRepository = uploadFileRepository;
  }
 
 
@@ -107,6 +111,7 @@ public class DashboardService {
 
  /**
   * CALCULATE EXPENSES AMOUNT OF PREVIOUS YEAR
+  *
   * @return total amount calculated of transactions of the year -1 from current year as DEBIT
   * Example: today is 2023, last year was 2022
   */
@@ -130,8 +135,10 @@ public class DashboardService {
 
   return formattedAmount;
  }
+
  /**
   * CALCULATE INCOME AMOUNT OF PREVIOUS YEAR
+  *
   * @return total amount calculated of transactions of the year -1 from current year as CREDIT
   * Example: today is 2023, last year was 2022
   */
@@ -155,5 +162,29 @@ public class DashboardService {
 
   return formattedAmount;
  }
+
+ /**
+  * GET LAST UPLOADED FILE DATE SIGNATURE
+  * Calculates how many rows and provide the last indexed file
+  *
+  * @return String of Local Date from UploadFile Enity
+  */
+ public String getLastUploadedFileDateSignature() {
+
+  int amountOfFilesUploaded = uploadFileRepository.findAll().size();
+  log.info(amountOfFilesUploaded);
+
+  if (amountOfFilesUploaded!=0) {
+   String lastFileDate = String.valueOf(uploadFileRepository.findAll().get(amountOfFilesUploaded-1).getSignatureDate());
+   LocalDate date = LocalDate.parse(lastFileDate);
+   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+   String formattedDate = date.format(formatter);
+   log.info(formattedDate);
+   return formattedDate;
+  }
+return "upload a file first";
+ }
+
+
 }
 
