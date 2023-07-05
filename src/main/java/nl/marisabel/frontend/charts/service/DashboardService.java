@@ -3,6 +3,7 @@ package nl.marisabel.frontend.charts.service;
 import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.service.CategoryService;
+import nl.marisabel.backend.savings.entity.SavingsEntity;
 import nl.marisabel.backend.savings.service.SavingsService;
 import nl.marisabel.backend.transactions.entity.TransactionEntity;
 import nl.marisabel.backend.transactions.repository.UploadFileRepository;
@@ -131,7 +132,7 @@ public class DashboardService {
   DecimalFormat decimalFormat = new DecimalFormat("#0.00");
   String formattedAmount = decimalFormat.format(totalAmountSpentLastYear);
 
-  log.info(formattedAmount);
+  log.info("Total expenses prev year:" + formattedAmount);
 
   return formattedAmount;
  }
@@ -158,7 +159,7 @@ public class DashboardService {
   DecimalFormat decimalFormat = new DecimalFormat("#0.00");
   String formattedAmount = decimalFormat.format(totalAmountSpentLastYear);
 
-  log.info(formattedAmount);
+  log.info("Total income prev year:" + formattedAmount);
 
   return formattedAmount;
  }
@@ -172,19 +173,32 @@ public class DashboardService {
  public String getLastUploadedFileDateSignature() {
 
   int amountOfFilesUploaded = uploadFileRepository.findAll().size();
-  log.info(amountOfFilesUploaded);
+  log.info("Total uploads: " + amountOfFilesUploaded);
 
-  if (amountOfFilesUploaded!=0) {
-   String lastFileDate = String.valueOf(uploadFileRepository.findAll().get(amountOfFilesUploaded-1).getSignatureDate());
+  if (amountOfFilesUploaded != 0) {
+   String lastFileDate = String.valueOf(uploadFileRepository.findAll().get(amountOfFilesUploaded - 1).getSignatureDate());
    LocalDate date = LocalDate.parse(lastFileDate);
    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
    String formattedDate = date.format(formatter);
-   log.info(formattedDate);
    return formattedDate;
   }
-return "upload a file first";
+  return "upload a file first";
  }
 
+ /**
+  * get the grand total of savings
+  * @return 00.00 String
+  */
+ public String getTotalSavings() {
+  List<SavingsEntity> savings = savingsService.getAllSavings();
+  double totalSavings = savings.stream()
+          .mapToDouble(SavingsEntity::getAmount)
+          .sum();
+  DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+  String formattedAmount = decimalFormat.format(totalSavings);
+  log.info("savings: " + formattedAmount);
+  return formattedAmount;
+ }
 
 }
 
