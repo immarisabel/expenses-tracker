@@ -31,6 +31,11 @@ public class SavingsService {
  }
 
 
+ /**
+  * CALCULATE MONTHLY SAVINGS
+  * @param savings
+  * @return Month / Savings 0.00
+  */
  public Map<String, Double> calculateMonthlySavings(List<SavingsEntity> savings) {
   Map<String, Double> monthlySavings = new LinkedHashMap<>();
 
@@ -54,12 +59,10 @@ public class SavingsService {
  public double calculateTotalAllocated(YearMonth yearMonth) {
   List<GoalEntity> goals = goalService.getAllGoals();
   double totalAllocated = 0;
-
   for (GoalEntity goal : goals) {
    List<SavingsEntity> existingSavings = this.findByGoalAndMonthYear(goal, String.valueOf(yearMonth));
    totalAllocated += existingSavings.stream().mapToDouble(SavingsEntity::getAmount).sum();
   }
-
   return totalAllocated;
  }
 
@@ -82,10 +85,12 @@ public class SavingsService {
    newSavings.setSavingYear(Year.of(yearMonth.getYear()));
    newSavings.setGoal(goal);
    newSavings.setMonthYear(String.valueOf(yearMonth));
+   goal.setLastAmount(amount);
    this.save(newSavings);
   } else {
    for (SavingsEntity savings : existingSavings) {
     savings.setAmount(savings.getAmount() + amount);
+    goal.setLastAmount(savings.getAmount() + amount);
     this.save(savings);
    }
   }
