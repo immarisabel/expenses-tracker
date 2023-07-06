@@ -1,5 +1,6 @@
 package nl.marisabel.backend.transactions.service;
 
+import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.transactions.entity.TransactionEntity;
 import nl.marisabel.backend.transactions.model.TransactionFilter;
 import org.springframework.data.domain.Page;
@@ -12,34 +13,58 @@ import java.util.Map;
 
 public interface TransactionService {
 
- // FILTERS
- public TransactionEntity getTransaction(Long id);
+ // Retrieval
 
- public Page<TransactionEntity> searchTransactions(String searchTerm,
-                                                   PageRequest pageRequest);
+ List<TransactionEntity> findAll();
 
- public Page<TransactionEntity> filterTransactionByDate(LocalDate startDate,
-                                                        LocalDate endDate,
-                                                        Pageable pageable);
+ Page<TransactionEntity> findAllPageable(Pageable pageable);
 
- public Page<TransactionEntity> getTransactionsByCategory(Long categoryId,
-                                                          PageRequest pageRequest);
+ TransactionEntity getTransaction(Long id);
 
- // CHARTS
- public List<TransactionEntity> getAllTransactions();
+ Page<TransactionEntity> findByCategoriesIsEmpty(Pageable pageable);
+ Page<TransactionEntity> findByCategoryIdPageable(Long categoryId, Pageable pageable);
 
- public Map<String, String> getDistinctMonthsAndYears();
+ Page<TransactionEntity> findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String searchTerm, Pageable pageable);
+
+ List<TransactionEntity> findByDateBetween(LocalDate startDate, LocalDate endDate);
+
+ Page<TransactionEntity> findByDateBetweenPageable(LocalDate startDate, LocalDate endDate, Pageable pageable);
+
+ List<Integer> findAllAmounts();
+
+ List<TransactionEntity> findAllByDateBetweenAndCategory(LocalDate startDate, LocalDate endDate, CategoryEntity category);
+ // Filtering
+
+ Page<TransactionEntity> searchTransactions(String searchTerm, PageRequest pageRequest);
+
+ Page<TransactionEntity> filterTransactionByDate(LocalDate startDate, LocalDate endDate, Pageable pageable);
+
+ Page<TransactionEntity> getTransactionsByCategory(Long categoryId, PageRequest pageRequest);
+
+ Page<TransactionEntity> filterTransactionByAmount(double minAmount, double maxAmount, PageRequest pageRequest);
+
+ Page<TransactionEntity> filterTransactions(TransactionFilter filter, Pageable pageable);
+ Object getFilteredTransactions(TransactionFilter filter);
+
+ // Charting
+
+ List<TransactionEntity> getAllTransactions();
+
+ Map<String, String> getDistinctMonthsAndYears();
+
+// // Calculation
+//
+// int calculateTotalCredits();
+//
+// int calculateTotalDebits();
+//
+// double calculateTotalCreditsByMonth(LocalDate startDate, LocalDate endDate);
+//
+// double calculateTotalDebitsByMonth(LocalDate startDate, LocalDate endDate);
+
+ // Other
+
+ Pageable createPageable(String sort, int page, int size);
 
 
-
- public Pageable createPageable(String sort, int page, int size);
-
- public Page<TransactionEntity> filterTransactionByAmount(double minAmount,
-                                                          double maxAmount,
-                                                          PageRequest pageRequest);
-
- public Page<TransactionEntity> filterTransactions(TransactionFilter filter,
-                                                   Pageable pageable);
-
- public Object getFilteredTransactions(TransactionFilter filter);
 }

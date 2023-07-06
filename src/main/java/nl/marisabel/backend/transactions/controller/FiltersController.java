@@ -5,7 +5,6 @@ import nl.marisabel.backend.categories.repository.CategoryRepository;
 import nl.marisabel.backend.transactions.entity.TransactionEntity;
 import nl.marisabel.backend.transactions.entity.TransactionForm;
 import nl.marisabel.backend.transactions.model.TransactionFilter;
-import nl.marisabel.backend.transactions.repository.TransactionRepository;
 import nl.marisabel.backend.transactions.service.TransactionServiceImp;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,16 +20,13 @@ public class FiltersController {
 
 
  private final TransactionServiceImp transactionServiceImp;
- private final TransactionRepository transactionRepository;
  private final CategoryRepository categoryRepository;
 
- public FiltersController(TransactionServiceImp transactionServiceImp,
-                          TransactionRepository transactionRepository,
-                          CategoryRepository categoryRepository) {
+ public FiltersController(TransactionServiceImp transactionServiceImp, CategoryRepository categoryRepository) {
   this.transactionServiceImp = transactionServiceImp;
-  this.transactionRepository = transactionRepository;
   this.categoryRepository = categoryRepository;
  }
+
 
 //TODO make page: org.thymeleaf.exceptions.TemplateInputException:
 // Error resolving template [transactions/no-results],
@@ -77,7 +73,7 @@ public class FiltersController {
   int size = 20;
    pageable = transactionServiceImp.createPageable(sort, page, size);
 
-  model.addAttribute("transactions", transactionRepository.findAll(pageable));
+  model.addAttribute("transactions", transactionServiceImp.findAllPageable(pageable));
   model.addAttribute("categories", categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category")));
   model.addAttribute("transactionsForm", new TransactionForm());
   model.addAttribute("sort", sort);
@@ -104,7 +100,7 @@ public class FiltersController {
  public String showTransactionsWithoutCategory(@RequestParam(defaultValue = "0") int page, Model model) {
   int size = 20;
 
-  model.addAttribute("transactions", transactionRepository.findByCategoriesIsEmpty(PageRequest.of(page, size)));
+  model.addAttribute("transactions", transactionServiceImp.findByCategoriesIsEmpty(PageRequest.of(page, size)));
   model.addAttribute("categories", categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category")));
   model.addAttribute("currentPage", page);
   model.addAttribute("hideMe", "hide");
