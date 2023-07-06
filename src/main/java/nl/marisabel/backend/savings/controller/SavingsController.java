@@ -4,8 +4,8 @@ import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.error.ResourceNotFoundException;
 import nl.marisabel.backend.savings.entity.GoalEntity;
 import nl.marisabel.backend.savings.entity.SavingsEntity;
-import nl.marisabel.backend.savings.service.GoalService;
-import nl.marisabel.backend.savings.service.SavingsService;
+import nl.marisabel.backend.savings.service.GoalServiceImp;
+import nl.marisabel.backend.savings.service.SavingsServiceImp;
 import nl.marisabel.backend.transactions.service.TransactionServiceImp;
 import nl.marisabel.backend.savings.model.SavingsModel;
 import nl.marisabel.util.DateUtils;
@@ -26,14 +26,14 @@ import java.util.Map;
 @RequestMapping("/savings")
 public class SavingsController {
 
- private final SavingsService savingsService;
+ private final SavingsServiceImp savingsServiceImp;
  private final TransactionServiceImp transactionServiceImp;
- private final GoalService goalService;
+ private final GoalServiceImp goalServiceImp;
 
- public SavingsController(SavingsService savingsService, TransactionServiceImp transactionServiceImp, GoalService goalService) {
-  this.savingsService = savingsService;
+ public SavingsController(SavingsServiceImp savingsServiceImp, TransactionServiceImp transactionServiceImp, GoalServiceImp goalServiceImp) {
+  this.savingsServiceImp = savingsServiceImp;
   this.transactionServiceImp = transactionServiceImp;
-  this.goalService = goalService;
+  this.goalServiceImp = goalServiceImp;
  }
 
 
@@ -45,26 +45,9 @@ public class SavingsController {
   DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMyyyy");
   YearMonth yearMonth = YearMonth.parse(month, monthFormatter);
   for (SavingsModel dto : savingsDTOs) {
-   GoalEntity goal = goalService.getGoalById(dto.getGoalId())
-           .orElseThrow(() -> new ResourceNotFoundException("Goal not found with id: " + dto.getGoalId()));
-
-   goal.setLastAmount(goal.getLastAmount() + dto.getAmount());
-   if (goal.getLastAmount() >= goal.getMaxAmount()) {
-    goal.setReached(true);
-   }
-
-   goalService.saveOrUpdate(goal);
-
-   SavingsEntity savingsEntity = new SavingsEntity();
-   savingsEntity.setAmount(dto.getAmount());
-   log.info("Amount: " + savingsEntity.getAmount());
-   savingsEntity.setSavingsMonth(yearMonth.getMonth());
-   savingsEntity.setSavingYear(Year.of(yearMonth.getYear()));
-   savingsEntity.setGoal(goal);
-   log.info("Goal: " + savingsEntity.getGoal().getName());
-   savingsEntity.setMonthYear(String.valueOf(yearMonth));
-   log.info("Month: " + savingsEntity.getMonthYear());
-   savingsService.save(savingsEntity);
+   GoalEntity goal = goalServiceImp.getGoalByIdAndHandleException(dto.getGoalId());
+   goalServiceImp.updateGoalState(goal, dto.getAmount());
+   savingsServiceImp.saveSavingsForGoal(dto.getAmount(), yearMonth, goal);
   }
   log.info("Savings allocated successfully!");
   return "savings/allocate-savings";
@@ -88,12 +71,12 @@ public class SavingsController {
   LocalDate startOfMonth = yearMonth.atDay(1);
   LocalDate endOfMonth = yearMonth.atEndOfMonth();
 
-  double totalAllocated = savingsService.calculateTotalAllocated(yearMonth);
-  Map<Long, Double> goalAllocatedAmountMap = savingsService.calculateGoalAllocatedAmountMap(yearMonth);
+  double totalAllocated = savingsServiceImp.calculateTotalAllocated(yearMonth);
+  Map<Long, Double> goalAllocatedAmountMap = savingsServiceImp.calculateGoalAllocatedAmountMap(yearMonth);
 
   log.info(DateUtils.formatForMonth(previousMonth) + " | " + month + " | " + DateUtils.formatForMonth(nextMonth));
 
-  model.addAttribute("goals", goalService.getAllGoals());
+  model.addAttribute("goals", goalServiceImp.getAllGoals());
   model.addAttribute("totalAllocated", totalAllocated);
   model.addAttribute("monthToAllocate", formattedDate);
   model.addAttribute("goalAllocatedAmountMap", goalAllocatedAmountMap);

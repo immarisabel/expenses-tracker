@@ -4,7 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.service.CategoryServiceImp;
 import nl.marisabel.backend.savings.entity.SavingsEntity;
-import nl.marisabel.backend.savings.service.SavingsService;
+import nl.marisabel.backend.savings.service.SavingsServiceImp;
 import nl.marisabel.backend.transactions.entity.TransactionEntity;
 import nl.marisabel.backend.transactions.repository.UploadFileRepository;
 import nl.marisabel.backend.transactions.service.TransactionServiceImp;
@@ -29,14 +29,14 @@ public class DashboardService {
  private final ChartService chartService;
  private final CategoryServiceImp categoryServiceImp;
  private final TransactionServiceImp transactionServiceImp;
- private final SavingsService savingsService;
+ private final SavingsServiceImp savingsServiceImp;
  private final UploadFileRepository uploadFileRepository;
 
- public DashboardService(ChartService chartService, CategoryServiceImp categoryServiceImp, TransactionServiceImp transactionServiceImp, SavingsService savingsService, UploadFileRepository uploadFileRepository) {
+ public DashboardService(ChartService chartService, CategoryServiceImp categoryServiceImp, TransactionServiceImp transactionServiceImp, SavingsServiceImp savingsServiceImp, UploadFileRepository uploadFileRepository) {
   this.chartService = chartService;
   this.categoryServiceImp = categoryServiceImp;
   this.transactionServiceImp = transactionServiceImp;
-  this.savingsService = savingsService;
+  this.savingsServiceImp = savingsServiceImp;
   this.uploadFileRepository = uploadFileRepository;
  }
 
@@ -190,7 +190,7 @@ public class DashboardService {
   * @return 00.00 String
   */
  public String getTotalSavings() {
-  List<SavingsEntity> savings = savingsService.getAllSavings();
+  List<SavingsEntity> savings = savingsServiceImp.getAllSavings();
   double totalSavings = savings.stream()
           .mapToDouble(SavingsEntity::getAmount)
           .sum();

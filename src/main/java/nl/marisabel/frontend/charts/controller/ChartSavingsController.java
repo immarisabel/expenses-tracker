@@ -3,7 +3,7 @@ package nl.marisabel.frontend.charts.controller;
 import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.savings.entity.GoalEntity;
 import nl.marisabel.backend.savings.entity.SavingsEntity;
-import nl.marisabel.backend.savings.service.GoalService;
+import nl.marisabel.backend.savings.service.GoalServiceImp;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,11 +17,11 @@ import java.util.stream.Collectors;
 @Log4j2
 @RequestMapping("/charts")
 public class ChartSavingsController {
- private final GoalService goalService;
+ private final GoalServiceImp goalServiceImp;
 
 
- public ChartSavingsController(GoalService goalService) {
-  this.goalService = goalService;
+ public ChartSavingsController(GoalServiceImp goalServiceImp) {
+  this.goalServiceImp = goalServiceImp;
  }
 
  @GetMapping("/savings/{goalId}")
@@ -31,7 +31,7 @@ public class ChartSavingsController {
 
   try {
    // Load the given goal ID
-   GoalEntity goal = goalService.getGoalById(goalId).orElseThrow(() -> new Exception("Goal not found"));
+   GoalEntity goal = goalServiceImp.getGoalById(goalId).orElseThrow(() -> new Exception("Goal not found"));
 
    // Load all savings per month for the given goal
    List<SavingsEntity> savingsEntities = goal.getSavingsEntities();
