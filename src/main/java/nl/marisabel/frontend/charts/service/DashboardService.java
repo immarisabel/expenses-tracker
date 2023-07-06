@@ -2,7 +2,7 @@ package nl.marisabel.frontend.charts.service;
 
 import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
-import nl.marisabel.backend.categories.service.CategoryService;
+import nl.marisabel.backend.categories.service.CategoryServiceImp;
 import nl.marisabel.backend.savings.entity.SavingsEntity;
 import nl.marisabel.backend.savings.service.SavingsService;
 import nl.marisabel.backend.transactions.entity.TransactionEntity;
@@ -27,14 +27,14 @@ import java.util.stream.Collectors;
 public class DashboardService {
 
  private final ChartService chartService;
- private final CategoryService categoryService;
+ private final CategoryServiceImp categoryServiceImp;
  private final TransactionService transactionService;
  private final SavingsService savingsService;
  private final UploadFileRepository uploadFileRepository;
 
- public DashboardService(ChartService chartService, CategoryService categoryService, TransactionService transactionService, SavingsService savingsService, UploadFileRepository uploadFileRepository) {
+ public DashboardService(ChartService chartService, CategoryServiceImp categoryServiceImp, TransactionService transactionService, SavingsService savingsService, UploadFileRepository uploadFileRepository) {
   this.chartService = chartService;
-  this.categoryService = categoryService;
+  this.categoryServiceImp = categoryServiceImp;
   this.transactionService = transactionService;
   this.savingsService = savingsService;
   this.uploadFileRepository = uploadFileRepository;
@@ -78,7 +78,7 @@ public class DashboardService {
  }
 
  public void loadCategorizedTransactionsPrevMonth(Model model) {
-  List<CategoryEntity> categories = categoryService.getCategories();
+  List<CategoryEntity> categories = categoryServiceImp.getCategories();
   List<TransactionEntity> transactions = transactionService.getAllTransactions();
 
   LocalDate currentDate = LocalDate.now();

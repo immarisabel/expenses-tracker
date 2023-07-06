@@ -1,26 +1,20 @@
 package nl.marisabel.backend.categories.controller;
 
-import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
-import nl.marisabel.backend.categories.service.CategoryService;
+import nl.marisabel.backend.categories.service.CategoryServiceImp;
 import nl.marisabel.backend.transactions.entity.TransactionEntity;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Collections;
-import java.util.List;
 
 @Controller
 @RequestMapping("/categories")
 public class CategoryController {
 
- private final CategoryService categoryService;
+ private final CategoryServiceImp categoryServiceImp;
 
- public CategoryController(CategoryService categoryService) {
-  this.categoryService = categoryService;
+ public CategoryController(CategoryServiceImp categoryServiceImp) {
+  this.categoryServiceImp = categoryServiceImp;
  }
 
  /**
@@ -30,7 +24,7 @@ public class CategoryController {
   */
  @GetMapping
  public String showCategoryPage(Model model) {
-  model.addAttribute("categories", categoryService.getCategories());
+  model.addAttribute("categories", categoryServiceImp.getCategories());
   model.addAttribute("newCategory", new CategoryEntity());
   model.addAttribute("category", new CategoryEntity());
   return "categories/category-page";
@@ -44,7 +38,7 @@ public class CategoryController {
   */
  @PostMapping("/add")
  public String addCategory(@ModelAttribute("newCategory") CategoryEntity newCategory) {
-  categoryService.saveOrUpdate(newCategory);
+  categoryServiceImp.saveOrUpdate(newCategory);
   return "redirect:/categories";
  }
 
@@ -56,8 +50,8 @@ public class CategoryController {
   */
  @GetMapping("/update")
  public String showFormForUpdatingCategory(@RequestParam("id") Long id, Model model) {
-  model.addAttribute("category", categoryService.getCategory(id));
-  model.addAttribute("categories", categoryService.getCategories());
+  model.addAttribute("category", categoryServiceImp.getCategory(id));
+  model.addAttribute("categories", categoryServiceImp.getCategories());
   return "categories/category-page";
  }
 
@@ -67,7 +61,7 @@ public class CategoryController {
   */
  @PostMapping("/update")
  public String updateCategory(@ModelAttribute("category") CategoryEntity category) {
-  categoryService.saveOrUpdate(category);
+  categoryServiceImp.saveOrUpdate(category);
   return "redirect:/categories";
  }
 
@@ -82,10 +76,10 @@ public class CategoryController {
   */
  @PostMapping("/delete")
  public String deleteCategory(@RequestParam("id") Long id, Model model, TransactionEntity transaction) {
-  CategoryEntity categoryEntity = categoryService.getCategory(id);
+  CategoryEntity categoryEntity = categoryServiceImp.getCategory(id);
   categoryEntity.setCategory("");
-  categoryService.saveOrUpdate(categoryEntity);
-  categoryService.deleteCategory(id);
+  categoryServiceImp.saveOrUpdate(categoryEntity);
+  categoryServiceImp.deleteCategory(id);
   return "redirect:/categories";
  }
 }

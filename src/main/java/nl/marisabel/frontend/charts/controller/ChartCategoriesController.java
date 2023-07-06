@@ -2,7 +2,7 @@ package nl.marisabel.frontend.charts.controller;
 
 import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
-import nl.marisabel.backend.categories.service.CategoryService;
+import nl.marisabel.backend.categories.service.CategoryServiceImp;
 import nl.marisabel.frontend.charts.service.ChartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,12 +19,12 @@ import java.util.*;
 @Log4j2
 @Controller
 public class ChartCategoriesController {
- private final CategoryService categoryService;
+ private final CategoryServiceImp categoryServiceImp;
  private final ChartService chartService;
 
  @Autowired
- public ChartCategoriesController(CategoryService categoryService, ChartService chartService) {
-  this.categoryService = categoryService;
+ public ChartCategoriesController(CategoryServiceImp categoryServiceImp, ChartService chartService) {
+  this.categoryServiceImp = categoryServiceImp;
   this.chartService = chartService;
  }
 
@@ -33,7 +33,7 @@ public class ChartCategoriesController {
                                   @RequestParam(value = "year", required = false) Integer year,
                                   Model model) {
 
-  CategoryEntity category = categoryService.getCategory(categoryId);
+  CategoryEntity category = categoryServiceImp.getCategory(categoryId);
 
   int currentYear = Year.now().getValue();
 

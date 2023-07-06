@@ -1,7 +1,7 @@
 package nl.marisabel.frontend.charts.controller;
 
 import lombok.extern.log4j.Log4j2;
-import nl.marisabel.backend.categories.service.CategoryService;
+import nl.marisabel.backend.categories.service.CategoryServiceImp;
 import nl.marisabel.frontend.charts.service.ChartService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,11 +20,11 @@ import java.util.Map;
 public class ChartYearsController {
 
  private final ChartService chartService;
- private final CategoryService categoryService;
+ private final CategoryServiceImp categoryServiceImp;
 
- public ChartYearsController(ChartService chartService, CategoryService categoryService) {
+ public ChartYearsController(ChartService chartService, CategoryServiceImp categoryServiceImp) {
   this.chartService = chartService;
-  this.categoryService = categoryService;
+  this.categoryServiceImp = categoryServiceImp;
  }
 
  /**
