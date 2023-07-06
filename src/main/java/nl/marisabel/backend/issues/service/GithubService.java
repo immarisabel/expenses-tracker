@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Service to call GitHub API for posting and retrieving issues related to project
+ */
 @Service
 public class GithubService {
 
@@ -33,6 +36,10 @@ public class GithubService {
   this.objectMapper = objectMapper;
  }
 
+ /**
+  * <h2>LIST OF ISSUES</h2>
+  * @return list of issues <a href="https://api.github.com/repos/immarisabel/expenses-tracker/issues">https://api.github.com/repos/immarisabel/expenses-tracker/issues</a>
+  */
  public List<IssueInfoModel> get() {
   String url = "https://api.github.com/repos/" + OWNER + "/" + REPO + "/issues";
   String authToken = TOKEN;
@@ -77,6 +84,14 @@ public class GithubService {
 
   return issuesList;
  }
+
+ /**
+  * <h2>Post issues to repo: https://api.github.com/repos/immarisabel/expenses-tracker/</h2>
+  * @param url
+  * @param json
+  * buildIssueJson()
+  * @return response 200 OK
+  */
  public String post(String url, String json) {
    return webClient.post()
            .uri(url)
@@ -88,14 +103,28 @@ public class GithubService {
            .block();
   }
 
+ /**
+  * <h2>BUILD JSON BODY RTESPONSE</h2>
+  * post response in repository issues
+  * @param title
+  * @param body
+  * @param assignees
+  * @param labels
+  * @return
+  */
+
   public String buildIssueJson(String title, String body, List<String> assignees, List<String> labels) {
    String assigneeStr = assignees.stream().map(a -> "\"" + a + "\"").collect(Collectors.joining(", "));
    String labelStr = labels.stream().map(l -> "\"" + l + "\"").collect(Collectors.joining(", "));
    return "{\"title\":\"" + title + "\", \"body\":\"" + body + "\", \"assignees\": [" + assigneeStr + "], \"labels\": [" + labelStr + "]}";
   }
 
-
-
+ /**
+  * <h2>RETRIEVES GITHUB TOKEN FROM</h2>
+  * <H3>GITHUB.PROPERTIES</H3>
+  * <H4>github.token=STRING</H4>
+  * @return TOKEN
+  */
  public String getToken() {
   return TOKEN;
  }
