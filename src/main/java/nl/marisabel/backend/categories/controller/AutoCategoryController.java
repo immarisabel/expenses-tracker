@@ -2,11 +2,9 @@ package nl.marisabel.backend.categories.controller;
 
 import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.categories.entity.AutoCategoryEntity;
-import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.service.AutoCategoryServiceImp;
 import nl.marisabel.backend.categories.service.CategoryServiceImp;
 import nl.marisabel.backend.transactions.entity.TransactionEntity;
-import nl.marisabel.backend.transactions.repository.TransactionRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +19,11 @@ import java.util.stream.Collectors;
 public class AutoCategoryController {
 
  private final AutoCategoryServiceImp autoCategoryService;
- private final TransactionRepository transactionRepository;
  private final CategoryServiceImp categoryService;
  private String message;
 
- public AutoCategoryController(AutoCategoryServiceImp autoCategoryService, TransactionRepository transactionRepository, CategoryServiceImp categoryService) {
+ public AutoCategoryController(AutoCategoryServiceImp autoCategoryService, CategoryServiceImp categoryService) {
   this.autoCategoryService = autoCategoryService;
-  this.transactionRepository = transactionRepository;
   this.categoryService = categoryService;
  }
 
@@ -90,37 +86,9 @@ public class AutoCategoryController {
   */
  @PostMapping("/autoCategorize")
  public String autoCategorize(Model model) {
-  List<TransactionEntity> unCategorizedTransactions = transactionRepository.findByCategoriesEmpty();
-  log.info("Number of uncategorized transactions: " + unCategorizedTransactions.size());
 
-  List<AutoCategoryEntity> autoCategories = autoCategoryService.getAutoCategoriesList();
+  int numCategorized = categoryService.autoCategorizeTransactions();
 
-  int numCategorized = 0;
-
-  for (AutoCategoryEntity autoCategory : autoCategories) {
-   // Try to find an existing CategoryEntity with this category
-   CategoryEntity existingCategory = categoryService.findByCategory(autoCategory.getCategory());
-
-   // If none exists, create a new one
-   if (existingCategory == null) {
-    existingCategory = new CategoryEntity();
-    existingCategory.setCategory(autoCategory.getCategory());
-    categoryService.saveOrUpdate(existingCategory); // don't forget to save the new category
-   }
-
-   for (TransactionEntity transaction : unCategorizedTransactions) {
-    for (String query : autoCategory.getQueries()) {
-// TODO handle if description is NULL
-     if (transaction.getEntity().toLowerCase().contains(query.toLowerCase()) ||
-             transaction.getDescription().toLowerCase().contains(query.toLowerCase())) {
-      transaction.addCategory(existingCategory);
-      transactionRepository.save(transaction);
-      numCategorized++;
-      break;
-     }
-    }
-   }
-  }
   message = "Transactions categorized: "+ numCategorized;
   model.addAttribute("message", message);
   log.info(message);

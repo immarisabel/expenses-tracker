@@ -6,7 +6,7 @@ import nl.marisabel.backend.savings.entity.GoalEntity;
 import nl.marisabel.backend.savings.entity.SavingsEntity;
 import nl.marisabel.backend.savings.service.GoalService;
 import nl.marisabel.backend.savings.service.SavingsService;
-import nl.marisabel.backend.transactions.service.TransactionService;
+import nl.marisabel.backend.transactions.service.TransactionServiceImp;
 import nl.marisabel.backend.savings.model.SavingsModel;
 import nl.marisabel.util.DateUtils;
 import org.springframework.stereotype.Controller;
@@ -27,12 +27,12 @@ import java.util.Map;
 public class SavingsController {
 
  private final SavingsService savingsService;
- private final TransactionService transactionService;
+ private final TransactionServiceImp transactionServiceImp;
  private final GoalService goalService;
 
- public SavingsController(SavingsService savingsService, TransactionService transactionService, GoalService goalService) {
+ public SavingsController(SavingsService savingsService, TransactionServiceImp transactionServiceImp, GoalService goalService) {
   this.savingsService = savingsService;
-  this.transactionService = transactionService;
+  this.transactionServiceImp = transactionServiceImp;
   this.goalService = goalService;
  }
 

@@ -1,7 +1,12 @@
 package nl.marisabel.backend.categories.service;
 
+import jakarta.transaction.Transactional;
+import lombok.extern.log4j.Log4j2;
+import nl.marisabel.backend.categories.entity.AutoCategoryEntity;
 import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.repository.CategoryRepository;
+import nl.marisabel.backend.transactions.entity.TransactionEntity;
+import nl.marisabel.backend.transactions.repository.TransactionRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +19,17 @@ import java.util.List;
  * TODO: prevent duplicated categories
  */
 @Service
+@Log4j2
 public class CategoryServiceImp implements CategoryService {
 
+ private final AutoCategoryServiceImp autoCategoryService;
  private final CategoryRepository categoryRepository;
+ private final TransactionRepository transactionRepository;
 
- public CategoryServiceImp(CategoryRepository categoryRepository) {
+ public CategoryServiceImp(AutoCategoryServiceImp autoCategoryService, CategoryRepository categoryRepository, TransactionRepository transactionRepository) {
+  this.autoCategoryService = autoCategoryService;
   this.categoryRepository = categoryRepository;
+  this.transactionRepository = transactionRepository;
  }
 
  /**
@@ -70,6 +80,74 @@ public class CategoryServiceImp implements CategoryService {
   CategoryEntity newCategory = new CategoryEntity();
   newCategory.setCategory(category);
   return categoryRepository.save(newCategory);
+ }
+
+
+ /**
+  * <H2>AUTO-CATEGORIZE TRANSACTIONS</H2>
+  * Filters transactions without categories and assign category according to matching description and entity.</br>
+  * Does not apply if transaction already has a category.</br>
+  * To update such transactions, we need to remove the categories from them.</br>
+  * TODO: method to remove category in batch
+  * @return number fo transactions categorized
+  */
+ public int autoCategorizeTransactions() {
+  // load all transactions without category
+
+  List<TransactionEntity> unCategorizedTransactions = transactionRepository.findByCategoriesEmpty();
+  log.info("Number of uncategorized transactions: " + unCategorizedTransactions.size());
+  List<AutoCategoryEntity> autoCategories = autoCategoryService.getAutoCategoriesList();
+
+  int numCategorized = 0;
+
+  for (AutoCategoryEntity autoCategory : autoCategories) {
+   // Try to find an existing CategoryEntity with this category
+   CategoryEntity existingCategory = findByCategory(autoCategory.getCategory());
+
+   // If none exists, create a new one
+   if (existingCategory == null) {
+    existingCategory = new CategoryEntity();
+    existingCategory.setCategory(autoCategory.getCategory());
+    saveOrUpdate(existingCategory); // don't forget to save the new category
+   }
+
+   for (TransactionEntity transaction : unCategorizedTransactions) {
+    for (String query : autoCategory.getQueries()) {
+// TODO handle if description is NULL
+     if (transaction.getEntity().toLowerCase().contains(query.toLowerCase()) ||
+             transaction.getDescription().toLowerCase().contains(query.toLowerCase())) {
+      transaction.addCategory(existingCategory);
+      transactionRepository.save(transaction);
+      numCategorized++;
+      break;
+     }
+    }
+   }
+  }
+  return numCategorized;
+ }
+
+
+ /**
+  * <h2>BATCH UPDATE CATEGORIES</h2>
+  * process the category for all selected transactions via JS
+  * @param categoryId
+  * @param transactionIds
+  */
+ @Transactional
+ public void batchUpdateCategory(Long categoryId, List<Long> transactionIds) {
+  CategoryEntity category = categoryRepository.findById(categoryId)
+          .orElseThrow(() -> new RuntimeException("Category not found with id " + categoryId));
+
+  List<TransactionEntity> transactions = transactionRepository.findAllById(transactionIds);
+
+  log.info("....transactions updated: " + transactions.size());
+
+  for (TransactionEntity transaction : transactions) {
+   transaction.getCategories().clear();
+   transaction.addCategory(category);
+   transactionRepository.save(transaction);
+  }
  }
 
 

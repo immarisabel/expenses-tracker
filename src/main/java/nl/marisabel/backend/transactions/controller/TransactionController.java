@@ -3,9 +3,10 @@ package nl.marisabel.backend.transactions.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.categories.repository.CategoryRepository;
+import nl.marisabel.backend.categories.service.CategoryServiceImp;
 import nl.marisabel.backend.transactions.entity.TransactionEntity;
 import nl.marisabel.backend.transactions.repository.TransactionRepository;
-import nl.marisabel.backend.transactions.service.TransactionService;
+import nl.marisabel.backend.transactions.service.TransactionServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,15 +26,17 @@ public class TransactionController {
     @Autowired
     private HttpServletRequest request;
     private final TransactionRepository transactionRepository;
-    private final TransactionService transactionService;
+    private final TransactionServiceImp transactionService;
+    private final CategoryServiceImp categoryService;
 
     public TransactionController(
             TransactionRepository transactionRepository,
             CategoryRepository categoryRepository,
-            TransactionService transactionService
-    ) {
+            TransactionServiceImp transactionService,
+            CategoryServiceImp categoryService) {
         this.transactionRepository = transactionRepository;
         this.transactionService = transactionService;
+        this.categoryService = categoryService;
     }
 
     //..........UPDATE CATEGORY IN BATCH
@@ -57,7 +60,7 @@ public class TransactionController {
         log.info("....transactions to update: " + transactionsId.size());
 
         try {
-            transactionService.batchUpdateCategory(categoryId, transactionsId);
+            categoryService.batchUpdateCategory(categoryId, transactionsId);
             log.info("Transaction updated successfully");
             redirectAttributes.addFlashAttribute("message", "Transaction updated successfully");
         } catch (Exception e) {

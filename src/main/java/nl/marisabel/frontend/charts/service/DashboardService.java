@@ -7,7 +7,7 @@ import nl.marisabel.backend.savings.entity.SavingsEntity;
 import nl.marisabel.backend.savings.service.SavingsService;
 import nl.marisabel.backend.transactions.entity.TransactionEntity;
 import nl.marisabel.backend.transactions.repository.UploadFileRepository;
-import nl.marisabel.backend.transactions.service.TransactionService;
+import nl.marisabel.backend.transactions.service.TransactionServiceImp;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -28,14 +28,14 @@ public class DashboardService {
 
  private final ChartService chartService;
  private final CategoryServiceImp categoryServiceImp;
- private final TransactionService transactionService;
+ private final TransactionServiceImp transactionServiceImp;
  private final SavingsService savingsService;
  private final UploadFileRepository uploadFileRepository;
 
- public DashboardService(ChartService chartService, CategoryServiceImp categoryServiceImp, TransactionService transactionService, SavingsService savingsService, UploadFileRepository uploadFileRepository) {
+ public DashboardService(ChartService chartService, CategoryServiceImp categoryServiceImp, TransactionServiceImp transactionServiceImp, SavingsService savingsService, UploadFileRepository uploadFileRepository) {
   this.chartService = chartService;
   this.categoryServiceImp = categoryServiceImp;
-  this.transactionService = transactionService;
+  this.transactionServiceImp = transactionServiceImp;
   this.savingsService = savingsService;
   this.uploadFileRepository = uploadFileRepository;
  }
@@ -79,7 +79,7 @@ public class DashboardService {
 
  public void loadCategorizedTransactionsPrevMonth(Model model) {
   List<CategoryEntity> categories = categoryServiceImp.getCategories();
-  List<TransactionEntity> transactions = transactionService.getAllTransactions();
+  List<TransactionEntity> transactions = transactionServiceImp.getAllTransactions();
 
   LocalDate currentDate = LocalDate.now();
   LocalDate previousMonth = currentDate.minusMonths(1);
@@ -119,7 +119,7 @@ public class DashboardService {
  public String calculateExpensesAmountOfPrevYear() {
   Year year = Year.now();
   Year lastYear = year.minusYears(1);
-  List<TransactionEntity> transactions = transactionService.getAllTransactions();
+  List<TransactionEntity> transactions = transactionServiceImp.getAllTransactions();
   List<TransactionEntity> previousYearTransactions = transactions.stream()
           .filter(transaction -> transaction.getDate().getYear() == lastYear.getValue())
           .filter(transaction -> transaction.getCreditOrDebit().equalsIgnoreCase("debit"))
@@ -146,7 +146,7 @@ public class DashboardService {
  public String calculateIncomeAmountOfPrevYear() {
   Year year = Year.now();
   Year lastYear = year.minusYears(1);
-  List<TransactionEntity> transactions = transactionService.getAllTransactions();
+  List<TransactionEntity> transactions = transactionServiceImp.getAllTransactions();
   List<TransactionEntity> previousYearTransactions = transactions.stream()
           .filter(transaction -> transaction.getDate().getYear() == lastYear.getValue())
           .filter(transaction -> transaction.getCreditOrDebit().equalsIgnoreCase("credit"))

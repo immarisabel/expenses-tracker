@@ -1,7 +1,9 @@
 package nl.marisabel.backend.categories.service;
 
 import nl.marisabel.backend.categories.entity.AutoCategoryEntity;
+import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.repository.AutoCategoryRepository;
+import nl.marisabel.backend.transactions.entity.TransactionEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,4 +52,8 @@ public class AutoCategoryServiceImp implements AutoCategoryService{
  public AutoCategoryEntity getAutocategoryToEdit(Long id) {
   return autoCategoryRepository.getReferenceById(id);
  }
+
+
+
+
 }

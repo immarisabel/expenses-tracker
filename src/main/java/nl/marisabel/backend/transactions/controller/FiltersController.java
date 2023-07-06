@@ -6,7 +6,7 @@ import nl.marisabel.backend.transactions.entity.TransactionEntity;
 import nl.marisabel.backend.transactions.entity.TransactionForm;
 import nl.marisabel.backend.transactions.model.TransactionFilter;
 import nl.marisabel.backend.transactions.repository.TransactionRepository;
-import nl.marisabel.backend.transactions.service.TransactionService;
+import nl.marisabel.backend.transactions.service.TransactionServiceImp;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,14 +20,14 @@ import org.springframework.web.bind.annotation.*;
 public class FiltersController {
 
 
- private final TransactionService transactionService;
+ private final TransactionServiceImp transactionServiceImp;
  private final TransactionRepository transactionRepository;
  private final CategoryRepository categoryRepository;
 
- public FiltersController(TransactionService transactionService,
+ public FiltersController(TransactionServiceImp transactionServiceImp,
                           TransactionRepository transactionRepository,
                           CategoryRepository categoryRepository) {
-  this.transactionService = transactionService;
+  this.transactionServiceImp = transactionServiceImp;
   this.transactionRepository = transactionRepository;
   this.categoryRepository = categoryRepository;
  }
@@ -49,32 +49,17 @@ public class FiltersController {
                                                 Model model) {
   model.addAttribute("filter", filter);
   model.addAttribute("categories", categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category")));
-  model.addAttribute("transactions", transactionService.getFilteredTransactions(filter));
+  model.addAttribute("transactions", transactionServiceImp.getFilteredTransactions(filter));
   return "transactions/filtered-page";
  }
-
-
-//
-// @GetMapping("/transactions/filtered")
-// public String showAdvancedFilteredTransactions(TransactionFilter filter,
-//                                                @RequestParam(defaultValue = "0") int page,
-//                                                Model model) {
-//  int size = 20;
-//  Pageable pageable = transactionService.createPageable("date", page, size);
-//  model.addAttribute("filter", filter);
-//  model.addAttribute("categories", categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category")));
-//  model.addAttribute("transactions", transactionService.getFilteredTransactions(filter, pageable));
-//  return "transactions/filtered-page";
-// }
-
 
 
  @PostMapping("/transactions/filtered")
  public String filterAdvancedTransactions(@ModelAttribute TransactionFilter filter,Pageable pageable, @RequestParam(defaultValue = "0") int page, Model model) {
 
   int size = 20;
-  pageable = transactionService.createPageable("date", page, size);
-  Page<TransactionEntity> filteredTransactions = transactionService.filterTransactions(filter, pageable);
+  pageable = transactionServiceImp.createPageable("date", page, size);
+  Page<TransactionEntity> filteredTransactions = transactionServiceImp.filterTransactions(filter, pageable);
   model.addAttribute("transactions", filteredTransactions);
   model.addAttribute("categories", categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category")));
 
@@ -90,7 +75,7 @@ public class FiltersController {
  @GetMapping("/transactions")
  public String showTransactions(@RequestParam(value = "sort", defaultValue = "date") String sort, Pageable pageable, @RequestParam(defaultValue = "0") int page, Model model) {
   int size = 20;
-   pageable = transactionService.createPageable(sort, page, size);
+   pageable = transactionServiceImp.createPageable(sort, page, size);
 
   model.addAttribute("transactions", transactionRepository.findAll(pageable));
   model.addAttribute("categories", categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category")));
@@ -107,7 +92,7 @@ public class FiltersController {
   int size = 20;
   PageRequest pageRequest = PageRequest.of(page, size);
   model.addAttribute("categories", categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category")));
-  model.addAttribute("transactions", transactionService.getTransactionsByCategory(categoryId, pageRequest));
+  model.addAttribute("transactions", transactionServiceImp.getTransactionsByCategory(categoryId, pageRequest));
   model.addAttribute("categoryId", categoryId);
 
   return "transactions/filtered-page";
