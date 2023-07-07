@@ -22,45 +22,15 @@ public interface TransactionService {
  TransactionEntity getTransaction(Long id);
 
  Page<TransactionEntity> findByCategoriesIsEmpty(Pageable pageable);
- Page<TransactionEntity> findByCategoryIdPageable(Long categoryId, Pageable pageable);
-
- Page<TransactionEntity> findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String searchTerm, Pageable pageable);
-
- List<TransactionEntity> findByDateBetween(LocalDate startDate, LocalDate endDate);
-
- Page<TransactionEntity> findByDateBetweenPageable(LocalDate startDate, LocalDate endDate, Pageable pageable);
-
- List<Integer> findAllAmounts();
 
  List<TransactionEntity> findAllByDateBetweenAndCategory(LocalDate startDate, LocalDate endDate, CategoryEntity category);
- // Filtering
-
- Page<TransactionEntity> searchTransactions(String searchTerm, PageRequest pageRequest);
-
- Page<TransactionEntity> filterTransactionByDate(LocalDate startDate, LocalDate endDate, Pageable pageable);
 
  Page<TransactionEntity> getTransactionsByCategory(Long categoryId, PageRequest pageRequest);
-
- Page<TransactionEntity> filterTransactionByAmount(double minAmount, double maxAmount, PageRequest pageRequest);
 
  Page<TransactionEntity> filterTransactions(TransactionFilter filter, Pageable pageable);
  Object getFilteredTransactions(TransactionFilter filter);
 
- // Charting
-
- List<TransactionEntity> getAllTransactions();
-
  Map<String, String> getDistinctMonthsAndYears();
-
-// // Calculation
-//
-// int calculateTotalCredits();
-//
-// int calculateTotalDebits();
-//
-// double calculateTotalCreditsByMonth(LocalDate startDate, LocalDate endDate);
-//
-// double calculateTotalDebitsByMonth(LocalDate startDate, LocalDate endDate);
 
  // Other
 

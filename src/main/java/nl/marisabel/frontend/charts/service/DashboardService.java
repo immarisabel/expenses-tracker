@@ -79,7 +79,7 @@ public class DashboardService {
 
  public void loadCategorizedTransactionsPrevMonth(Model model) {
   List<CategoryEntity> categories = categoryServiceImp.getCategories();
-  List<TransactionEntity> transactions = transactionServiceImp.getAllTransactions();
+  List<TransactionEntity> transactions = transactionServiceImp.findAll();
 
   LocalDate currentDate = LocalDate.now();
   LocalDate previousMonth = currentDate.minusMonths(1);
@@ -119,7 +119,7 @@ public class DashboardService {
  public String calculateExpensesAmountOfPrevYear() {
   Year year = Year.now();
   Year lastYear = year.minusYears(1);
-  List<TransactionEntity> transactions = transactionServiceImp.getAllTransactions();
+  List<TransactionEntity> transactions = transactionServiceImp.findAll();
   List<TransactionEntity> previousYearTransactions = transactions.stream()
           .filter(transaction -> transaction.getDate().getYear() == lastYear.getValue())
           .filter(transaction -> transaction.getCreditOrDebit().equalsIgnoreCase("debit"))
@@ -146,7 +146,7 @@ public class DashboardService {
  public String calculateIncomeAmountOfPrevYear() {
   Year year = Year.now();
   Year lastYear = year.minusYears(1);
-  List<TransactionEntity> transactions = transactionServiceImp.getAllTransactions();
+  List<TransactionEntity> transactions = transactionServiceImp.findAll();
   List<TransactionEntity> previousYearTransactions = transactions.stream()
           .filter(transaction -> transaction.getDate().getYear() == lastYear.getValue())
           .filter(transaction -> transaction.getCreditOrDebit().equalsIgnoreCase("credit"))

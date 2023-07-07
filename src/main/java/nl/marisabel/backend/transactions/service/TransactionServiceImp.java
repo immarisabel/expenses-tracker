@@ -7,6 +7,7 @@ import nl.marisabel.backend.transactions.entity.TransactionEntity;
 import nl.marisabel.backend.transactions.model.TransactionFilter;
 import nl.marisabel.backend.transactions.repository.TransactionRepository;
 import nl.marisabel.backend.transactions.repository.TransactionSpecification;
+import nl.marisabel.frontend.charts.service.ChartService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +27,6 @@ import java.util.LinkedHashMap;
  * <H2>TRANSACTIONS SERVICE IMPLEMENTATION</H2>
  * handles the business logic related to transactions
  * filtering and calculations for charts
- * TODO: prevent duplicated categories
  */
 @Service
 @Log4j2
@@ -39,84 +39,45 @@ public class TransactionServiceImp implements TransactionService {
   this.transactionRepository = transactionRepository;
   this.categoryRepository = categoryRepository;
  }
+
+ /**
+  * Find all transactions
+  * @return list of transactions
+  */
  public List<TransactionEntity> findAll(){
   return transactionRepository.findAll();
  }
 
-
- @Override
+ /**
+  * Find all transactions in pages
+  * @param pageable
+  * @return list of pages containing x number of transactions
+  */
  public Page<TransactionEntity> findAllPageable(Pageable pageable) {
   return transactionRepository.findAll(pageable);
  }
- public List<TransactionEntity> getAllTransactions() {
-  return transactionRepository.findAll();
- }
 
+ /**
+  * find single transacion by ID
+  * @param id
+  * @return transaction object
+  */
  public TransactionEntity getTransaction(Long id) {
   return transactionRepository.findById(id).get();
  }
 
- @Override
+ /**
+  * find transactions without categories
+  * @param pageable
+  * @return list of transactions without categories
+  */
  public Page<TransactionEntity> findByCategoriesIsEmpty(Pageable pageable) {
   return transactionRepository.findByCategoriesIsEmpty(pageable);
  }
- @Override
- public Page<TransactionEntity> findByCategoryIdPageable(Long categoryId, Pageable pageable) {
-  return transactionRepository.findByCategoryIdPageable(categoryId, pageable);
- }
-
- @Override
- public Page<TransactionEntity> findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String searchTerm, Pageable pageable) {
-  return transactionRepository.findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(searchTerm, pageable);
- }
-
- @Override
- public List<TransactionEntity> findByDateBetween(LocalDate startDate, LocalDate endDate) {
-  return transactionRepository.findByDateBetween(startDate, endDate);
- }
-
- @Override
- public Page<TransactionEntity> findByDateBetweenPageable(LocalDate startDate, LocalDate endDate, Pageable pageable) {
-  return transactionRepository.findByDateBetween(startDate, endDate, pageable);
- }
-
- public List<TransactionEntity> findAllByDateBetweenAndCategory(LocalDate startDate, LocalDate endDate, CategoryEntity category){
-  return transactionRepository.findAllByDateBetweenAndCategory(startDate,endDate,category);
- }
- @Override
- public List<Integer> findAllAmounts() {
-  return transactionRepository.findAllAmounts();
- }
 
 
  /**
-  * <h2>FILTERING TRANSACTIONS</h2>
-  * <H3>Get Pages of Transactions list based on matching String queries</H3>
-  *
-  * @param searchTerm
-  * @param pageRequest
-  * @return list of pageable transactions matching description or entity
-  */
- public Page<TransactionEntity> searchTransactions(String searchTerm, PageRequest pageRequest) {
-  return transactionRepository.findByEntityContainingIgnoreCaseOrDescriptionContainingIgnoreCase(searchTerm, pageRequest);
- }
-
- /**
-  * <h2>FILTERING TRANSACTIONS</h2>
-  * <H3>Get Pages of Transactions list based on range of dates</H3>
-  *
-  * @param startDate
-  * @param endDate
-  * @param pageable
-  * @return list of pageable transactions matching date range between startDate and endDate
-  */
- public Page<TransactionEntity> filterTransactionByDate(LocalDate startDate, LocalDate endDate, Pageable pageable) {
-  return transactionRepository.findByDateBetween(startDate, endDate, pageable);
- }
-
- /**
-  * <h2>FILTERING TRANSACTIONS</h2>
-  * <H3>Get Pages of Transactions list based matching category</H3>
+  * Get Pages of Transactions list based matching category
   *
   * @param categoryId
   * @param pageRequest
@@ -127,16 +88,23 @@ public class TransactionServiceImp implements TransactionService {
  }
 
  /**
-  * <h2>FILTER TRANSACTIONS BY AMOUNT</h2>
+  *<h2>Chart Filter of Transactions</h2>
+  * <p>find transactions between dates and categories</p>
   *
-  * @param minAmount
-  * @param maxAmount
-  * @param pageRequest
-  * @return list of transactions matching range of amount
+  * mainly used for the monthly category chart where:</br>
+  * used in: {@link ChartService#getMonthlyDebitsByCategoryForCategory(int year, CategoryEntity categoryEntity) getMonthlyDebitsByCategoryForCategory()}</br>
+  * and in: {@link ChartService#getMonthlyCreditsByCategoryForCategory(int year, CategoryEntity categoryEntity) getMonthlyCreditsByCategoryForCategory()}
+  *
+  * @param startDate = start of month
+  * @param endDate = end of month
+  * @param category = categoryID and transactions to display
+  * @return list of transactions belonging to a specific category during a range of dates
   */
- public Page<TransactionEntity> filterTransactionByAmount(double minAmount, double maxAmount, PageRequest pageRequest) {
-  return transactionRepository.findByAmountBetween(minAmount, maxAmount, pageRequest);
+
+ public List<TransactionEntity> findAllByDateBetweenAndCategory(LocalDate startDate, LocalDate endDate, CategoryEntity category){
+  return transactionRepository.findAllByDateBetweenAndCategory(startDate,endDate,category);
  }
+
 
 
  /**
@@ -153,7 +121,6 @@ public class TransactionServiceImp implements TransactionService {
 
 
  /**
-  * <h2>FILTERING TRANSACTIONS</h2>
   * <h3>Get transactions for each month of each year</h3>
   * stream transactions and separates them from start of month to end of month
   * then map them to MMyyyy
@@ -161,7 +128,7 @@ public class TransactionServiceImp implements TransactionService {
   * @return map of transactions grouped in each matching month/year
   */
  public Map<String, String> getDistinctMonthsAndYears() {
-  List<TransactionEntity> transactions = this.getAllTransactions();
+  List<TransactionEntity> transactions = this.findAll();
 
   return transactions.stream()
           .map(t -> YearMonth.from(t.getDate()))
@@ -174,9 +141,20 @@ public class TransactionServiceImp implements TransactionService {
                   LinkedHashMap::new));
  }
 
+ /**
+  * <h3>GET: ADVANCED FILTERING OF TRANSACTIONS</h3>
+  * GET filters the transactions using the Transaction Specification in repository
+  *
+  * @param filter
+  * @return all matching transactions
+  */
+ public Object getFilteredTransactions(TransactionFilter filter) {
+  Specification<TransactionEntity> specification = new TransactionSpecification(filter);
+  return transactionRepository.findAll(specification);
+ }
 
  /**
-  * <H2>CREATE SORTED PAGES FOR FILTERS</H2>
+  * <H3>CREATE SORTED PAGES FOR FILTERS</H3>
   * create pages according to size of list
   * and sorts columns by entity name, amount or date
   *
@@ -210,17 +188,6 @@ public class TransactionServiceImp implements TransactionService {
 
 
 
- /**
-  * <h2>GET: ADVANCED FILTERING OF TRANSACTIONS</h2>
-  * GET filters the transactions using the Transaction Specification in repository
-  *
-  * @param filter
-  * @return all matching transactions
-  */
- public Object getFilteredTransactions(TransactionFilter filter) {
-  Specification<TransactionEntity> specification = new TransactionSpecification(filter);
-  return transactionRepository.findAll(specification);
- }
 
 
 }
