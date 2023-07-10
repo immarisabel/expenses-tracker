@@ -19,17 +19,16 @@ import java.util.Map;
  * retrieving all savings, calculating monthly savings, finding savings by goal and month-year,
  * calculating the total allocated amount, calculating the goal allocated amount map, and updating savings.
  */
-@Service
 @Log4j2
+@Service
 public class SavingsServiceImp implements SavingsService {
 
  private final SavingsRepository savingsRepository;
- private final GoalServiceImp goalServiceImp;
 
- public SavingsServiceImp(SavingsRepository savingsRepository, GoalServiceImp goalServiceImp) {
+ public SavingsServiceImp(SavingsRepository savingsRepository) {
   this.savingsRepository = savingsRepository;
-  this.goalServiceImp = goalServiceImp;
  }
+
 
  /**
   * Saves the provided savings entity.
@@ -72,6 +71,7 @@ public class SavingsServiceImp implements SavingsService {
   return monthlySavings;
  }
 
+
  /**
   * Finds savings entities by the given goal and month-year.
   *
@@ -83,41 +83,6 @@ public class SavingsServiceImp implements SavingsService {
   return savingsRepository.findByGoalAndMonthYear(goal, monthYear);
  }
 
- /**
-  * Calculates the total allocated amount for the specified year and month.
-  *
-  * @param yearMonth The YearMonth object representing the year and month for which to calculate the total allocated amount.
-  * @return The total allocated amount for the specified year and month.
-  */
- public double calculateTotalAllocated(YearMonth yearMonth) {
-  List<GoalEntity> goals = goalServiceImp.getAllGoals();
-  double totalAllocated = 0;
-
-  for (GoalEntity goal : goals) {
-   List<SavingsEntity> existingSavings = this.findByGoalAndMonthYear(goal, String.valueOf(yearMonth));
-   totalAllocated += existingSavings.stream().mapToDouble(SavingsEntity::getAmount).sum();
-  }
-
-  return totalAllocated;
- }
-
- /**
-  * Calculates the goal allocated amount map for the specified year and month.
-  *
-  * @param yearMonth The YearMonth object representing the year and month for which to calculate the goal allocated amount map.
-  * @return A Map where the key is the goal ID and the value is the allocated amount for that goal.
-  */
- public Map<Long, Double> calculateGoalAllocatedAmountMap(YearMonth yearMonth) {
-  List<GoalEntity> goals = goalServiceImp.getAllGoals();
-  Map<Long, Double> goalAllocatedAmountMap = new HashMap<>();
-
-  for (GoalEntity goal : goals) {
-   List<SavingsEntity> existingSavings = this.findByGoalAndMonthYear(goal, String.valueOf(yearMonth));
-   // Additional processing can be done here
-  }
-
-  return goalAllocatedAmountMap;
- }
 
  /**
   * Updates the savings for the given goal, year and month with the provided amount.

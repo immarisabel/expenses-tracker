@@ -4,10 +4,15 @@ import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import nl.marisabel.backend.error.ResourceNotFoundException;
 import nl.marisabel.backend.savings.entity.GoalEntity;
+import nl.marisabel.backend.savings.entity.SavingsEntity;
+import nl.marisabel.backend.savings.repository.GoalRepository;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
+import java.time.YearMonth;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 /**
  * <h2>GOAL SERVICE</h2>
@@ -17,22 +22,23 @@ import java.util.Optional;
  * @Service - Indicates that this class is a service component.
  * @Log4j2 - Enables logging capabilities using Log4j2.
  */
-@Service
 @Log4j2
+@Service
 public class GoalServiceImp implements GoalService {
 
- private final GoalService goalService;
+ private final GoalRepository goalRepository;
 
- public GoalServiceImp(GoalService goalService) {
-  this.goalService = goalService;
+ public GoalServiceImp(GoalRepository goalRepository) {
+  this.goalRepository = goalRepository;
  }
+
 
  /**
   * Saves or updates the given goal.
   * @param goal The GoalEntity object to be saved or updated.
   */
  public void saveOrUpdate(GoalEntity goal) {
-  goalService.saveOrUpdate(goal);
+  goalRepository.save(goal);
  }
 
  /**
@@ -40,7 +46,7 @@ public class GoalServiceImp implements GoalService {
   * @return A List of GoalEntity objects representing all goals.
   */
  public List<GoalEntity> getAllGoals() {
-  return goalService.getAllGoals();
+  return goalRepository.findAll();
  }
 
  /**
@@ -50,7 +56,7 @@ public class GoalServiceImp implements GoalService {
   */
  @Transactional
  public Optional<GoalEntity> getGoalById(Long id) {
-  Optional<GoalEntity> goal = goalService.getGoalById(id);
+  Optional<GoalEntity> goal = goalRepository.findById(id);
   goal.ifPresent(g -> Hibernate.initialize(g.getSavingsEntities()));
   return goal;
  }
@@ -67,7 +73,7 @@ public class GoalServiceImp implements GoalService {
   goal.setLastAmount(goal.getLastAmount() + amount);
   if (goal.getLastAmount() >= goal.getMaxAmount()) {
    goal.setReached(true);
-   goalService.saveOrUpdate(goal);
+   goalRepository.save(goal);
   }
 
   log.info("New goal amount: " + goal.getName() + " : " + goal.getLastAmount());
@@ -83,9 +89,10 @@ public class GoalServiceImp implements GoalService {
   * @return goal object, if not, throw exception
   */
  public GoalEntity getGoalByIdAndHandleException(Long goalId) {
-  return goalService.getGoalById(goalId)
+  return goalRepository.findById(goalId)
           .orElseThrow(() -> new ResourceNotFoundException("Goal not found with id: " + goalId));
  }
+
 
 
 
