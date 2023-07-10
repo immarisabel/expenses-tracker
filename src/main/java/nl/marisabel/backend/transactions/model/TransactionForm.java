@@ -1,4 +1,4 @@
-package nl.marisabel.backend.transactions.entity;
+package nl.marisabel.backend.transactions.model;
 
 import lombok.Getter;
 import lombok.Setter;

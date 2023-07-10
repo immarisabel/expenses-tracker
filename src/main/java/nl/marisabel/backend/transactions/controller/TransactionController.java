@@ -2,6 +2,7 @@ package nl.marisabel.backend.transactions.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
+import nl.marisabel.backend.categories.entity.CategoryEntity;
 import nl.marisabel.backend.categories.repository.CategoryRepository;
 import nl.marisabel.backend.categories.service.CategoryServiceImp;
 import nl.marisabel.backend.transactions.entity.TransactionEntity;
@@ -73,7 +74,6 @@ public class TransactionController {
     }
 
 
-
     @PostMapping("/delete-transaction")
     public String deletesTransaction(@RequestParam("id") Long id, Model model) {
         Optional<TransactionEntity> transactionOptional = transactionRepository.findById(id);
@@ -87,18 +87,27 @@ public class TransactionController {
         return "redirect:/transactions";
     }
 
+
+    /**
+     * EDIT TRANSACTIONS
+     */
+
     @GetMapping("/edit/{id}")
     public String showEditTransactionForm(@PathVariable("id") Long id, Model model) {
         TransactionEntity transaction = transactionService.getTransaction(id);
-        log.info(transaction.getEntity());
+        List<CategoryEntity> categories = categoryService.getCategories();
+        log.info(transaction);
+        model.addAttribute("categories", categories);
         model.addAttribute("transaction", transaction);
         return "transactions/manual-transaction";
     }
 
     @PostMapping("/edit")
     public String editTransaction(@ModelAttribute("transaction") TransactionEntity transaction, RedirectAttributes redirectAttributes) {
+
         TransactionEntity savedTransaction = transactionRepository.save(transaction);
-        log.info(transaction.getDate());
+
+        log.info(transaction.getCategories());
         redirectAttributes.addFlashAttribute("message", "Transaction edited successfully. ID: " + savedTransaction.getId());
         return "redirect:/transactions";
     }
