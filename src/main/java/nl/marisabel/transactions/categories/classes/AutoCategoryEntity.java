@@ -1,4 +1,4 @@
-package nl.marisabel.categories.classes;
+package nl.marisabel.transactions.categories.classes;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

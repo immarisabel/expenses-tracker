@@ -5,7 +5,7 @@ import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import nl.marisabel.categories.classes.CategoryEntity;
+import nl.marisabel.transactions.categories.classes.CategoryEntity;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;

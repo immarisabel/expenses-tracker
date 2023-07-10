@@ -1,6 +1,6 @@
-package nl.marisabel.categories.interfaces;
+package nl.marisabel.transactions.categories.interfaces;
 
-import nl.marisabel.categories.classes.AutoCategoryEntity;
+import nl.marisabel.transactions.categories.classes.AutoCategoryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

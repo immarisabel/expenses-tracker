@@ -1,7 +1,7 @@
 package nl.marisabel.transactions.classes;
 
 import lombok.extern.log4j.Log4j2;
-import nl.marisabel.categories.interfaces.CategoryRepository;
+import nl.marisabel.transactions.categories.interfaces.CategoryRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

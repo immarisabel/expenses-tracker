@@ -1,8 +1,8 @@
-package nl.marisabel.charts;
+package nl.marisabel.transactions.charts;
 
 import lombok.extern.log4j.Log4j2;
-import nl.marisabel.categories.classes.CategoryEntity;
-import nl.marisabel.categories.classes.CategoryServiceImp;
+import nl.marisabel.transactions.categories.classes.CategoryEntity;
+import nl.marisabel.transactions.categories.classes.CategoryServiceImp;
 import nl.marisabel.transactions.classes.TransactionEntity;
 import nl.marisabel.transactions.classes.TransactionServiceImp;
 import org.springframework.stereotype.Service;

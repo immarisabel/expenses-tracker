@@ -1,4 +1,4 @@
-package nl.marisabel.categories.classes;
+package nl.marisabel.transactions.categories.classes;
 
 import nl.marisabel.transactions.classes.TransactionEntity;
 import org.springframework.stereotype.Controller;

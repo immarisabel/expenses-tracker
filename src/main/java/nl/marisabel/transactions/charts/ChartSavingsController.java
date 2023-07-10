@@ -1,4 +1,4 @@
-package nl.marisabel.charts;
+package nl.marisabel.transactions.charts;
 
 import lombok.extern.log4j.Log4j2;
 import nl.marisabel.savings.classes.GoalEntity;

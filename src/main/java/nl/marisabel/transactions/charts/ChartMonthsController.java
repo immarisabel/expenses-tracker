@@ -1,7 +1,7 @@
-package nl.marisabel.charts;
+package nl.marisabel.transactions.charts;
 
 import lombok.extern.log4j.Log4j2;
-import nl.marisabel.categories.classes.CategoryServiceImp;
+import nl.marisabel.transactions.categories.classes.CategoryServiceImp;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

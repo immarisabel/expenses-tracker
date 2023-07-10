@@ -1,4 +1,4 @@
-package nl.marisabel.categories.classes;
+package nl.marisabel.transactions.categories.classes;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;

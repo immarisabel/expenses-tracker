@@ -1,6 +1,6 @@
-package nl.marisabel.categories.interfaces;
+package nl.marisabel.transactions.categories.interfaces;
 
-import nl.marisabel.categories.classes.AutoCategoryEntity;
+import nl.marisabel.transactions.categories.classes.AutoCategoryEntity;
 
 import java.util.List;
 

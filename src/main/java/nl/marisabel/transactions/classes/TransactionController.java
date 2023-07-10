@@ -2,9 +2,9 @@ package nl.marisabel.transactions.classes;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
-import nl.marisabel.categories.classes.CategoryEntity;
-import nl.marisabel.categories.interfaces.CategoryRepository;
-import nl.marisabel.categories.classes.CategoryServiceImp;
+import nl.marisabel.transactions.categories.classes.CategoryEntity;
+import nl.marisabel.transactions.categories.interfaces.CategoryRepository;
+import nl.marisabel.transactions.categories.classes.CategoryServiceImp;
 import nl.marisabel.transactions.interfaces.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

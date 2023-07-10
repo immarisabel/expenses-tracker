@@ -1,7 +1,7 @@
-package nl.marisabel.categories.classes;
+package nl.marisabel.transactions.categories.classes;
 
-import nl.marisabel.categories.interfaces.AutoCategoryRepository;
-import nl.marisabel.categories.interfaces.AutoCategoryService;
+import nl.marisabel.transactions.categories.interfaces.AutoCategoryRepository;
+import nl.marisabel.transactions.categories.interfaces.AutoCategoryService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

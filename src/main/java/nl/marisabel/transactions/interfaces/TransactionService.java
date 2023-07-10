@@ -1,6 +1,6 @@
 package nl.marisabel.transactions.interfaces;
 
-import nl.marisabel.categories.classes.CategoryEntity;
+import nl.marisabel.transactions.categories.classes.CategoryEntity;
 import nl.marisabel.transactions.classes.TransactionEntity;
 import nl.marisabel.transactions.classes.TransactionFilter;
 import org.springframework.data.domain.Page;

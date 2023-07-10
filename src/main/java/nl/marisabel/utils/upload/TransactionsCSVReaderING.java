@@ -4,7 +4,7 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import lombok.extern.log4j.Log4j2;
-import nl.marisabel.categories.interfaces.AutoCategoryRepository;
+import nl.marisabel.transactions.categories.interfaces.AutoCategoryRepository;
 import nl.marisabel.transactions.classes.UploadFileEntity;
 import nl.marisabel.transactions.interfaces.TransactionRepository;
 import nl.marisabel.transactions.classes.TransactionEntity;

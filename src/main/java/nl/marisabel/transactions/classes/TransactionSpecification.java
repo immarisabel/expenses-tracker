@@ -1,7 +1,7 @@
 package nl.marisabel.transactions.classes;
 
 import jakarta.persistence.criteria.*;
-import nl.marisabel.categories.classes.CategoryEntity;
+import nl.marisabel.transactions.categories.classes.CategoryEntity;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
