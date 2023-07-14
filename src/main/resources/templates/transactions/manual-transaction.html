@@ -18,6 +18,9 @@
 
 <div class="container">
     <h2>Edit Transaction</h2>
+
+    <p th:text="${transaction}"></p>
+
     <form action="#" th:action="@{/transactions/edit}" th:object="${transaction}" method="post">
         <input type="hidden" th:field="*{id}" />
         <div class="form-row">
@@ -32,11 +35,15 @@
             </select>
             <input type="text" th:field="*{amount}" class="form-control" required/>
         </div>
-
-
         <div class="form-row">
-            <input class="myButton" type="submit" value="Submit"/>
+            <select name="categoryId" class="form-control">
+                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.category}"
+                        th:selected="${category}"></option>
+            </select>
+            <input type="text" th:field="*{description}" placeholder="description" class="form-control" required/>
         </div>
+
+            <input class="myButton" type="submit" value="Submit"/>
     </form>
 </div>
 </body>
