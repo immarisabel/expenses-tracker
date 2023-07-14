@@ -28,7 +28,7 @@ public class TransactionEntity {
  private String creditOrDebit;
  private double amount;
  @Column(columnDefinition = "TEXT")
- private String description;
+ private String description = "nothing";
 
 
  public void setAmount() throws ParseException {
