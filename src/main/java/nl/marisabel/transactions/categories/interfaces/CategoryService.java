@@ -3,6 +3,7 @@ package nl.marisabel.transactions.categories.interfaces;
 import nl.marisabel.transactions.categories.classes.CategoryEntity;
 
 import java.util.List;
+import java.util.Set;
 
 public interface CategoryService  {
 
@@ -14,5 +15,6 @@ public interface CategoryService  {
  public CategoryEntity findByCategory(String category);
 
  public void deleteCategory(Long id);
+
 
 }

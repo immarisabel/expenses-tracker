@@ -20,6 +20,10 @@
     <h2>Edit Transaction</h2>
 
     <p th:text="${transaction}"></p>
+<!--    <td data-title="Category"-->
+<!--        th:text="${transaction.categories.size() > 0 ? transaction.categories[0].category : ''}"></td>-->
+
+
 
     <form action="#" th:action="@{/transactions/edit}" th:object="${transaction}" method="post">
         <input type="hidden" th:field="*{id}" />
@@ -36,10 +40,16 @@
             <input type="text" th:field="*{amount}" class="form-control" required/>
         </div>
         <div class="form-row">
-            <select name="categoryId" class="form-control">
+
+
+
+            <select name="categoryId"  th:field="*{categories}"  class="form-control">
                 <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.category}"
-                        th:selected="${category}"></option>
+                        th:selected="${category}">
+                </option>
             </select>
+
+
             <input type="text" th:field="*{description}" placeholder="description" class="form-control" required/>
         </div>
 

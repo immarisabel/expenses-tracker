@@ -30,17 +30,8 @@ public class TransactionEntity {
  @Column(columnDefinition = "TEXT")
  private String description = "nothing";
 
-
- public void setAmount() throws ParseException {
-  DecimalFormatSymbols symbols = new DecimalFormatSymbols();
-  symbols.setDecimalSeparator(',');
-  DecimalFormat decimalFormat = new DecimalFormat("#0.00", symbols);
-  this.amount = decimalFormat.parse(String.valueOf(amount)).doubleValue();
- }
-
-
  @ManyToMany(fetch = FetchType.EAGER,
-         cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+         cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
  @JoinTable(
          name = "category_expenses",
          joinColumns = @JoinColumn(name = "expense_id"),
@@ -53,12 +44,6 @@ public class TransactionEntity {
  }
 
  @Transactional
- public void removeCategory(CategoryEntity category) {
-  categories.remove(category);
-  category.getTransactions().remove(this);
- }
-
- @Transactional
  public void removeCategories() {
   for (CategoryEntity category : this.categories) {
    category.getTransactions().remove(this);
@@ -66,5 +51,11 @@ public class TransactionEntity {
   this.categories.clear();
  }
 
+ public void setAmount() throws ParseException {
+  DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+  symbols.setDecimalSeparator(',');
+  DecimalFormat decimalFormat = new DecimalFormat("#0.00", symbols);
+  this.amount = decimalFormat.parse(String.valueOf(amount)).doubleValue();
+ }
 
 }
