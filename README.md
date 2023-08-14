@@ -1,4 +1,6 @@
-# Finance Tracker
+# imTrackingExpenses
+## A Personal Finance Tracker
+
 ### Personal use project to keep track of expenses and savings from our ING account.
 
 This project loads the CVS file from the ING account and saves the columns in a local H2 database.
