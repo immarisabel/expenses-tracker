@@ -2,15 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sd="http://www.w3.org/1999/xhtml">
 <div th:fragment="transactions-table" class="transactions-table">
 
-    <div th:if="${message}" class="alert alert-success" role="alert">
+    <div th:if="${message}" class="alert alert-success mt-5" role="alert">
         <p th:text="${message}"></p>
     </div>
 
-    <div th:if="${error}" class="alert alert-danger" role="alert">
+    <div th:if="${error}" class="alert alert-danger mt-5" role="alert">
         <p th:text="${error}"></p>
     </div>
 
-    <div class="update-categories" >
+    <div class="update-categories">
         <form style="display: flex; width:25rem;" id="updateCategoryForm" th:action="@{/transactions/updateCategory(searchTerm=${searchTerm})}" method="post" th:withQueryString="true">
             <select name="categoryId" class="form-control">
                 <option value="">add category to transaction</option>
