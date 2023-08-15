@@ -7,8 +7,6 @@ This project loads the CVS file from the ING account and saves the columns in a 
 I am using H2 database in order to have this application portable for security reasons, meant to be run from a USB file.
 Our main requirement is having everything offline. Hence I coded it myself, in order to keep our finance totally private.
 
-![](expensestrackerdemo.gif)
-
 **Progress so far as of 6/15/2023**
 
 _Styling done with help of ChatGPT 👍_ saved a lot of time with the css and html
