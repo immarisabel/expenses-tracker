@@ -60,7 +60,7 @@ public class ChartService {
   return calculateMonthlyTotals(allTransactions, creditOrDebitTypes);
  }
 
- public Map<String, Double> getMonthlyDebitsAndAFByCategoryForCategory(int year, CategoryEntity categoryEntity) {
+ public Map<String, Double> getMonthlyDebitsAndAfByCategoryForCategory(int year, CategoryEntity categoryEntity) {
   LocalDate startDate = YearMonth.of(year, 1).atDay(1);
   LocalDate endDate = YearMonth.of(year, 12).atEndOfMonth();
 
@@ -185,7 +185,7 @@ public class ChartService {
   return calculateMonthlyTotalsByCategory(categories, yearMonth, creditOrDebitTypes);
  }
 
- public Map<String, Double> getMonthlyDebitsAndAFByCategoryForMonth(YearMonth yearMonth) {
+ public Map<String, Double> getMonthlyDebitsAndAfByCategoryForMonth(YearMonth yearMonth) {
   List<CategoryEntity> categories = categoryService.getCategories();
   List<String> debitOrAF = Arrays.asList("DEBIT", "AF");
   return calculateMonthlyTotalsByCategory(categories, yearMonth, debitOrAF);
