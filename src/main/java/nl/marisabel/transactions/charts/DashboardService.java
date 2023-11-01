@@ -122,7 +122,8 @@ public class DashboardService {
   List<TransactionEntity> transactions = transactionServiceImp.findAll();
   List<TransactionEntity> previousYearTransactions = transactions.stream()
           .filter(transaction -> transaction.getDate().getYear() == lastYear.getValue())
-          .filter(transaction -> transaction.getCreditOrDebit().equalsIgnoreCase("debit"))
+          .filter(transaction -> !transaction.getCreditOrDebit().equalsIgnoreCase("DEBIT") ||
+                  transaction.getCreditOrDebit().equalsIgnoreCase("AF"))
           .collect(Collectors.toList());
 
   double totalAmountSpentLastYear = previousYearTransactions.stream()
@@ -149,7 +150,8 @@ public class DashboardService {
   List<TransactionEntity> transactions = transactionServiceImp.findAll();
   List<TransactionEntity> previousYearTransactions = transactions.stream()
           .filter(transaction -> transaction.getDate().getYear() == lastYear.getValue())
-          .filter(transaction -> transaction.getCreditOrDebit().equalsIgnoreCase("credit"))
+          .filter(transaction -> transaction.getCreditOrDebit().equalsIgnoreCase("CREDIT") ||
+                  transaction.getCreditOrDebit().equalsIgnoreCase("BIJ"))
           .collect(Collectors.toList());
 
   double totalAmountSpentLastYear = previousYearTransactions.stream()
