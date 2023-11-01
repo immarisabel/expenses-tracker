@@ -90,8 +90,8 @@ public class TransactionServiceImp implements TransactionService {
   * <p>find transactions between dates and categories</p>
   *
   * mainly used for the monthly category chart where:</br>
-  * used in: {@link ChartService#getMonthlyDebitsByCategoryForCategory(int year, CategoryEntity categoryEntity) getMonthlyDebitsByCategoryForCategory()}</br>
-  * and in: {@link ChartService#getMonthlyCreditsByCategoryForCategory(int year, CategoryEntity categoryEntity) getMonthlyCreditsByCategoryForCategory()}
+  * used in: {@link ChartService#getMonthlyDebitsAndAfByCategoryForCategory(int, CategoryEntity)} (int year, CategoryEntity categoryEntity) getMonthlyDebitsByCategoryForCategory()}</br>
+  * and in: {@link ChartService#getMonthlyCreditsAndBijByCategoryForCategory(int, CategoryEntity)} (int year, CategoryEntity categoryEntity) getMonthlyCreditsByCategoryForCategory()}
   *
   * @param startDate = start of month
   * @param endDate = end of month
@@ -139,17 +139,6 @@ public class TransactionServiceImp implements TransactionService {
                   LinkedHashMap::new));
  }
 
- /**
-  * <h3>GET: ADVANCED FILTERING OF TRANSACTIONS</h3>
-  * GET filters the transactions using the Transaction Specification in repository
-  *
-  * @param filter
-  * @return all matching transactions
-  */
- public Object getFilteredTransactions(TransactionFilter filter) {
-  Specification<TransactionEntity> specification = new TransactionSpecification(filter);
-  return transactionRepository.findAll(specification);
- }
 
  /**
   * <H3>CREATE SORTED PAGES FOR FILTERS</H3>
@@ -163,19 +152,19 @@ public class TransactionServiceImp implements TransactionService {
   */
  public Pageable createPageable(String sort, int page, int size) {
   if (sort.contains("entity")) {
-   if (sort.contains(",desc")) {
+   if (sort.contains("desc")) {
     return PageRequest.of(page, size, Sort.by("entity").descending());
    } else {
     return PageRequest.of(page, size, Sort.by("entity").ascending());
    }
   } else if (sort.contains("amount")) {
-   if (sort.contains(",desc")) {
+   if (sort.contains("desc")) {
     return PageRequest.of(page, size, Sort.by("amount").descending());
    } else {
     return PageRequest.of(page, size, Sort.by("amount").ascending());
    }
   } else if (sort.contains("date")) {
-   if (sort.contains(",desc")) {
+   if (sort.contains("desc")) {
     return PageRequest.of(page, size, Sort.by("date").descending());
    } else {
     return PageRequest.of(page, size, Sort.by("date").ascending());

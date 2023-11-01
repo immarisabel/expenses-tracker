@@ -28,7 +28,6 @@ public interface TransactionService {
  Page<TransactionEntity> getTransactionsByCategory(Long categoryId, PageRequest pageRequest);
 
  Page<TransactionEntity> filterTransactions(TransactionFilter filter, Pageable pageable);
- Object getFilteredTransactions(TransactionFilter filter);
 
  Map<String, String> getDistinctMonthsAndYears();
 
