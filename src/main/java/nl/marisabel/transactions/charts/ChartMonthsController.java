@@ -51,8 +51,8 @@ public class ChartMonthsController {
   YearMonth nextMonth = yearMonth.plusMonths(1);
 
   // Fetch the monthly totals for the given month
-  Map<String, Double> monthlyCreditsByCategory = chartService.getMonthlyCreditsByCategoryForMonth(yearMonth);
-  Map<String, Double> monthlyDebitsByCategory = chartService.getMonthlyDebitsByCategoryForMonth(yearMonth);
+  Map<String, Double> monthlyCreditsByCategory = chartService.getMonthlyCreditsAndBijByCategoryForMonth(yearMonth);
+  Map<String, Double> monthlyDebitsByCategory = chartService.getMonthlyDebitsAndAfByCategoryForMonth(yearMonth);
 
   List<String> labels = new ArrayList<>();
   List<Double> credits = new ArrayList<>();
