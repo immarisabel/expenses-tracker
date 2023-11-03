@@ -49,7 +49,7 @@ public class FiltersController {
  @PostMapping("/transactions/filtered")
  public String filterAdvancedTransactions(@ModelAttribute TransactionFilter filter,Pageable pageable, @RequestParam(defaultValue = "0") int page, Model model) {
 
-  int size = 20;
+  int size = 100;
   pageable = transactionServiceImp.createPageable("date", page, size);
   Page<TransactionEntity> filteredTransactions = transactionServiceImp.filterTransactions(filter, pageable);
   model.addAttribute("transactions", filteredTransactions);
@@ -66,7 +66,7 @@ public class FiltersController {
  //.......... D E F A U L T
  @GetMapping("/transactions")
  public String showTransactions(@RequestParam(value = "sort", defaultValue = "date") String sort, Pageable pageable, @RequestParam(defaultValue = "0") int page, Model model) {
-  int size = 20;
+  int size = 100;
    pageable = transactionServiceImp.createPageable(sort, page, size);
 
   model.addAttribute("transactions", transactionServiceImp.findAllPageable(pageable));
@@ -81,7 +81,7 @@ public class FiltersController {
  //.......... CATEGORY FILTER
  @GetMapping("/transactions/categories")
  public String showCategoryCharts(@RequestParam("categoryId") Long categoryId, @RequestParam(defaultValue = "0") int page, Model model) {
-  int size = 20;
+  int size = 100;
   PageRequest pageRequest = PageRequest.of(page, size);
   model.addAttribute("categories", categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category")));
   model.addAttribute("transactions", transactionServiceImp.getTransactionsByCategory(categoryId, pageRequest));
@@ -94,7 +94,7 @@ public class FiltersController {
  //.......... NO CATEGORY FILTER
  @GetMapping("/transactions/categories/none")
  public String showTransactionsWithoutCategory(@RequestParam(defaultValue = "0") int page, Model model) {
-  int size = 20;
+  int size = 100;
 
   model.addAttribute("transactions", transactionServiceImp.findByCategoriesIsEmpty(PageRequest.of(page, size)));
   model.addAttribute("categories", categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category")));

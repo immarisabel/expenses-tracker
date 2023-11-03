@@ -45,7 +45,7 @@ public class TransactionController {
          @RequestParam("categoryId") Long categoryId,
          @RequestParam(value = "selectedTransactionsIds", required = false) String[] selectedTransactionsIds,
          @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
-         @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
+         @RequestParam(value = "pageSize", required = false, defaultValue = "100") int pageSize,
          RedirectAttributes redirectAttributes,
          HttpServletRequest request
  ) {
