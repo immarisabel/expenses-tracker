@@ -11,6 +11,22 @@
   --color-highlighter: rgb(255, 255, 209);
 }
 
+.color-red {
+    color: #F84F31;
+        padding-left:1rem;
+        padding-right:1rem;
+}
+
+.color-green {
+    color: #23C552;
+    padding-left:1rem;
+    padding-right:1rem;
+}
+
+
+.flex {
+    display:flex;
+}
 /* HEADERS */
 
 h1 {

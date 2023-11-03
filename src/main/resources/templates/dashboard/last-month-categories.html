@@ -65,7 +65,7 @@
                                 const value = context.raw || 0;
                                 const percentage = ((value / filteredDonutChartData.reduce((a, b) => a + b, 0)) * 100).toFixed(2);
                                 const amount = totalAmountMap[label] || 0;
-                                return `${label}: ${percentage}%  Total: ${amount} euros`;
+                                return `${label}: ${percentage}% `;
                             }
                             return '';
                         }

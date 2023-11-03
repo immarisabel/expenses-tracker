@@ -65,6 +65,12 @@ public class ChartService {
   return calculateMonthlyTotals(allTransactions, "DEBIT");
  }
 
+ public Double calculateYearTotalForCategoryCredits(int year, CategoryEntity categoryEntity) {
+  return getMonthlyCreditsByCategoryForCategory(year, categoryEntity).values().stream().reduce(0.0, Double::sum);
+ }
+ public Double calculateYearTotalForCategoryDebits(int year, CategoryEntity categoryEntity) {
+  return getMonthlyDebitsByCategoryForCategory(year, categoryEntity).values().stream().reduce(0.0, Double::sum);
+ }
  /**
   * with the filtered transactions and the specified year and debit type ("DEBIT").
   * It returns the monthly debit totals for the given year.
@@ -140,6 +146,13 @@ public class ChartService {
                   LinkedHashMap::new,
                   Collectors.summingDouble(TransactionEntity::getAmount)
           ));
+ }
+
+ public Double sumTotalForYearlyChart(int year, String creditOrDebit) {
+  log.info(".... summing totals for year " + year);
+ return getMonthlyTotalsForYearlyChart(year, creditOrDebit)
+         .values().stream()
+         .reduce(Double::sum).orElse(0.0);
  }
 
  // CHARTS MONTHLY WITH CATEGORIES

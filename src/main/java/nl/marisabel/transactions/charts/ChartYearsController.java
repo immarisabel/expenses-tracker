@@ -7,11 +7,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @Controller
@@ -43,6 +45,8 @@ public class ChartYearsController {
   // Get data for the specified year
   Map<String, Double> monthlyCredits = chartService.getMonthlyTotalsForYearlyChart(year, "CREDIT");
   Map<String, Double> monthlyDebits = chartService.getMonthlyTotalsForYearlyChart(year, "DEBIT");
+
+
   // Generate labels and data for the chart
   List<String> labels = new ArrayList<>();
   List<Double> credits = new ArrayList<>();
@@ -67,6 +71,28 @@ public class ChartYearsController {
   model.addAttribute("credits", credits);
   model.addAttribute("debits", debits);
   model.addAttribute("currentYear", year);
+
+
+  // totals for the current year
+  String totalCredits = String.valueOf(chartService.sumTotalForYearlyChart(year, "CREDIT"));
+  String totalDebits = String.valueOf(chartService.sumTotalForYearlyChart(year, "DEBIT"));
+
+// Parse the strings to doubles
+  double creditsAmount = Double.parseDouble(totalCredits);
+  double debitsAmount = Double.parseDouble(totalDebits);
+
+// Create a NumberFormat instance for Euros with 2 decimal places
+  NumberFormat euroFormat = NumberFormat.getCurrencyInstance(Locale.GERMANY);
+  euroFormat.setMaximumFractionDigits(2);
+
+// Format the amounts as Euros
+  totalCredits = euroFormat.format(creditsAmount);
+  totalDebits = euroFormat.format(debitsAmount);
+
+  log.info("total credits: " + totalCredits);
+  log.info("total debits: " + totalDebits);
+  model.addAttribute("totalCredits", totalCredits);
+  model.addAttribute("totalDebits", totalDebits);
 
   // Set previous and next year for pagination
   int previousYear = year - 1;

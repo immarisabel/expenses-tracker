@@ -31,6 +31,8 @@ public class DashboardService {
  private final TransactionServiceImp transactionServiceImp;
  private final SavingsServiceImp savingsServiceImp;
  private final UploadFileRepository uploadFileRepository;
+ private final String DEBIT = "debit";
+ private final String CREDIT = "credit";
 
  public DashboardService(ChartService chartService, CategoryServiceImp categoryServiceImp, TransactionServiceImp transactionServiceImp, SavingsServiceImp savingsServiceImp, UploadFileRepository uploadFileRepository) {
   this.chartService = chartService;
@@ -47,6 +49,7 @@ public class DashboardService {
   // Get data for the current year
   Map<String, Double> monthlyCredits = chartService.getMonthlyCreditsForYear(currentYear);
   Map<String, Double> monthlyDebits = chartService.getMonthlyDebitsForYear(currentYear);
+  Double totalAmountSpent = chartService.sumTotalForYearlyChart(currentYear,DEBIT);
   // Generate labels and data for the chart
   List<String> labels = new ArrayList<>();
   List<Double> credits = new ArrayList<>();
@@ -122,7 +125,7 @@ public class DashboardService {
   List<TransactionEntity> transactions = transactionServiceImp.findAll();
   List<TransactionEntity> previousYearTransactions = transactions.stream()
           .filter(transaction -> transaction.getDate().getYear() == lastYear.getValue())
-          .filter(transaction -> transaction.getCreditOrDebit().equalsIgnoreCase("debit"))
+          .filter(transaction -> transaction.getCreditOrDebit().equalsIgnoreCase(DEBIT))
           .collect(Collectors.toList());
 
   double totalAmountSpentLastYear = previousYearTransactions.stream()
@@ -149,7 +152,7 @@ public class DashboardService {
   List<TransactionEntity> transactions = transactionServiceImp.findAll();
   List<TransactionEntity> previousYearTransactions = transactions.stream()
           .filter(transaction -> transaction.getDate().getYear() == lastYear.getValue())
-          .filter(transaction -> transaction.getCreditOrDebit().equalsIgnoreCase("credit"))
+          .filter(transaction -> transaction.getCreditOrDebit().equalsIgnoreCase(CREDIT))
           .collect(Collectors.toList());
 
   double totalAmountSpentLastYear = previousYearTransactions.stream()

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.text.NumberFormat;
 import java.time.Month;
 import java.time.Year;
 import java.time.YearMonth;
@@ -85,6 +86,31 @@ public class ChartCategoriesController {
   model.addAttribute("debits", debits);
   model.addAttribute("category", category);
   model.addAttribute("currentYear", year);
+
+
+
+
+
+  // totals for the current year
+  String totalCredits = String.valueOf(chartService.calculateYearTotalForCategoryCredits(year, category));
+  String totalDebits = String.valueOf(chartService.calculateYearTotalForCategoryDebits(year, category));
+// Parse the strings to doubles
+  double creditsAmount = Double.parseDouble(totalCredits);
+  double debitsAmount = Double.parseDouble(totalDebits);
+
+// Create a NumberFormat instance for Euros with 2 decimal places
+  NumberFormat euroFormat = NumberFormat.getCurrencyInstance(Locale.GERMANY);
+  euroFormat.setMaximumFractionDigits(2);
+
+// Format the amounts as Euros
+  totalCredits = euroFormat.format(creditsAmount);
+  totalDebits = euroFormat.format(debitsAmount);
+
+  log.info("total credits: " + totalCredits);
+  log.info("total debits: " + totalDebits);
+  model.addAttribute("totalCredits", totalCredits);
+  model.addAttribute("totalDebits", totalDebits);
+
 
   // Set previous and next year for pagination
   int previousYear = year - 1;
