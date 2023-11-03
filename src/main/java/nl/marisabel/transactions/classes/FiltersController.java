@@ -36,18 +36,39 @@ public class FiltersController {
   return "transactions/filter-form";
  }
  // for now without  filters. Being an advance search, it should just give more limited transactions.
+// @GetMapping("/transactions/filtered")
+// public String showAdvancedFilteredTransactions(TransactionFilter filter,
+//                                                @RequestParam(defaultValue = "0") int page,
+//                                                Model model) {
+//  Pageable pageable = transactionServiceImp.createPageable("date", page, 20);
+//  model.addAttribute("filter", filter);
+//  model.addAttribute("categories", categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category")));
+//  model.addAttribute("transactions", transactionServiceImp.getFilteredTransactions(filter));
+//  return "transactions/filtered-page";
+// }
+
+
  @GetMapping("/transactions/filtered")
  public String showAdvancedFilteredTransactions(TransactionFilter filter,
+                                                @RequestParam(defaultValue = "0") int page,
                                                 Model model) {
+  Pageable pageable = PageRequest.of(page, 20, Sort.by(Sort.Order.asc("date")));
+  Page<TransactionEntity> filteredTransactions = transactionServiceImp.filterTransactions(filter, pageable);
+
   model.addAttribute("filter", filter);
   model.addAttribute("categories", categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "category")));
-  model.addAttribute("transactions", transactionServiceImp.getFilteredTransactions(filter));
+  model.addAttribute("transactions", filteredTransactions);
+
   return "transactions/filtered-page";
  }
 
 
+
  @PostMapping("/transactions/filtered")
- public String filterAdvancedTransactions(@ModelAttribute TransactionFilter filter,Pageable pageable, @RequestParam(defaultValue = "0") int page, Model model) {
+ public String filterAdvancedTransactions(@ModelAttribute TransactionFilter filter,
+                                          Pageable pageable,
+                                          @RequestParam(defaultValue = "0") int page,
+                                          Model model) {
 
   int size = 100;
   pageable = transactionServiceImp.createPageable("date", page, size);

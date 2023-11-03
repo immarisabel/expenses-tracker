@@ -55,8 +55,8 @@ public class ChartCategoriesController {
   YearMonth endYearMonth = YearMonth.of(year, 12);
 
   // Get data for the specified year
-  Map<String, Double> monthlyCredits = chartService.getMonthlyCreditsByCategoryForCategory(year, category);
-  Map<String, Double> monthlyDebits = chartService.getMonthlyDebitsByCategoryForCategory(year, category);
+  Map<String, Double> monthlyCredits = chartService.getMonthlyCreditsAndBijByCategoryForCategory(year, category);
+  Map<String, Double> monthlyDebits = chartService.getMonthlyDebitsAndAfByCategoryForCategory(year, category);
   log.info("DEBITS " + monthlyDebits.size() + " | " + monthlyDebits.values()+ " | " +monthlyDebits.keySet());
   log.info("CREDITS " + monthlyCredits.size() + " | " + monthlyCredits.values()+ " | " +monthlyCredits.keySet());
   // Initialize lists to store chart data

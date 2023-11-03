@@ -33,37 +33,42 @@ public class ChartService {
   * summing the transaction amounts for each month.
   *
   * @param transactions
-  * @param creditOrDebit
+  * @param creditOrDebitTypes
   * @return monthlyTotals
   */
- private Map<String, Double> calculateMonthlyTotals(List<TransactionEntity> transactions, String creditOrDebit) {
-  Map<String, Double> monthlyTotals = new LinkedHashMap<>();
+ private Map<String, Double> calculateMonthlyTotals(List<TransactionEntity> transactions, List<String> creditOrDebitTypes) {
+  Map<String, Double> monthlyTotals = new LinkedHashMap();
 
   for (TransactionEntity transaction : transactions) {
-    String month = transaction.getDate().getMonth().toString();
-    double amount = transaction.getAmount();
-    String transactionCreditOrDebit = transaction.getCreditOrDebit();
-    if (transactionCreditOrDebit.equalsIgnoreCase(creditOrDebit)) {
-     monthlyTotals.merge(month, amount, Double::sum);
-    }
-
+   String month = transaction.getDate().getMonth().toString();
+   double amount = transaction.getAmount();
+   String transactionCreditOrDebit = transaction.getCreditOrDebit();
+   if (creditOrDebitTypes.contains(transactionCreditOrDebit)) {
+    monthlyTotals.merge(month, amount, Double::sum);
+   }
   }
   return monthlyTotals;
  }
- public Map<String, Double> getMonthlyCreditsByCategoryForCategory(int year, CategoryEntity categoryEntity) {
+
+
+ public Map<String, Double> getMonthlyCreditsAndBijByCategoryForCategory(int year, CategoryEntity categoryEntity) {
   LocalDate startDate = YearMonth.of(year, 1).atDay(1);
   LocalDate endDate = YearMonth.of(year, 12).atEndOfMonth();
 
   List<TransactionEntity> allTransactions = transactionService.findAllByDateBetweenAndCategory(startDate, endDate, categoryEntity);
-  return calculateMonthlyTotals(allTransactions, "CREDIT");
+  List<String> creditOrDebitTypes = Arrays.asList("CREDIT", "BIJ");
+  return calculateMonthlyTotals(allTransactions, creditOrDebitTypes);
  }
- public Map<String, Double> getMonthlyDebitsByCategoryForCategory(int year, CategoryEntity categoryEntity) {
+
+ public Map<String, Double> getMonthlyDebitsAndAfByCategoryForCategory(int year, CategoryEntity categoryEntity) {
   LocalDate startDate = YearMonth.of(year, 1).atDay(1);
   LocalDate endDate = YearMonth.of(year, 12).atEndOfMonth();
 
   List<TransactionEntity> allTransactions = transactionService.findAllByDateBetweenAndCategory(startDate, endDate, categoryEntity);
-  return calculateMonthlyTotals(allTransactions, "DEBIT");
+  List<String> debitOrAF = Arrays.asList("DEBIT", "AF");
+  return calculateMonthlyTotals(allTransactions, debitOrAF);
  }
+
 
  /**
   * with the filtered transactions and the specified year and debit type ("DEBIT").
@@ -71,16 +76,16 @@ public class ChartService {
   *
   * @param transactions
   * @param year
-  * @param creditOrDebit
+  * @param creditOrDebitTypes
   * @return
   */
- private Map<String, Double> calculateMonthlyTotalsForYear(List<TransactionEntity> transactions, int year, String creditOrDebit) {
+ private Map<String, Double> calculateMonthlyTotalsForYear(List<TransactionEntity> transactions, int year, List<String> creditOrDebitTypes) {
   log.info(".... loading calculateMonthlyTotalsForYear()");
   log.info(".... for year " + year);
 
   return transactions.stream()
           .filter(transaction -> transaction.getDate().getYear() == year)
-          .filter(transaction -> transaction.getCreditOrDebit().equalsIgnoreCase(creditOrDebit))
+          .filter(transaction -> creditOrDebitTypes.contains(transaction.getCreditOrDebit()))
           .filter(transaction -> !transaction.getCategories().equals(EXCLUDE_CATEGORY))
           .collect(Collectors.groupingBy(
                   transaction -> transaction.getDate().getMonth().toString(),
@@ -103,17 +108,22 @@ public class ChartService {
                   .noneMatch(category -> category.getCategory().equals(EXCLUDE_CATEGORY)))
           .collect(Collectors.toList());
  }
+
  public Map<String, Double> getMonthlyCreditsForYear(int year) {
   List<TransactionEntity> allTransactions = transactionService.findAll();
   List<TransactionEntity> filteredTransactions = filterTransactionsByCategories(allTransactions);
   log.info(".... loading getMonthlyCreditsForYear()");
-  return calculateMonthlyTotalsForYear(filteredTransactions, year, "CREDIT");
+  List<String> creditOrBij = Arrays.asList("CREDIT", "BIJ");
+  Map<String, Double> result = calculateMonthlyTotalsForYear(filteredTransactions, year, creditOrBij);
+  return result;
  }
+
  public Map<String, Double> getMonthlyDebitsForYear(int year) {
   List<TransactionEntity> allTransactions = transactionService.findAll();
   List<TransactionEntity> filteredTransactions = filterTransactionsByCategories(allTransactions);
   log.info(".... loading getMonthlyDebitsForYear()");
-  return calculateMonthlyTotalsForYear(filteredTransactions, year, "DEBIT");
+  List<String> debitOrAF = Arrays.asList("DEBIT", "AF");
+  return calculateMonthlyTotalsForYear(filteredTransactions, year, debitOrAF);
  }
 
  /**
@@ -147,10 +157,10 @@ public class ChartService {
  /**
   * @param categories
   * @param yearMonth
-  * @param creditOrDebit
+  * @param creditOrDebitTypes
   * @return monthlyTotals /charts/month/{month}
   */
- private Map<String, Double> calculateMonthlyTotalsByCategory(List<CategoryEntity> categories, YearMonth yearMonth, String creditOrDebit) {
+ private Map<String, Double> calculateMonthlyTotalsByCategory(List<CategoryEntity> categories, YearMonth yearMonth, List<String> creditOrDebitTypes) {
   LocalDate startDate = yearMonth.atDay(1);
   LocalDate endDate = yearMonth.atEndOfMonth();
 
@@ -160,7 +170,7 @@ public class ChartService {
 
    List<TransactionEntity> transactions = transactionService.findAllByDateBetweenAndCategory(startDate, endDate, category);
    double total = transactions.stream()
-           .filter(transaction -> transaction.getCreditOrDebit().equalsIgnoreCase(creditOrDebit))
+           .filter(transaction -> creditOrDebitTypes.contains(transaction.getCreditOrDebit()))
            .mapToDouble(TransactionEntity::getAmount)
            .sum();
 
@@ -168,14 +178,19 @@ public class ChartService {
   }
   return monthlyTotals;
  }
- public Map<String, Double> getMonthlyCreditsByCategoryForMonth(YearMonth yearMonth) {
+
+ public Map<String, Double> getMonthlyCreditsAndBijByCategoryForMonth(YearMonth yearMonth) {
   List<CategoryEntity> categories = categoryService.getCategories();
-  return calculateMonthlyTotalsByCategory(categories, yearMonth, "CREDIT");
+  List<String> creditOrDebitTypes = Arrays.asList("CREDIT", "BIJ");
+  return calculateMonthlyTotalsByCategory(categories, yearMonth, creditOrDebitTypes);
  }
- public Map<String, Double> getMonthlyDebitsByCategoryForMonth(YearMonth yearMonth) {
+
+ public Map<String, Double> getMonthlyDebitsAndAfByCategoryForMonth(YearMonth yearMonth) {
   List<CategoryEntity> categories = categoryService.getCategories();
-  return calculateMonthlyTotalsByCategory(categories, yearMonth, "DEBIT");
+  List<String> debitOrAF = Arrays.asList("DEBIT", "AF");
+  return calculateMonthlyTotalsByCategory(categories, yearMonth, debitOrAF);
  }
+
 
 
 }
